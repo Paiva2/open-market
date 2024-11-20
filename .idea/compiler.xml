@@ -6,13 +6,17 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="open-market-users" />
         <module name="open-market-discovery" />
+        <module name="open-market-gateway" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="open-market-discovery" options="-parameters" />
+      <module name="open-market-gateway" options="-parameters" />
+      <module name="open-market-users" options="-parameters" />
     </option>
   </component>
 </project>
