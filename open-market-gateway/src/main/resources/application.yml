@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: open-market-gateway
@@ -8,11 +11,26 @@ spring:
           uri: lb://OPEN-MARKET-USERS
           predicates:
             - Path=/api/user/**
-          filters:
-            - StripPrefix=1
-server:
-  port: 8080
-
+      default-filters:
+        - TokenRelay=
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - SaveSession
+        - StripPrefix=1
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI}
+      client:
+        provider:
+          keycloak:
+            issuer-uri: ${JWT_ISSUER_URI}
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: ${KC_CLIENT_ID}
+            client-secret: ${KC_CLIENT_SECRET}
+            scope: openid, profile, email
 eureka:
   client:
     fetch-registry: true

@@ -1,7 +1,11 @@
 spring:
   application:
     name: open-market-users
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI}
 server:
   port: 0
 
@@ -10,3 +14,5 @@ eureka:
     registerWithEureka: true
     serviceUrl:
       defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+  instance:
+    hostname: localhost

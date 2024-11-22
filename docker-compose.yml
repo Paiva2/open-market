@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  postgres-db:
+    container_name: "database_open-market"
+    image: 'bitnami/postgresql'
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=development
+      - POSTGRES_PASSWORD=development
+      - POSTGRES_DB=open-market-db
+  rabbitmq:
+    container_name: "rabbitmq_open-market"
+    image: 'rabbitmq:management'
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  keycloack:
+    container_name: "keycloack_open-market"
+    image: "codingpuss/keycloak-silicon:16.1.1"
+    restart: always
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_EXTRA_ARGS="-Dkeycloak.profile.feature.upload_scripts=enabled"
+    ports:
+      - "8185:8080"
+    depends_on: [ postgres-db ]
