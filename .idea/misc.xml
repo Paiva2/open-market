@@ -7,6 +7,7 @@
         <option value="$PROJECT_DIR$/open-market-discovery/pom.xml" />
         <option value="$PROJECT_DIR$/open-market-users/pom.xml" />
         <option value="$PROJECT_DIR$/open-market-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/custom-user-storage-open-market/pom.xml" />
       </list>
     </option>
   </component>
