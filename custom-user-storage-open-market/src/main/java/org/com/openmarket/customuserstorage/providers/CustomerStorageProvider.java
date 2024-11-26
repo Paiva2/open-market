@@ -3,16 +3,14 @@ package org.com.openmarket.customuserstorage.providers;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import jakarta.ws.rs.core.MultivaluedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.com.openmarket.customuserstorage.entity.UserEntityImpl;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.credential.CredentialInput;
 import org.keycloak.credential.CredentialInputUpdater;
 import org.keycloak.credential.CredentialInputValidator;
-import org.keycloak.models.GroupModel;
-import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.RealmModel;
-import org.keycloak.models.UserModel;
+import org.keycloak.models.*;
 import org.keycloak.models.credential.PasswordCredentialModel;
 import org.keycloak.storage.StorageId;
 import org.keycloak.storage.UserStorageProvider;
@@ -120,8 +118,37 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
 
     @Override
     public UserModel addUser(RealmModel realmModel, String username) {
-        // not implemented to use a custom register flow
-        return null;
+        KeycloakContext context = session.getContext();
+        MultivaluedMap<String, String> formParams = context.getHttpRequest().getDecodedFormParameters();
+
+        String email = formParams.getFirst("email");
+        String password = formParams.getFirst("password");
+        String formUsername = formParams.getFirst("username");
+        String firstName = formParams.getFirst("firstName");
+        String lastName = formParams.getFirst("lastName");
+
+        String hashedNewPassword = BCrypt.hashpw(password, BCrypt.gensalt(6));
+
+        entityManager.getTransaction().begin();
+        Query query = entityManager.createQuery(
+            "insert into UserEntityImpl (email, password, userName) values (:email, :password, :username)"
+        );
+        query.setParameter("email", email);
+        query.setParameter("password", hashedNewPassword);
+        query.setParameter("username", formUsername);
+        query.executeUpdate();
+        entityManager.getTransaction().commit();
+
+        UserModel userModel = this.getUserByEmail(realmModel, email);
+
+        userModel.setEnabled(true);
+        userModel.setFirstName(firstName);
+        userModel.setLastName(lastName);
+        userModel.setEmail(email);
+        userModel.setUsername(formUsername);
+        userModel.credentialManager().updateCredential(UserCredentialModel.password(hashedNewPassword));
+
+        return userModel;
     }
 
     @Override
@@ -172,7 +199,7 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
 
         UserEntityImpl userFound = user.get(0);
 
-        String hashedNewPassword = BCrypt.hashpw(passwordInput, BCrypt.gensalt());
+        String hashedNewPassword = BCrypt.hashpw(passwordInput, BCrypt.gensalt(6));
         userFound.setPassword(hashedNewPassword);
         userFound.setEmail(userModel.getEmail());
         userFound.setUserName(userModel.getUsername());
