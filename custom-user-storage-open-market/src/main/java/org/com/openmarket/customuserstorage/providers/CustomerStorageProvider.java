@@ -266,9 +266,7 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
 
     @Override
     public int getUsersCount(RealmModel realm) {
-        TypedQuery<Integer> query = entityManager.createQuery("select count(u) from UserEntityImpl u", Integer.class);
-        Integer usersCount = query.getSingleResult();
-        if (usersCount == null) return 0;
-        return usersCount;
+        TypedQuery<Long> query = entityManager.createQuery("select count(u) from UserEntityImpl u", Long.class);
+        return query.getSingleResult().intValue();
     }
 }
