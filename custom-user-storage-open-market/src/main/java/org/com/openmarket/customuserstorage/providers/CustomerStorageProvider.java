@@ -243,6 +243,7 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
 
         StorageId sid = new StorageId(userModel.getId());
         String userExternalId = sid.getExternalId();
+        userModel.setSingleAttribute("externalId", userExternalId);
 
         String passwordInput = credentialInput.getChallengeResponse();
 

@@ -18,8 +18,10 @@ public class KeycloakClaimsConfig implements Converter<Jwt, Collection<GrantedAu
 
         List<String> rolesClaimed = source.getClaim("role");
 
+        if (rolesClaimed == null || rolesClaimed.isEmpty()) return null;
+
         for (String role : rolesClaimed) {
-            if(role.startsWith(ROLE_PREFIX)) {
+            if (role.startsWith(ROLE_PREFIX)) {
                 authorities.add(new SimpleGrantedAuthority("ROLE_" + role.replace(ROLE_PREFIX, "")));
             }
         }
