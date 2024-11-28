@@ -6,6 +6,8 @@ import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.MultivaluedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.com.openmarket.customuserstorage.entity.UserEntityImpl;
+import org.com.openmarket.customuserstorage.providers.dto.UserCreatedMessageDTO;
+import org.com.openmarket.customuserstorage.providers.enumeration.EnumUserEvents;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.credential.CredentialInput;
 import org.keycloak.credential.CredentialInputUpdater;
@@ -18,21 +20,31 @@ import org.keycloak.storage.user.UserLookupProvider;
 import org.keycloak.storage.user.UserQueryProvider;
 import org.keycloak.storage.user.UserRegistrationProvider;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import static org.com.openmarket.customuserstorage.constants.QueueConstants.USER_DATA_ROUTING_KEY;
+import static org.com.openmarket.customuserstorage.constants.QueueConstants.USER_DATA_TOPIC_EXCHANGE;
 
 @Slf4j
 public class CustomerStorageProvider implements UserStorageProvider, UserLookupProvider, UserQueryProvider, UserRegistrationProvider, CredentialInputValidator, CredentialInputUpdater {
     private final KeycloakSession session;
     private final ComponentModel model;
     private final EntityManager entityManager;
+    private final RabbitTemplate rabbitTemplate;
 
-    public CustomerStorageProvider(KeycloakSession keycloakSession, ComponentModel componentModel, EntityManager entityManager) {
+    private final Queue userDataQueue;
+
+    public CustomerStorageProvider(KeycloakSession keycloakSession, ComponentModel componentModel, EntityManager entityManager, RabbitTemplate rabbitTemplate, Queue userDataQueue) {
         this.session = keycloakSession;
         this.model = componentModel;
         this.entityManager = entityManager;
+        this.rabbitTemplate = rabbitTemplate;
+        this.userDataQueue = userDataQueue;
     }
 
     @Override
@@ -129,17 +141,38 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
 
         String hashedNewPassword = BCrypt.hashpw(password, BCrypt.gensalt(6));
 
-        entityManager.getTransaction().begin();
-        Query query = entityManager.createQuery(
-            "insert into UserEntityImpl (email, password, userName) values (:email, :password, :username)"
-        );
-        query.setParameter("email", email);
-        query.setParameter("password", hashedNewPassword);
-        query.setParameter("username", formUsername);
-        query.executeUpdate();
-        entityManager.getTransaction().commit();
+        try {
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery(
+                "insert into UserEntityImpl (email, password, userName) values (:email, :password, :username)"
+            );
+            query.setParameter("email", email);
+            query.setParameter("password", hashedNewPassword);
+            query.setParameter("username", formUsername);
+            query.executeUpdate();
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            log.error("Error while creating new user on database {}", e.getMessage());
+            throw new RuntimeException("Error while creating new user on database {}", e);
+        }
 
         UserModel userModel = this.getUserByEmail(realmModel, email);
+
+        try {
+            rabbitTemplate.convertAndSend(
+                USER_DATA_TOPIC_EXCHANGE,
+                USER_DATA_ROUTING_KEY,
+                new UserCreatedMessageDTO(EnumUserEvents.CREATED, userModel.getId(), userModel.getUsername(), userModel.getEmail())
+            );
+        } catch (Exception e) {
+            log.error("Error while sending new user to broker {}", e.getMessage());
+            entityManager.getTransaction().begin();
+            Query query = entityManager.createQuery("delete from UserEntityImpl u where u.id = :userId");
+            query.setParameter("userId", userModel.getId());
+            query.executeUpdate();
+            entityManager.getTransaction().commit();
+            throw new RuntimeException("Error while sending new user to broker! User creation failed.");
+        }
 
         userModel.setEnabled(true);
         userModel.setFirstName(firstName);

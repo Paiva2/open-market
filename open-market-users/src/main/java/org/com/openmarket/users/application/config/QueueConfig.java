@@ -5,7 +5,9 @@ import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,33 +16,18 @@ import static org.com.openmarket.users.application.config.constants.QueueConstan
 @Configuration
 public class QueueConfig {
     @Bean
-    public Queue makeUserCreatedQueue() {
-        return createQueue(USER_CREATED_QUEUE);
+    public Queue makeUserDataQueue() {
+        return createQueue(USER_DATA_QUEUE);
     }
 
     @Bean
-    public TopicExchange makeUserCreatedExchange() {
-        return createExchange(USER_CREATED_TOPIC_EXCHANGE);
+    public TopicExchange makeUserDataExchange() {
+        return createExchange(USER_DATA_TOPIC_EXCHANGE);
     }
 
     @Bean
-    public Binding makeUserCreatedBinding() {
-        return createBinding(makeUserCreatedQueue(), makeUserCreatedExchange(), USER_CREATED_ROUTING_KEY);
-    }
-
-    @Bean
-    public Queue makeUserUpdatedQueue() {
-        return createQueue(USER_UPDATED_QUEUE);
-    }
-
-    @Bean
-    public TopicExchange makeUserUpdatedExchange() {
-        return createExchange(USER_UPDATED_TOPIC_EXCHANGE);
-    }
-
-    @Bean
-    public Binding makeUserUpdatedBinding() {
-        return createBinding(makeUserUpdatedQueue(), makeUserUpdatedExchange(), USER_UPDATED_ROUTING_KEY);
+    public Binding makeUserDataBinding() {
+        return createBinding(makeUserDataQueue(), makeUserDataExchange(), USER_DATA_ROUTING_KEY);
     }
 
     @Bean
@@ -49,6 +36,18 @@ public class QueueConfig {
         container.setConnectionFactory(connectionFactory);
 
         return container;
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter jackson2JsonMessageConverter) {
+        final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(jackson2JsonMessageConverter);
+        return rabbitTemplate;
+    }
+
+    @Bean
+    public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
+        return new Jackson2JsonMessageConverter();
     }
 
     private Queue createQueue(String queueName) {
