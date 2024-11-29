@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.com.open-market</groupId>
-    <artifactId>open-market-products</artifactId>
+    <artifactId>open-market-items</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>open-market-products</name>
-    <description>open-market-products</description>
+    <name>open-market-items</name>
+    <description>open-market-items</description>
     <url/>
     <licenses>
         <license/>

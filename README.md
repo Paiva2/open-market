@@ -25,9 +25,9 @@ Unlike the original game market, this platform will allow users to list any type
     - [x] Login
     - [x] Register
     - [x] Forgot Password
-    - [ ] Update Profile
+    - [x] Update Profile
     - [x] OAuth2
-    - [ ] User Profile Features
+    - [x] User Profile Features
 
 
 - [ ] Basic Item Operations

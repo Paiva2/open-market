@@ -1,10 +1,10 @@
-package org.com.openmarket.products;
+package org.com.openmarket.items;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OpenMarketProductsApplicationTests {
+class OpenMarketItemsApplicationTests {
 
     @Test
     void contextLoads() {

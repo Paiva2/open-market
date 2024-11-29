@@ -3,14 +3,14 @@ server:
 
 spring:
   application:
-    name: open-market-products
+    name: open-market-items
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: ${JWT_ISSUER_URI}
   datasource:
-    url: jdbc:postgresql://localhost:5433/open-market-products-db
+    url: jdbc:postgresql://localhost:5433/open-market-items-db
     username: development
     password: development
     driver-class-name: org.postgresql.Driver

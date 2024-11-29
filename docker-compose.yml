@@ -21,8 +21,8 @@ services:
       - POSTGRES_DB=open-market-users-db
     networks:
       - open-market-network
-  db-products-open-market:
-    container_name: "open-market-products-db"
+  db-items-open-market:
+    container_name: "open-market-items-db"
     image: 'bitnami/postgresql:16'
     ports:
       - "5433:5432"
