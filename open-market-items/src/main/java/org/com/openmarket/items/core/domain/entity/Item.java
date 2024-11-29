@@ -19,8 +19,9 @@ public class Item {
     private String name;
     private String description;
     private String photoUrl;
+    private Boolean unique;
     private BigDecimal baseSellingPrice;
-    private boolean active;
+    private Boolean active;
     private Date createdAt;
     private Date updatedAt;
 

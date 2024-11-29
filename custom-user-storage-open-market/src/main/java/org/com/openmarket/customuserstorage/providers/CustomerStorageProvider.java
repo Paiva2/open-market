@@ -1,5 +1,6 @@
 package org.com.openmarket.customuserstorage.providers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
@@ -36,6 +37,7 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
     private final ComponentModel model;
     private final EntityManager entityManager;
     private final RabbitTemplate rabbitTemplate;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     private final Queue userDataQueue;
 
@@ -162,13 +164,13 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
             rabbitTemplate.convertAndSend(
                 USER_DATA_TOPIC_EXCHANGE,
                 USER_DATA_ROUTING_KEY,
-                new UserCreatedMessageDTO(EnumUserEvents.CREATED, userModel.getId(), userModel.getUsername(), userModel.getEmail())
+                mapper.writeValueAsString(new UserCreatedMessageDTO(EnumUserEvents.CREATED, StorageId.externalId(userModel.getId()), userModel.getUsername(), userModel.getEmail()))
             );
         } catch (Exception e) {
             log.error("Error while sending new user to broker {}", e.getMessage());
             entityManager.getTransaction().begin();
             Query query = entityManager.createQuery("delete from UserEntityImpl u where u.id = :userId");
-            query.setParameter("userId", userModel.getId());
+            query.setParameter("userId", StorageId.externalId(userModel.getId()));
             query.executeUpdate();
             entityManager.getTransaction().commit();
             throw new RuntimeException("Error while sending new user to broker! User creation failed.");

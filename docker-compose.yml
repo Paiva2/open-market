@@ -29,7 +29,7 @@ services:
     environment:
       - POSTGRES_USER=development
       - POSTGRES_PASSWORD=development
-      - POSTGRES_DB=open-market-products-db
+      - POSTGRES_DB=open-market-items-db
     networks:
       - open-market-network
   keycloak:
