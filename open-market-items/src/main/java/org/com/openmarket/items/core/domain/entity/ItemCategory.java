@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,12 +19,18 @@ public class ItemCategory {
     private Date createdAt;
     private Date updatedAt;
 
+    public ItemCategory(KeyId id, Item item, Category category) {
+        this.id = id;
+        this.item = item;
+        this.category = category;
+    }
+
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
     @Data
     public static class KeyId {
-        private Long itemId;
+        private UUID itemId;
         private Long categoryId;
     }
 }
