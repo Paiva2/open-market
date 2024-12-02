@@ -22,6 +22,7 @@ import java.util.UUID;
 public class ItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "itm_id")
     private UUID id;
 
     @Column(name = "itm_name", unique = true, nullable = false)
