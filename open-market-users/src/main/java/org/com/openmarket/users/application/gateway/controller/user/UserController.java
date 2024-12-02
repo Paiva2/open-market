@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/find/{userId}")
-    public ResponseEntity<FindUserProfileOutput> findUser(@AuthenticationPrincipal Jwt jwt, @PathVariable("userId") Long userId) {
+    public ResponseEntity<FindUserProfileOutput> findUser(@PathVariable("userId") Long userId) {
         FindUserProfileOutput output = findUserUsecase.execute(userId);
         return new ResponseEntity<>(output, HttpStatus.OK);
     }

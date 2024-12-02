@@ -21,7 +21,7 @@ Unlike the original game market, this platform will allow users to list any type
 ## Features
 
 ### Core Features (Essential for basic market functionality)
-- [ ] User Account Management
+- [x] User Account Management
     - [x] Login
     - [x] Register
     - [x] Forgot Password

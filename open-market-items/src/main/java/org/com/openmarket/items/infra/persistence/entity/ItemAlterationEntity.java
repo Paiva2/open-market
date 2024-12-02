@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.com.openmarket.items.core.domain.enumeration.EnumItemAlteration;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
@@ -25,9 +27,11 @@ public class ItemAlterationEntity {
     @Enumerated(EnumType.STRING)
     private EnumItemAlteration action;
 
+    @CreationTimestamp
     @Column(name = "ial_created_at", nullable = false, updatable = false)
     private Date createdAt;
 
+    @UpdateTimestamp
     @Column(name = "ial_updated_at", nullable = false)
     private Date updatedAt;
 

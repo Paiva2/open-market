@@ -11,6 +11,10 @@ spring:
           uri: lb://OPEN-MARKET-USERS
           predicates:
             - Path=/api/user/**
+        - id: items_route
+          uri: lb://OPEN-MARKET-ITEMS
+          predicates:
+            - Path=/api/item/**
       default-filters:
         - TokenRelay=
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin

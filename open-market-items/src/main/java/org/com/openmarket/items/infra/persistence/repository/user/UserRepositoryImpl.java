@@ -23,6 +23,14 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByExternalId(Long id) {
+        Optional<UserEntity> user = repository.findByExternalId(id.toString());
+        if (user.isEmpty()) return Optional.empty();
+
+        return Optional.of(UserMapper.toDomain(user.get()));
+    }
+
+    @Override
     public User save(User user) {
         UserEntity userEntity = repository.save(UserMapper.toPersistence(user));
 
