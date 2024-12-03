@@ -8,6 +8,7 @@ import org.com.openmarket.items.infra.persistence.mapper.ItemMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Component
@@ -17,6 +18,13 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Optional<Item> findByName(String name) {
         Optional<ItemEntity> itemFound = repository.findByName(name);
+        if (itemFound.isEmpty()) return Optional.empty();
+        return Optional.of(ItemMapper.toDomain(itemFound.get()));
+    }
+
+    @Override
+    public Optional<Item> findById(UUID id) {
+        Optional<ItemEntity> itemFound = repository.findById(id);
         if (itemFound.isEmpty()) return Optional.empty();
         return Optional.of(ItemMapper.toDomain(itemFound.get()));
     }

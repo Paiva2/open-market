@@ -17,9 +17,10 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "tb_categories")
+@SequenceGenerator(name = "categories_seq", sequenceName = "tb_categories_cat_id_seq", allocationSize = 1)
 public class CategoryEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "categories_seq")
     @Column(name = "cat_id")
     private Long id;
 

@@ -7,21 +7,22 @@ import org.com.openmarket.items.application.gateway.controller.exception.Externa
 import org.com.openmarket.items.application.gateway.controller.item.dto.CreateItemDTO;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.CreateItemUsecase;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.dto.CreateItemOutput;
+import org.com.openmarket.items.core.domain.usecase.item.disableItem.DisableItemUsecase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/item")
 @AllArgsConstructor
+@RequestMapping("/item")
 public class ItemController {
     private final CreateItemUsecase createItemUsecase;
+    private final DisableItemUsecase disableItemUsecase;
 
     @PostMapping("/new")
     @PreAuthorize("hasAnyAuthority('ROLE_admin')")
@@ -30,6 +31,15 @@ public class ItemController {
         Long subjectId = getIdFromToken(jwt);
         CreateItemOutput output = createItemUsecase.execute(subjectId, dto.toInput());
         return new ResponseEntity<>(output, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{itemId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_admin')")
+    @Transactional
+    public ResponseEntity<Void> disableItem(@AuthenticationPrincipal Jwt jwt, @PathVariable("itemId") UUID itemId) {
+        Long subjectId = getIdFromToken(jwt);
+        disableItemUsecase.execute(subjectId, itemId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     private Long getIdFromToken(Jwt jwt) {

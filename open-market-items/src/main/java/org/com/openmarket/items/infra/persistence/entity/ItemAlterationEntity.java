@@ -17,10 +17,11 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "tb_items_alterations")
+@SequenceGenerator(name = "items_alterations_seq", sequenceName = "tb_items_alterations_ial_id_seq", allocationSize = 1)
 public class ItemAlterationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ial_id")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "items_alterations_seq")
     private Long id;
 
     @Column(name = "ial_action", nullable = false)
