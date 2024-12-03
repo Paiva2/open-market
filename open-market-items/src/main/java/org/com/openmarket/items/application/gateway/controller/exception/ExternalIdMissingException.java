@@ -1,6 +1,8 @@
 package org.com.openmarket.items.application.gateway.controller.exception;
 
-public class ExternalIdMissingException extends RuntimeException {
+import org.com.openmarket.items.core.domain.usecase.common.exception.core.BadRequestException;
+
+public class ExternalIdMissingException extends BadRequestException {
     private final static String MESSAGE = "External id not present!";
 
     public ExternalIdMissingException() {
