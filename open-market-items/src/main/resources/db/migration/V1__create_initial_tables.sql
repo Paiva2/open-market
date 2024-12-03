@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS tb_items
 (
     itm_id                 uuid PRIMARY KEY,
     itm_name               VARCHAR(250) UNIQUE NOT NULL,
-    itm_description        VARCHAR(300) UNIQUE NOT NULL,
-    itm_photo_url          VARCHAR(500) UNIQUE NOT NULL,
+    itm_description        VARCHAR(300)        NOT NULL,
+    itm_photo_url          VARCHAR(500)        NOT NULL,
     itm_unique             BOOLEAN             NOT NULL DEFAULT FALSE,
     itm_base_selling_price NUMERIC(12, 2)      NOT NULL DEFAULT 0,
     itm_active             BOOLEAN             NOT NULL DEFAULT TRUE,
