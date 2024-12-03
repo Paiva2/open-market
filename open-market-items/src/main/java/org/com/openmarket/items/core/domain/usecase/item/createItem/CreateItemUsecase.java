@@ -1,15 +1,22 @@
 package org.com.openmarket.items.core.domain.usecase.item.createItem;
 
 import lombok.AllArgsConstructor;
-import org.com.openmarket.items.core.domain.entity.*;
+import org.com.openmarket.items.core.domain.entity.Category;
+import org.com.openmarket.items.core.domain.entity.Item;
+import org.com.openmarket.items.core.domain.entity.ItemCategory;
+import org.com.openmarket.items.core.domain.entity.User;
 import org.com.openmarket.items.core.domain.enumeration.EnumItemAlteration;
-import org.com.openmarket.items.core.domain.repository.*;
+import org.com.openmarket.items.core.domain.repository.CategoryRepository;
+import org.com.openmarket.items.core.domain.repository.ItemCategoryRepository;
+import org.com.openmarket.items.core.domain.repository.ItemRepository;
+import org.com.openmarket.items.core.domain.repository.UserRepository;
 import org.com.openmarket.items.core.domain.usecase.common.exception.CategoryNotFoundException;
 import org.com.openmarket.items.core.domain.usecase.common.exception.InvalidFieldException;
 import org.com.openmarket.items.core.domain.usecase.common.exception.UserNotFoundException;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.dto.CreateItemInput;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.dto.CreateItemOutput;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.exception.ItemAlreadyExistsException;
+import org.com.openmarket.items.core.domain.usecase.itemAlteration.registerItemAlteration.RegisterItemAlterationUsecase;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,7 +31,7 @@ public class CreateItemUsecase {
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
     private final ItemCategoryRepository itemCategoryRepository;
-    private final ItemAlterationRepository itemAlterationRepository;
+    private final RegisterItemAlterationUsecase registerItemAlterationUsecase;
 
     public CreateItemOutput execute(Long userId, CreateItemInput input) {
         validateRequiredFields(input);
@@ -42,8 +49,7 @@ public class CreateItemUsecase {
 
         item.setItemCategories(itemCategories);
 
-        ItemAlteration itemAlteration = fillNewItemAlreation(user, item);
-        persistItemAlteration(itemAlteration);
+        persistItemAlteration(user, item);
 
         return mountOutput(item);
     }
@@ -133,16 +139,8 @@ public class CreateItemUsecase {
         return itemCategoryRepository.saveAll(itemCategories);
     }
 
-    private ItemAlteration fillNewItemAlreation(User user, Item item) {
-        return ItemAlteration.builder()
-            .action(EnumItemAlteration.CREATION)
-            .user(user)
-            .item(item)
-            .build();
-    }
-
-    private void persistItemAlteration(ItemAlteration itemAlteration) {
-        itemAlterationRepository.save(itemAlteration);
+    private void persistItemAlteration(User user, Item item) {
+        registerItemAlterationUsecase.execute(user, item, EnumItemAlteration.CREATION);
     }
 
     private CreateItemOutput mountOutput(Item item) {
