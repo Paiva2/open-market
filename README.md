@@ -31,11 +31,14 @@ Unlike the original game market, this platform will allow users to list any type
 
 
 - [ ] Basic Item Operations
+    - [x] Create items
+    - [x] Disable items
+    - [x] Basic item informations
+    - [x] Set basic price
+    - [x] Update Item
     - [ ] List items for sale
-    - [ ] Set basic price
     - [ ] Upload item images
     - [ ] Remove listings
-    - [ ] Basic item description
 
 
 - [ ] Essential Search & Filters

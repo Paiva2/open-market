@@ -34,17 +34,6 @@ public class ItemMapper {
         ItemEntity itemEntity = new ItemEntity();
         copyProperties(entity, itemEntity);
 
-        if (entity.getItemCategories() != null) {
-            List<ItemCategoryEntity> itemCategories = new ArrayList<>();
-
-            for (ItemCategory itemCategory : entity.getItemCategories()) {
-                ItemCategoryEntity itemCategoryEntity = ItemCategoryMapper.toPersistence(itemCategory);
-                itemCategories.add(itemCategoryEntity);
-            }
-
-            itemEntity.setItemCategories(itemCategories);
-        }
-
         return itemEntity;
     }
 
