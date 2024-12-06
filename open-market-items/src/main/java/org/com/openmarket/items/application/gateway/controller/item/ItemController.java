@@ -21,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @RestController
@@ -60,13 +61,27 @@ public class ItemController {
     }
 
     @GetMapping(value = "/list")
-    public ResponseEntity<ListItemsOutput> listItems(@AuthenticationPrincipal Jwt jwt, @RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "15") Integer size, @RequestParam(name = "name", required = false) String name, @RequestParam(name = "category", required = false) Long category, @RequestParam(name = "active", required = false) Boolean active, @RequestParam(name = "direction", required = false, defaultValue = "asc") String direction) {
+    public ResponseEntity<ListItemsOutput> listItems(
+        @AuthenticationPrincipal Jwt jwt,
+        @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+        @RequestParam(name = "size", required = false, defaultValue = "15") Integer size,
+        @RequestParam(name = "name", required = false) String name,
+        @RequestParam(name = "category", required = false) Long category,
+        @RequestParam(name = "active", required = false) Boolean active,
+        @RequestParam(value = "unique", required = false) Boolean unique,
+        @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
+        @RequestParam(value = "minPrice", required = false) BigDecimal minPrice,
+        @RequestParam(name = "direction", required = false, defaultValue = "asc") String direction
+    ) {
         getIdFromToken(jwt);
         ListItemsOutput output = listItemsUsecase.execute(ListItemsInput.builder()
             .page(page)
             .size(size)
             .category(category)
             .active(active)
+            .unique(unique)
+            .maxPrice(maxPrice)
+            .minPrice(minPrice)
             .name(name)
             .direction(direction)
             .build()

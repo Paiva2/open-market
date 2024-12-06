@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,7 +43,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Page<Item> findAllItems(int page, int size, String name, Long category, Boolean active, String direction) {
+    public Page<Item> findAllItems(int page, int size, String name, Long category, Boolean active, Boolean unique, BigDecimal maxPrice, BigDecimal minPrice, String direction) {
         Sort.Direction sortDirection;
 
         try {
@@ -52,7 +53,7 @@ public class ItemRepositoryImpl implements ItemRepository {
         }
 
         Pageable pageable = PageRequest.of(page - 1, size, sortDirection, "itm_name");
-        Page<ItemEntity> itemsEntities = repository.findAllItems(name, category, active, pageable);
+        Page<ItemEntity> itemsEntities = repository.findAllItems(name, category, active, unique, maxPrice, minPrice, pageable);
 
         return itemsEntities.map(ItemMapper::toDomain);
     }

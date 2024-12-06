@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-//todo: add price min and max filter and unique filter
 public class ListItemsUsecase {
     private final ItemRepository itemRepository;
 
@@ -31,7 +30,7 @@ public class ListItemsUsecase {
     }
 
     private Page<Item> findItems(ListItemsInput input) {
-        return itemRepository.findAllItems(input.getPage(), input.getSize(), input.getName(), input.getCategory(), input.getActive(), input.getDirection());
+        return itemRepository.findAllItems(input.getPage(), input.getSize(), input.getName(), input.getCategory(), input.getActive(), input.getUnique(), input.getMaxPrice(), input.getMinPrice(), input.getDirection());
     }
 
     private ListItemsOutput mountOutput(Page<Item> items, ListItemsInput input) {
