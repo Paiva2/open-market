@@ -9,6 +9,9 @@ import org.com.openmarket.items.application.gateway.controller.item.dto.UpdateIt
 import org.com.openmarket.items.core.domain.usecase.item.createItem.CreateItemUsecase;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.dto.CreateItemOutput;
 import org.com.openmarket.items.core.domain.usecase.item.disableItem.DisableItemUsecase;
+import org.com.openmarket.items.core.domain.usecase.item.listItems.ListItemsUsecase;
+import org.com.openmarket.items.core.domain.usecase.item.listItems.dto.ListItemsInput;
+import org.com.openmarket.items.core.domain.usecase.item.listItems.dto.ListItemsOutput;
 import org.com.openmarket.items.core.domain.usecase.item.updateItem.UpdateItemUsecase;
 import org.com.openmarket.items.core.domain.usecase.item.updateItem.dto.UpdateItemOutput;
 import org.springframework.http.HttpStatus;
@@ -27,6 +30,7 @@ public class ItemController {
     private final CreateItemUsecase createItemUsecase;
     private final DisableItemUsecase disableItemUsecase;
     private final UpdateItemUsecase updateItemUsecase;
+    private final ListItemsUsecase listItemsUsecase;
 
     @PostMapping("/new")
     @PreAuthorize("hasAnyAuthority('ROLE_admin')")
@@ -52,6 +56,21 @@ public class ItemController {
     public ResponseEntity<UpdateItemOutput> updateItem(@AuthenticationPrincipal Jwt jwt, @PathVariable("itemId") UUID itemId, @RequestBody @Valid UpdateItemDTO dto) {
         Long subjectId = getIdFromToken(jwt);
         UpdateItemOutput output = updateItemUsecase.execute(subjectId, dto.toInput(itemId));
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/list")
+    public ResponseEntity<ListItemsOutput> listItems(@AuthenticationPrincipal Jwt jwt, @RequestParam(name = "page", required = false, defaultValue = "1") Integer page, @RequestParam(name = "size", required = false, defaultValue = "15") Integer size, @RequestParam(name = "name", required = false) String name, @RequestParam(name = "category", required = false) Long category, @RequestParam(name = "active", required = false) Boolean active, @RequestParam(name = "direction", required = false, defaultValue = "asc") String direction) {
+        getIdFromToken(jwt);
+        ListItemsOutput output = listItemsUsecase.execute(ListItemsInput.builder()
+            .page(page)
+            .size(size)
+            .category(category)
+            .active(active)
+            .name(name)
+            .direction(direction)
+            .build()
+        );
         return new ResponseEntity<>(output, HttpStatus.OK);
     }
 
