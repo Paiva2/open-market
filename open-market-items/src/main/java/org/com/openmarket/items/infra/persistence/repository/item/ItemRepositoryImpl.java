@@ -2,7 +2,7 @@ package org.com.openmarket.items.infra.persistence.repository.item;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.items.core.domain.entity.Item;
-import org.com.openmarket.items.core.domain.repository.ItemRepository;
+import org.com.openmarket.items.core.domain.interfaces.repository.ItemRepository;
 import org.com.openmarket.items.core.domain.usecase.common.exception.InvalidFieldException;
 import org.com.openmarket.items.infra.persistence.entity.ItemEntity;
 import org.com.openmarket.items.infra.persistence.mapper.ItemMapper;

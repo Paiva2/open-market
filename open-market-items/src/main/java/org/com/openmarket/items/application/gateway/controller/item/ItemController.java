@@ -19,14 +19,18 @@ import org.com.openmarket.items.core.domain.usecase.item.listItems.dto.ListItems
 import org.com.openmarket.items.core.domain.usecase.item.listItems.dto.ListItemsOutput;
 import org.com.openmarket.items.core.domain.usecase.item.updateItem.UpdateItemUsecase;
 import org.com.openmarket.items.core.domain.usecase.item.updateItem.dto.UpdateItemOutput;
+import org.com.openmarket.items.core.domain.usecase.item.uploadImage.UploadImageUsecase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -39,6 +43,7 @@ public class ItemController {
     private final ListCategoriesUsecase listCategoriesUsecase;
     private final CreateCategoryUsecase createCategoryUsecase;
     private final DeleteCategoryUsecase deleteCategoryUsecase;
+    private final UploadImageUsecase uploadImageUsecase;
 
     @PostMapping("/new")
     @PreAuthorize("hasAnyAuthority('ROLE_admin')")
@@ -118,6 +123,14 @@ public class ItemController {
         Long subjectId = getIdFromToken(jwt);
         deleteCategoryUsecase.execute(subjectId, categoryId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/image/upload")
+    public ResponseEntity<Map<String, String>> uploadImage(
+        @RequestParam("image") MultipartFile file
+    ) {
+        String url = uploadImageUsecase.execute(file);
+        return new ResponseEntity<>(Collections.singletonMap("url", url), HttpStatus.CREATED);
     }
 
     private Long getIdFromToken(Jwt jwt) {

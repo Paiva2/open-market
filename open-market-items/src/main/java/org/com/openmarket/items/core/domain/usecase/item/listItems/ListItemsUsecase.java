@@ -2,7 +2,7 @@ package org.com.openmarket.items.core.domain.usecase.item.listItems;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.items.core.domain.entity.Item;
-import org.com.openmarket.items.core.domain.repository.ItemRepository;
+import org.com.openmarket.items.core.domain.interfaces.repository.ItemRepository;
 import org.com.openmarket.items.core.domain.usecase.item.listItems.dto.ListItemsInput;
 import org.com.openmarket.items.core.domain.usecase.item.listItems.dto.ListItemsOutput;
 import org.springframework.data.domain.Page;

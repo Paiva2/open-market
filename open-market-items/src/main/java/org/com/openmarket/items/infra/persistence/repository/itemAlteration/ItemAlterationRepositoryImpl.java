@@ -2,7 +2,7 @@ package org.com.openmarket.items.infra.persistence.repository.itemAlteration;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.items.core.domain.entity.ItemAlteration;
-import org.com.openmarket.items.core.domain.repository.ItemAlterationRepository;
+import org.com.openmarket.items.core.domain.interfaces.repository.ItemAlterationRepository;
 import org.com.openmarket.items.infra.persistence.entity.ItemAlterationEntity;
 import org.com.openmarket.items.infra.persistence.mapper.ItemAlterationMapper;
 import org.springframework.stereotype.Component;

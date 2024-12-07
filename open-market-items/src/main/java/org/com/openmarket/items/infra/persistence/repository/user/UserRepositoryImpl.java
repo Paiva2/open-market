@@ -2,7 +2,7 @@ package org.com.openmarket.items.infra.persistence.repository.user;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.items.core.domain.entity.User;
-import org.com.openmarket.items.core.domain.repository.UserRepository;
+import org.com.openmarket.items.core.domain.interfaces.repository.UserRepository;
 import org.com.openmarket.items.infra.persistence.entity.UserEntity;
 import org.com.openmarket.items.infra.persistence.mapper.UserMapper;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package org.com.openmarket.items.core.domain.repository;
+package org.com.openmarket.items.core.domain.interfaces.repository;
 
 import org.com.openmarket.items.core.domain.entity.Item;
 import org.springframework.data.domain.Page;

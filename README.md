@@ -41,11 +41,11 @@ Unlike the original game market, this platform will allow users to list any type
     - [ ] Remove listings
 
 
-- [ ] Essential Search & Filters
-    - [ ] Search by name
-    - [ ] Basic category filters
-    - [ ] Price range filters
-    - [ ] Simple sort options
+- [x] Essential Search & Filters
+    - [x] Search by name
+    - [x] Basic category filters
+    - [x] Price range filters
+    - [x] Simple sort options
 
 
 - [ ] Basic Trading

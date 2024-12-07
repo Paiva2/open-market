@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: open-market-items
+  http:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 20MB
   security:
     oauth2:
       resourceserver:
@@ -36,3 +40,11 @@ eureka:
       defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
   instance:
     hostname: localhost
+
+java:
+  io:
+    tmpdir: ${TEMP_DIR_PATH}
+
+aws:
+  access-key-id: ${AWS_ACCESS_KEY_ID}
+  aws-secret-key: ${AWS_SECRET_KEY}

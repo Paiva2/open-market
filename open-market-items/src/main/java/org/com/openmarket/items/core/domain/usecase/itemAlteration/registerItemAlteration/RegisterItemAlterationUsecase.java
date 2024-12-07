@@ -5,7 +5,7 @@ import org.com.openmarket.items.core.domain.entity.Item;
 import org.com.openmarket.items.core.domain.entity.ItemAlteration;
 import org.com.openmarket.items.core.domain.entity.User;
 import org.com.openmarket.items.core.domain.enumeration.EnumItemAlteration;
-import org.com.openmarket.items.core.domain.repository.ItemAlterationRepository;
+import org.com.openmarket.items.core.domain.interfaces.repository.ItemAlterationRepository;
 import org.springframework.stereotype.Service;
 
 @Service

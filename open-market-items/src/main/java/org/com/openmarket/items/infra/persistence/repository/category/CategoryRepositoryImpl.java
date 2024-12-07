@@ -2,7 +2,7 @@ package org.com.openmarket.items.infra.persistence.repository.category;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.items.core.domain.entity.Category;
-import org.com.openmarket.items.core.domain.repository.CategoryRepository;
+import org.com.openmarket.items.core.domain.interfaces.repository.CategoryRepository;
 import org.com.openmarket.items.infra.persistence.entity.CategoryEntity;
 import org.com.openmarket.items.infra.persistence.mapper.CategoryMapper;
 import org.springframework.data.domain.Page;

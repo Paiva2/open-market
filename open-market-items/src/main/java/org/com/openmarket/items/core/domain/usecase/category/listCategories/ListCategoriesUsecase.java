@@ -2,7 +2,7 @@ package org.com.openmarket.items.core.domain.usecase.category.listCategories;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.items.core.domain.entity.Category;
-import org.com.openmarket.items.core.domain.repository.CategoryRepository;
+import org.com.openmarket.items.core.domain.interfaces.repository.CategoryRepository;
 import org.com.openmarket.items.core.domain.usecase.category.listCategories.dto.ListCategoriesOutput;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

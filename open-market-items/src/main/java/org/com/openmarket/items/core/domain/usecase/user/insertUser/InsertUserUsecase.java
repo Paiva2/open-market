@@ -2,7 +2,7 @@ package org.com.openmarket.items.core.domain.usecase.user.insertUser;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.items.core.domain.entity.User;
-import org.com.openmarket.items.core.domain.repository.UserRepository;
+import org.com.openmarket.items.core.domain.interfaces.repository.UserRepository;
 import org.com.openmarket.items.core.domain.usecase.common.exception.InvalidFieldException;
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.dto.InsertUserInput;
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.exception.UserAlreadyExistsException;
