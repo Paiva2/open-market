@@ -13,5 +13,9 @@ public interface CategoryRepository {
 
     Optional<Category> findByName(String name);
 
+    Optional<Category> findById(Long id);
+
     Category save(Category category);
+
+    void delete(Long id);
 }

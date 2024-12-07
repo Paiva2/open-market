@@ -111,7 +111,7 @@ public class UpdateItemUsecase {
         List<Long> categoriesNotFound = categoriesIds.stream().filter(id -> !categoriesFoundIds.contains(id)).toList();
 
         if (!categoriesNotFound.isEmpty()) {
-            throw new CategoryNotFoundException(MessageFormat.format("Categories with id {0} not found!", categoriesIds));
+            throw new CategoryNotFoundException(MessageFormat.format("Categories with id {0} not found!", categoriesNotFound));
         }
 
         return categoriesFound;

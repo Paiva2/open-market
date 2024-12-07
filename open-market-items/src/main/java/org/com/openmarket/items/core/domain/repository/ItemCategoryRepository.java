@@ -13,4 +13,6 @@ public interface ItemCategoryRepository {
     List<ItemCategory> findAllByItem(UUID itemId);
 
     void removeAllByItem(UUID itemId);
+
+    void removeAllByCategory(Long categoryId);
 }

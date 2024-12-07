@@ -39,8 +39,20 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
+    public Optional<Category> findById(Long id) {
+        Optional<CategoryEntity> categoryEntity = repository.findById(id);
+        if (categoryEntity.isEmpty()) return Optional.empty();
+        return Optional.of(CategoryMapper.toDomain(categoryEntity.get()));
+    }
+
+    @Override
     public Category save(Category category) {
         CategoryEntity categoryEntity = repository.save(CategoryMapper.toPersistence(category));
         return CategoryMapper.toDomain(categoryEntity);
+    }
+
+    @Override
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 }

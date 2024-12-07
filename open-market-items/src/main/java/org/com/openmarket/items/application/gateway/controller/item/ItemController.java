@@ -9,6 +9,7 @@ import org.com.openmarket.items.application.gateway.controller.item.dto.CreateIt
 import org.com.openmarket.items.application.gateway.controller.item.dto.UpdateItemDTO;
 import org.com.openmarket.items.core.domain.usecase.category.createCategory.CreateCategoryUsecase;
 import org.com.openmarket.items.core.domain.usecase.category.createCategory.dto.CreateCategoryOutput;
+import org.com.openmarket.items.core.domain.usecase.category.deleteCategory.DeleteCategoryUsecase;
 import org.com.openmarket.items.core.domain.usecase.category.listCategories.ListCategoriesUsecase;
 import org.com.openmarket.items.core.domain.usecase.category.listCategories.dto.ListCategoriesOutput;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.CreateItemUsecase;
@@ -37,6 +38,7 @@ public class ItemController {
     private final ListItemsUsecase listItemsUsecase;
     private final ListCategoriesUsecase listCategoriesUsecase;
     private final CreateCategoryUsecase createCategoryUsecase;
+    private final DeleteCategoryUsecase deleteCategoryUsecase;
 
     @PostMapping("/new")
     @PreAuthorize("hasAnyAuthority('ROLE_admin')")
@@ -104,6 +106,18 @@ public class ItemController {
         Long subjectId = getIdFromToken(jwt);
         CreateCategoryOutput output = createCategoryUsecase.execute(subjectId, dto.getName());
         return new ResponseEntity<>(output, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/category/{categoryId}")
+    @PreAuthorize("hasAnyAuthority('ROLE_admin')")
+    @Transactional
+    public ResponseEntity<CreateCategoryOutput> deleteCategory(
+        @AuthenticationPrincipal Jwt jwt,
+        @PathVariable("categoryId") Long categoryId
+    ) {
+        Long subjectId = getIdFromToken(jwt);
+        deleteCategoryUsecase.execute(subjectId, categoryId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     private Long getIdFromToken(Jwt jwt) {

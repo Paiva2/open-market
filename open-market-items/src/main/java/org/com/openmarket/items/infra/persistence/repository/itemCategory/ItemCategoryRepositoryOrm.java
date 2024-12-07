@@ -10,4 +10,6 @@ public interface ItemCategoryRepositoryOrm extends JpaRepository<ItemCategoryEnt
     List<ItemCategoryEntity> findAllByItemId(UUID itemId);
 
     void deleteAllByItemId(UUID itemId);
+
+    void deleteAllByCategoryId(Long categoryId);
 }
