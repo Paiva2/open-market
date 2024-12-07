@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface CategoryRepositoryOrm extends JpaRepository<CategoryEntity, Long> {
     @Query(value = """
         select * from tb_categories cat
@@ -14,4 +16,6 @@ public interface CategoryRepositoryOrm extends JpaRepository<CategoryEntity, Lon
         order by cat.cat_name asc
         """, nativeQuery = true)
     Page<CategoryEntity> findAll(@Param("name") String name, Pageable pageable);
+
+    Optional<CategoryEntity> findByName(String name);
 }

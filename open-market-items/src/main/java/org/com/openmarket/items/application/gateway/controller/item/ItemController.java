@@ -4,8 +4,11 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.items.application.gateway.controller.exception.ExternalIdMissingException;
+import org.com.openmarket.items.application.gateway.controller.item.dto.CreateCategoryDTO;
 import org.com.openmarket.items.application.gateway.controller.item.dto.CreateItemDTO;
 import org.com.openmarket.items.application.gateway.controller.item.dto.UpdateItemDTO;
+import org.com.openmarket.items.core.domain.usecase.category.createCategory.CreateCategoryUsecase;
+import org.com.openmarket.items.core.domain.usecase.category.createCategory.dto.CreateCategoryOutput;
 import org.com.openmarket.items.core.domain.usecase.category.listCategories.ListCategoriesUsecase;
 import org.com.openmarket.items.core.domain.usecase.category.listCategories.dto.ListCategoriesOutput;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.CreateItemUsecase;
@@ -33,6 +36,7 @@ public class ItemController {
     private final UpdateItemUsecase updateItemUsecase;
     private final ListItemsUsecase listItemsUsecase;
     private final ListCategoriesUsecase listCategoriesUsecase;
+    private final CreateCategoryUsecase createCategoryUsecase;
 
     @PostMapping("/new")
     @PreAuthorize("hasAnyAuthority('ROLE_admin')")
@@ -89,6 +93,17 @@ public class ItemController {
     ) {
         ListCategoriesOutput output = listCategoriesUsecase.execute(page, size, name);
         return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @PostMapping("/category")
+    @PreAuthorize("hasAnyAuthority('ROLE_admin')")
+    public ResponseEntity<CreateCategoryOutput> createCategory(
+        @AuthenticationPrincipal Jwt jwt,
+        @RequestBody @Valid CreateCategoryDTO dto
+    ) {
+        Long subjectId = getIdFromToken(jwt);
+        CreateCategoryOutput output = createCategoryUsecase.execute(subjectId, dto.getName());
+        return new ResponseEntity<>(output, HttpStatus.CREATED);
     }
 
     private Long getIdFromToken(Jwt jwt) {

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Component
@@ -28,5 +29,18 @@ public class CategoryRepositoryImpl implements CategoryRepository {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<CategoryEntity> categoriesPage = repository.findAll(name, pageable);
         return categoriesPage.map(CategoryMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Category> findByName(String name) {
+        Optional<CategoryEntity> categoryEntity = repository.findByName(name);
+        if (categoryEntity.isEmpty()) return Optional.empty();
+        return Optional.of(CategoryMapper.toDomain(categoryEntity.get()));
+    }
+
+    @Override
+    public Category save(Category category) {
+        CategoryEntity categoryEntity = repository.save(CategoryMapper.toPersistence(category));
+        return CategoryMapper.toDomain(categoryEntity);
     }
 }
