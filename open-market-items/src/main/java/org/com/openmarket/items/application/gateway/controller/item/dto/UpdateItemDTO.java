@@ -31,6 +31,9 @@ public class UpdateItemDTO {
     private String photoUrl;
 
     @NotNull
+    private Boolean active;
+
+    @NotNull
     private Boolean unique;
 
     @NotNull
@@ -47,6 +50,7 @@ public class UpdateItemDTO {
             .description(this.description)
             .photoUrl(this.photoUrl)
             .unique(this.unique)
+            .active(this.active)
             .baseSellingPrice(this.baseSellingPrice)
             .categoriesIds(this.categoriesIds)
             .build();

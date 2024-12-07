@@ -10,7 +10,6 @@ import org.com.openmarket.items.core.domain.usecase.category.listCategories.List
 import org.com.openmarket.items.core.domain.usecase.category.listCategories.dto.ListCategoriesOutput;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.CreateItemUsecase;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.dto.CreateItemOutput;
-import org.com.openmarket.items.core.domain.usecase.item.disableItem.DisableItemUsecase;
 import org.com.openmarket.items.core.domain.usecase.item.listItems.ListItemsUsecase;
 import org.com.openmarket.items.core.domain.usecase.item.listItems.dto.ListItemsInput;
 import org.com.openmarket.items.core.domain.usecase.item.listItems.dto.ListItemsOutput;
@@ -31,7 +30,6 @@ import java.util.UUID;
 @RequestMapping("/item")
 public class ItemController {
     private final CreateItemUsecase createItemUsecase;
-    private final DisableItemUsecase disableItemUsecase;
     private final UpdateItemUsecase updateItemUsecase;
     private final ListItemsUsecase listItemsUsecase;
     private final ListCategoriesUsecase listCategoriesUsecase;
@@ -43,15 +41,6 @@ public class ItemController {
         Long subjectId = getIdFromToken(jwt);
         CreateItemOutput output = createItemUsecase.execute(subjectId, dto.toInput());
         return new ResponseEntity<>(output, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/{itemId}")
-    @PreAuthorize("hasAnyAuthority('ROLE_admin')")
-    @Transactional
-    public ResponseEntity<Void> disableItem(@AuthenticationPrincipal Jwt jwt, @PathVariable("itemId") UUID itemId) {
-        Long subjectId = getIdFromToken(jwt);
-        disableItemUsecase.execute(subjectId, itemId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/{itemId}/update")

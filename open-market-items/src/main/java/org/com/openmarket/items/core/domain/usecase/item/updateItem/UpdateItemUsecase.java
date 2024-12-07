@@ -139,6 +139,7 @@ public class UpdateItemUsecase {
         item.setPhotoUrl(input.getPhotoUrl() != null ? input.getPhotoUrl() : item.getPhotoUrl());
         item.setUnique(input.getUnique() != null ? input.getUnique() : item.getUnique());
         item.setBaseSellingPrice(input.getBaseSellingPrice() != null ? input.getBaseSellingPrice() : item.getBaseSellingPrice());
+        item.setActive(input.getActive() != null ? input.getActive() : item.getActive());
     }
 
     private Item persistItemUpdated(Item item) {

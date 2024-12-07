@@ -21,6 +21,7 @@ public class UpdateItemOutput {
     private String description;
     private String photoUrl;
     private Boolean unique;
+    private Boolean active;
     private BigDecimal baseSellingPrice;
     private List<CategoryOutput> categories;
 
@@ -32,6 +33,7 @@ public class UpdateItemOutput {
             .photoUrl(item.getPhotoUrl())
             .unique(item.getUnique())
             .baseSellingPrice(item.getBaseSellingPrice())
+            .active(item.getActive())
             .categories(item.getItemCategories().stream().map(CategoryOutput::new).toList())
             .build();
     }

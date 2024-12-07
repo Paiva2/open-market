@@ -18,6 +18,7 @@ public class UpdateItemInput {
     private String name;
     private String description;
     private String photoUrl;
+    private Boolean active;
     private Boolean unique;
     private BigDecimal baseSellingPrice;
     private List<Long> categoriesIds;
