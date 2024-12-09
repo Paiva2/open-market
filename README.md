@@ -37,7 +37,7 @@ Unlike the original game market, this platform will allow users to list any type
     - [x] Set basic price
     - [x] Update Item
     - [ ] List items for sale
-    - [ ] Upload item images
+    - [x] Upload item images
     - [ ] Remove listings
 
 
