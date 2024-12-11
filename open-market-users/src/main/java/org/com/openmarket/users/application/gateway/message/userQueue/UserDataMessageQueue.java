@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import static org.com.openmarket.users.application.config.constants.QueueConstants.User.USER_DATA_QUEUE;
 import static org.com.openmarket.users.application.config.constants.QueueConstants.UserItem.USER_DATA_ITEM_ROUTING_KEY;
 import static org.com.openmarket.users.application.config.constants.QueueConstants.UserItem.USER_DATA_ITEM_TOPIC_EXCHANGE;
+import static org.com.openmarket.users.application.config.constants.QueueConstants.UserWallet.USER_DATA_WALLET_ROUTING_KEY;
+import static org.com.openmarket.users.application.config.constants.QueueConstants.UserWallet.USER_DATA_WALLET_TOPIC_EXCHANGE;
 
 //todo: make DLQ
 @Slf4j
@@ -28,7 +30,9 @@ public class UserDataMessageQueue {
         try {
             log.info("New message received on queue {}", USER_DATA_QUEUE);
             String bodyConverted = convertBodyAsString(messagePayload);
+            registerMessageOnConfigDb();
             sendToItemServiceQueue(bodyConverted);
+            sendToWalletServiceQueue(bodyConverted);
         } catch (Exception e) {
             String message = "Error while receiving a new message";
             log.error(message, e);
@@ -36,9 +40,18 @@ public class UserDataMessageQueue {
         }
     }
 
+    private void registerMessageOnConfigDb() {
+
+    }
+
     private void sendToItemServiceQueue(String message) throws JsonProcessingException {
         UserCreatedMessageDTO messageConverted = mapper.readValue(message, UserCreatedMessageDTO.class);
         rabbitTemplate.convertAndSend(USER_DATA_ITEM_TOPIC_EXCHANGE, USER_DATA_ITEM_ROUTING_KEY, mapper.writeValueAsString(messageConverted));
+    }
+
+    private void sendToWalletServiceQueue(String message) throws JsonProcessingException {
+        UserCreatedMessageDTO messageConverted = mapper.readValue(message, UserCreatedMessageDTO.class);
+        rabbitTemplate.convertAndSend(USER_DATA_WALLET_TOPIC_EXCHANGE, USER_DATA_WALLET_ROUTING_KEY, mapper.writeValueAsString(messageConverted));
     }
 
     private String convertBodyAsString(Message messagePayload) {

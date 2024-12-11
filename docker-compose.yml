@@ -10,6 +10,17 @@ services:
       - POSTGRES_PASSWORD=password
     networks:
       - open-market-network
+  db-messages-open-market:
+    container_name: "open-market-messages-db"
+    image: mongo:4.0.0
+    environment:
+      MONGO_INITDB_DATABASE: open-market-messages-db
+      MONGO_INITDB_ROOT_USERNAME: development
+      MONGO_INITDB_ROOT_PASSWORD: development
+    ports:
+      - "27017:27017"
+    networks:
+      - open-market-network
   db-users-open-market:
     container_name: "open-market-users-db"
     image: 'bitnami/postgresql:16'

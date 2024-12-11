@@ -56,6 +56,11 @@
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.github.mongobee</groupId>
+			<artifactId>mongobee</artifactId>
+			<version>0.13</version>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
