@@ -1,4 +1,4 @@
-package org.com.openmarket.users.infra.persistence.repository;
+package org.com.openmarket.users.infra.persistence.repository.user;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.users.core.domain.entity.User;
