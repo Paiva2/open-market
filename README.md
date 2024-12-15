@@ -9,8 +9,6 @@ In this market, users can interact with items and perform various actions, such 
 - Applying filters
 - And other features
 
-Unlike the original game market, this platform will allow users to list any type of item they want to sell.
-
 ## Technologies
 - Java 17
 - Spring Boot
