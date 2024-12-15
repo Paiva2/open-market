@@ -2,9 +2,11 @@ package org.com.openmarket.wallet.core.domain.usecase.user.registerUser;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.wallet.core.domain.entity.User;
+import org.com.openmarket.wallet.core.domain.entity.Wallet;
 import org.com.openmarket.wallet.core.domain.usecase.user.registerUser.dto.RegisterUserInput;
 import org.com.openmarket.wallet.core.domain.usecase.user.registerUser.exception.UserAlreadyExistsException;
 import org.com.openmarket.wallet.core.interfaces.UserRepository;
+import org.com.openmarket.wallet.core.interfaces.WalletRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,12 +15,16 @@ import java.util.Optional;
 @AllArgsConstructor
 public class RegisterUserUsecase {
     private final UserRepository userRepository;
+    private final WalletRepository walletRepository;
 
     public void execute(RegisterUserInput input) {
         checkUserAlreadyExists(input.getEmail());
 
         User user = fillUser(input);
-        saveUser(user);
+        user = saveUser(user);
+
+        Wallet wallet = fillWallet(user);
+        saveWallet(wallet);
     }
 
     private void checkUserAlreadyExists(String email) {
@@ -37,7 +43,17 @@ public class RegisterUserUsecase {
             .build();
     }
 
-    private void saveUser(User user) {
-        userRepository.save(user);
+    private User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    private Wallet fillWallet(User user) {
+        return Wallet.builder()
+            .user(user)
+            .build();
+    }
+
+    private void saveWallet(Wallet wallet) {
+        walletRepository.save(wallet);
     }
 }

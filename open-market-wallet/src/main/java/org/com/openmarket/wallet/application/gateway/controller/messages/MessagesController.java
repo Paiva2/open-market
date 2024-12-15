@@ -1,6 +1,7 @@
 package org.com.openmarket.wallet.application.gateway.controller.messages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.com.openmarket.wallet.application.gateway.controller.messages.dto.UserMessageDTO;
@@ -23,6 +24,7 @@ public class MessagesController {
 
     private final RegisterUserUsecase registerUserUsecase;
 
+    @Transactional
     @RabbitListener(queues = USER_DATA_WALLET_QUEUE)
     public void execute(@Payload Message message) {
         log.info("Received a new message: {}", message);

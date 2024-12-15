@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -16,30 +15,22 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tb_users")
-public class UserEntity {
+@Table(name = "tb_wallets")
+public class WalletEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "usr_id")
+    @Column(name = "wlt_id")
     private UUID id;
 
-    @Column(name = "usr_external_id")
-    private String externalId;
-
-    @Column(name = "usr_username")
-    private String username;
-
-    @Column(name = "usr_email")
-    private String email;
-
     @CreationTimestamp
-    @Column(name = "usr_created_at")
-    private Date createdAt;
+    @Column(name = "wlt_created_at")
+    private String createdAt;
 
     @UpdateTimestamp
-    @Column(name = "usr_updated_at")
-    private Date updatedAt;
+    @Column(name = "wlt_updated_at")
+    private String updatedAt;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
-    private WalletEntity wallet;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "wlt_user_id")
+    private UserEntity user;
 }
