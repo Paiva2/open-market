@@ -1,4 +1,4 @@
-package org.com.openmarket.users.infra.persistence.entity;
+package org.com.openmarket.items.infra.persistence.entity;
 
 import jakarta.persistence.Id;
 import lombok.Data;
@@ -18,7 +18,7 @@ public class UserDataMessageEntity {
 
     private String data;
 
-    private List<String> queuesAlreadyReceived;
-
     private String createdAt;
+
+    private List<String> queuesAlreadyReceived;
 }

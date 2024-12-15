@@ -5,9 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.com.openmarket.items.core.domain.enumeration.EnumUserEvents;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDataMessageInput {
     private EnumUserEvents event;
     private String extId;

@@ -7,25 +7,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.com.openmarket.users.application.gateway.message.userQueue.dto.UserCreatedMessageDTO;
 import org.com.openmarket.users.core.domain.repository.UserDataMessageRepository;
 import org.com.openmarket.users.infra.persistence.entity.UserDataMessageEntity;
-import org.com.openmarket.users.infra.persistence.repository.userDataMessage.UserDataMessageRepositoryImpl;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.com.openmarket.users.application.config.constants.QueueConstants.User.USER_DATA_QUEUE;
 import static org.com.openmarket.users.application.config.constants.QueueConstants.UserItem.*;
 import static org.com.openmarket.users.application.config.constants.QueueConstants.UserWallet.*;
 
-//todo: make DLQ
 @Slf4j
 @Component
 @AllArgsConstructor
 public class UserDataMessageQueue {
     private final static ObjectMapper mapper = new ObjectMapper();
+
     private final RabbitTemplate rabbitTemplate;
     private final UserDataMessageRepository userDataMessageRepository;
 
@@ -48,6 +48,7 @@ public class UserDataMessageQueue {
         UserDataMessageEntity message = new UserDataMessageEntity();
         message.setQueueName(USER_DATA_QUEUE);
         message.setData(data);
+        message.setCreatedAt(new Date().toString());
         message.setQueuesAlreadyReceived(
             List.of(USER_DATA_QUEUE, USER_DATA_ITEM_QUEUE, USER_DATA_WALLET_QUEUE)
         );

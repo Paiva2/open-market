@@ -10,6 +10,10 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.com.openmarket.users.application.config.constants.QueueConstants.Dlq.DEAD_LETTER_QUEUE;
 import static org.com.openmarket.users.application.config.constants.QueueConstants.User.*;
 
 @Configuration
@@ -40,12 +44,17 @@ public class QueueConfig {
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        
+
         return rabbitTemplate;
     }
 
     private Queue createQueue(String queueName) {
-        return new Queue(queueName, true, false, false);
+        Map<String, Object> arguments = new HashMap<>() {{
+            put("x-dead-letter-exchange", "");
+            put("x-dead-letter-routing-key", DEAD_LETTER_QUEUE);
+        }};
+
+        return new Queue(queueName, true, false, false, arguments);
     }
 
     private TopicExchange createExchange(String exchangeName) {

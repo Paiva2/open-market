@@ -11,6 +11,10 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.com.openmarket.wallet.application.config.constants.QueueConstants.Dlq.DEAD_LETTER_QUEUE;
 import static org.com.openmarket.wallet.application.config.constants.QueueConstants.UserWallet.*;
 
 @Configuration
@@ -51,7 +55,12 @@ public class QueueConfig {
     }
 
     public Queue createQueue(String queueName) {
-        return new Queue(queueName, true, false, false);
+        Map<String, Object> arguments = new HashMap<>() {{
+            put("x-dead-letter-exchange", "");
+            put("x-dead-letter-routing-key", DEAD_LETTER_QUEUE);
+        }};
+
+        return new Queue(queueName, true, false, false, arguments);
     }
 
     public TopicExchange createExchange(String exchangeName) {

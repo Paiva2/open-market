@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import static org.com.openmarket.items.application.config.constants.QueueConstants.UserItem.USER_DATA_ITEM_QUEUE;
 
-//todo: DLQ
 @Slf4j
 @Component
 @AllArgsConstructor
@@ -38,10 +37,10 @@ public class UserDataMessageQueue {
             }
         } catch (UserAlreadyExistsException e) {
             String message = "Error while processing new message";
-            log.error("{}: {}", message, e.getMessage());
+            log.error("{}: {0}", message, e);
         } catch (Exception e) {
             String message = "Error while processing new message";
-            log.error("{}: {}", message, e);
+            log.error("{}: {0}", message, e);
             throw new RuntimeException(message);
         }
     }
