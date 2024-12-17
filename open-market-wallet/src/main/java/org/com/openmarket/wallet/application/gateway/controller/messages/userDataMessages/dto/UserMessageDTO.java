@@ -1,4 +1,4 @@
-package org.com.openmarket.wallet.application.gateway.controller.messages.dto;
+package org.com.openmarket.wallet.application.gateway.controller.messages.userDataMessages.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -18,8 +18,10 @@ public class WalletLedger {
     private UUID id;
     private EnumTransactionType transactionType;
     private BigDecimal value;
+    private String description;
     private Date createdAt;
     private Date updatedAt;
 
     private Wallet wallet;
+    private Wallet targetWallet;
 }

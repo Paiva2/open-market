@@ -16,6 +16,7 @@ import java.util.Map;
 
 import static org.com.openmarket.wallet.application.config.constants.QueueConstants.Dlq.DEAD_LETTER_QUEUE;
 import static org.com.openmarket.wallet.application.config.constants.QueueConstants.UserWallet.*;
+import static org.com.openmarket.wallet.application.config.constants.QueueConstants.Wallet.WALLET_DATA;
 
 @Configuration
 public class QueueConfig {
@@ -32,6 +33,11 @@ public class QueueConfig {
     @Bean
     public Binding makeUserDataBinding() {
         return createBinding(makeUserDataQueue(), makeUserDataExchange(), USER_DATA_WALLET_ROUTING_KEY);
+    }
+
+    @Bean
+    public Queue makeWalletQueue() {
+        return createQueue(WALLET_DATA);
     }
 
     @Bean

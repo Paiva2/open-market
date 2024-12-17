@@ -1,10 +1,10 @@
-package org.com.openmarket.wallet.application.gateway.controller.messages;
+package org.com.openmarket.wallet.application.gateway.controller.messages.userDataMessages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.com.openmarket.wallet.application.gateway.controller.messages.dto.UserMessageDTO;
+import org.com.openmarket.wallet.application.gateway.controller.messages.userDataMessages.dto.UserMessageDTO;
 import org.com.openmarket.wallet.core.domain.usecase.user.registerUser.RegisterUserUsecase;
 import org.com.openmarket.wallet.core.domain.usecase.user.registerUser.dto.RegisterUserInput;
 import org.com.openmarket.wallet.core.domain.usecase.user.registerUser.exception.UserAlreadyExistsException;
@@ -19,7 +19,7 @@ import static org.com.openmarket.wallet.application.config.constants.QueueConsta
 @Slf4j
 @Controller
 @AllArgsConstructor
-public class MessagesController {
+public class UserDataMessagesController {
     private final static ObjectMapper mapper = new ObjectMapper();
 
     private final RegisterUserUsecase registerUserUsecase;

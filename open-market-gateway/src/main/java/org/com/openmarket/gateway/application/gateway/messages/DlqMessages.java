@@ -45,6 +45,7 @@ public class DlqMessages {
 
         if (maxRetries >= MAX_RETRIES) {
             log.info("Message discarded for reaching max retries: {}", messagePayload);
+            //todo: save on mongodb
             return;
         }
 

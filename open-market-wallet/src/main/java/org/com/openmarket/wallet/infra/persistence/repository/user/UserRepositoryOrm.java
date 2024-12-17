@@ -11,4 +11,7 @@ import java.util.UUID;
 public interface UserRepositoryOrm extends JpaRepository<UserEntity, UUID> {
     @Query("select usr from UserEntity usr where usr.email = :email")
     Optional<UserEntity> findByEmail(@Param("email") String email);
+
+    @Query("select usr from UserEntity usr where usr.externalId = :externalId")
+    Optional<UserEntity> findByExternalId(@Param("externalId") String externalId);
 }

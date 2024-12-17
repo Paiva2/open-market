@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -33,4 +34,10 @@ public class WalletEntity {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "wlt_user_id")
     private UserEntity user;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "wallet")
+    private List<WalletLedgerEntity> walletLedgers;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "targetWallet")
+    private List<WalletLedgerEntity> walletTargetLedgers;
 }
