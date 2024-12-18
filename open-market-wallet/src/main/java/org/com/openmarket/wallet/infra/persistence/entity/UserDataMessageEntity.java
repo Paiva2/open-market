@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@Document(collection = "messages-user-data")
+@Document(collection = "past-messages")
 @AllArgsConstructor
 public class UserDataMessageEntity {
     @Id

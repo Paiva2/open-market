@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@Document(collection = "messages-user-data")
+@Document(collection = "past-messages")
 public class UserDataMessageEntity {
     @Id
     private String id;
