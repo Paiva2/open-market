@@ -6,8 +6,13 @@ import com.mongodb.client.MongoDatabase;
 
 @ChangeLog
 public class MongoChangelogs {
-    @ChangeSet(order = "001", id = "1-create-messages-user-data-collection", author = "paiva")
-    public void creatingInitialDb(MongoDatabase db){
-         db.createCollection("messages-user-data");
+    @ChangeSet(order = "001", id = "1-create-past-messages-collection", author = "paiva")
+    public void creatingInitialDb(MongoDatabase db) {
+        db.createCollection("past-messages");
+    }
+
+    @ChangeSet(order = "002", id = "2-create-failed-messages-collection", author = "paiva")
+    public void createFailedMessagesColl(MongoDatabase db) {
+        db.createCollection("failed-messages");
     }
 }
