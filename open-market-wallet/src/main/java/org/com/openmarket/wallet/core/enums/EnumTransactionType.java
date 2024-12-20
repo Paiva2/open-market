@@ -1,4 +1,4 @@
-package org.com.openmarket.wallet.core.domain.enums;
+package org.com.openmarket.wallet.core.enums;
 
 public enum EnumTransactionType {
     WITHDRAWAL,

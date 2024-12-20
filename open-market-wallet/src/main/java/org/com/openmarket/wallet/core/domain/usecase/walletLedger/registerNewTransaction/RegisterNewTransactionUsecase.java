@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import org.com.openmarket.wallet.core.domain.entity.User;
 import org.com.openmarket.wallet.core.domain.entity.Wallet;
 import org.com.openmarket.wallet.core.domain.entity.WalletLedger;
-import org.com.openmarket.wallet.core.domain.enums.EnumTransactionType;
 import org.com.openmarket.wallet.core.domain.usecase.common.exception.UserNotFoundException;
 import org.com.openmarket.wallet.core.domain.usecase.common.exception.WalletNotFoundException;
 import org.com.openmarket.wallet.core.domain.usecase.walletLedger.registerNewTransaction.dto.RegisterNewTransactionInput;
 import org.com.openmarket.wallet.core.domain.usecase.walletLedger.registerNewTransaction.exception.InvalidTypeException;
 import org.com.openmarket.wallet.core.domain.usecase.walletLedger.registerNewTransaction.exception.InvalidValueException;
+import org.com.openmarket.wallet.core.enums.EnumTransactionType;
 import org.com.openmarket.wallet.core.interfaces.UserRepository;
 import org.com.openmarket.wallet.core.interfaces.WalletLedgerRepository;
 import org.com.openmarket.wallet.core.interfaces.WalletRepository;
@@ -74,7 +74,7 @@ public class RegisterNewTransactionUsecase {
         return WalletLedger.builder()
             .wallet(userWallet)
             .targetWallet(targetWallet)
-            .value(input.getValue())
+            .value(input.getValue().multiply(BigDecimal.valueOf(100)))
             .transactionType(transactionType)
             .description(input.getDescription())
             .build();

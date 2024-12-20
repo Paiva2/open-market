@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.com.openmarket.wallet.core.domain.enums.EnumTransactionType;
+import org.com.openmarket.wallet.core.enums.EnumTransactionType;
 
 import java.math.BigDecimal;
 import java.util.Date;
