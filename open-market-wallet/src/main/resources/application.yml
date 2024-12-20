@@ -9,6 +9,11 @@ spring:
     username: development
     password: development
     driver-class-name: org.postgresql.Driver
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI}
   jpa:
     hibernate:
       ddl-auto: none
