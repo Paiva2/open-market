@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,11 +26,11 @@ public class WalletEntity {
 
     @CreationTimestamp
     @Column(name = "wlt_created_at")
-    private String createdAt;
+    private Date createdAt;
 
     @UpdateTimestamp
     @Column(name = "wlt_updated_at")
-    private String updatedAt;
+    private Date updatedAt;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "wlt_user_id")
