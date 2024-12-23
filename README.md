@@ -68,33 +68,29 @@ current balance, operations listing, etc.
     - [x] Price range filters
     - [x] Simple sort options
 
+- [ ] Advanced Item Management (Item on sale)
+    - [ ] List items for sale
+    - [ ] Remove listings
+    - [ ] Scheduled listings/removals
+
 - [ ] Essential Search & Filters (Item on sale)
     - [ ] Search by name
     - [ ] Basic category filters
     - [ ] Price range filters
     - [ ] Simple sort options
     - [ ] Multiple criteria search
-    - [ ] Advanced attribute filtering
-    - [ ] Price comparison tools
+    - [ ] Category filtering
 
 - [ ] Basic Trading (Item on sale)
     - [ ] Make offers
     - [ ] Accept/Reject offers
-    - [ ] Basic messaging system
     - [ ] View trade history
-
-- [ ] Advanced Item Management (Item on sale)
-    - [ ] Batch operations
-    - [ ] Scheduled listings/removals
-    - [ ] Advanced item descriptions
-    - [ ] List items for sale
-    - [ ] Remove listings
 
 - [ ] Enhanced Trading Features (Item on sale)
     - [ ] Counter-offers
     - [ ] Offer expiration time
-    - [ ] Trade-specific chat
-    - [ ] Advanced notification system
+    - [ ] Notification system on trading operations
+    - [ ] Receive items/balance on operation finishing
 
 - [ ] Market Analysis (Item on sale)
     - [ ] Price history tracking
@@ -103,7 +99,5 @@ current balance, operations listing, etc.
     - [ ] Price alerts
 
 - [ ] Economic Features (Item on sale)
-    - [ ] Automatic tax system
-    - [ ] Advanced fee structure
-    - [ ] Bulk transaction handling
-    - [ ] Economic indicators
+    - [ ] Tax system
+    - [ ] Fee structure
