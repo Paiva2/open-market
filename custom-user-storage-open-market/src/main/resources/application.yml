@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: custom-user-storage-open-market
+
+  rabbitmq:
+    host: rabbitmq_open-market
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
