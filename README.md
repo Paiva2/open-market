@@ -16,7 +16,10 @@ In this market, users can interact with items and perform various actions, such 
 - Spring Boot
 - Spring Cloud (Gateway, Discovery)
 - Keycloak
-- ...
+- RabbitMQ
+- Postgres
+- MongoDB
+- Docker
 
 ## Services
 

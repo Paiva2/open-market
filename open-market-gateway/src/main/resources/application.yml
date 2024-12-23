@@ -19,6 +19,10 @@ spring:
           uri: lb://OPEN-MARKET-WALLET
           predicates:
             - Path=/api/wallet/**
+        - id: market_route
+          uri: lb://OPEN-MARKET-MARKET
+          predicates:
+            - Path=/api/market/**
       default-filters:
         - TokenRelay=
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
