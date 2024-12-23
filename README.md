@@ -42,6 +42,10 @@ categories.
 Service to handle users wallet, this is the service that receive operations with wallet and show to the user their
 current balance, operations listing, etc.
 
+### Market
+
+...
+
 ## Features
 
 - [x] User Account Management
