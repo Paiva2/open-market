@@ -1,6 +1,8 @@
 package org.com.openmarket.wallet.core.domain.usecase.walletLedger.registerNewTransaction.exception;
 
-public class InvalidValueException extends RuntimeException {
+import org.com.openmarket.wallet.core.domain.usecase.common.exception.core.BadRequestException;
+
+public class InvalidValueException extends BadRequestException {
     public InvalidValueException(String message) {
         super(message);
     }
