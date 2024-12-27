@@ -1,0 +1,1 @@
+ALTER TABLE "open-market-wallets-db".public.tb_users ADD COLUMN usr_enabled BOOLEAN NOT NULL DEFAULT TRUE;

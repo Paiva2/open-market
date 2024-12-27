@@ -32,6 +32,9 @@ public class UserEntity {
     @Column(name = "usr_email")
     private String email;
 
+    @Column(name = "usr_enabled")
+    private Boolean enabled;
+
     @CreationTimestamp
     @Column(name = "usr_created_at")
     private Date createdAt;

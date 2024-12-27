@@ -17,6 +17,7 @@ public class User {
     private String externalId;
     private String username;
     private String email;
+    private Boolean enabled;
     private Date createdAt;
     private Date updatedAt;
 

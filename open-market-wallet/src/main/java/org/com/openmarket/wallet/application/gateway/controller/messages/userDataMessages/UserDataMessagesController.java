@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.com.openmarket.wallet.application.gateway.controller.messages.userDataMessages.dto.UserMessageDTO;
+import org.com.openmarket.wallet.core.domain.usecase.user.disableUser.DisableUserUsecase;
 import org.com.openmarket.wallet.core.domain.usecase.user.registerUser.RegisterUserUsecase;
 import org.com.openmarket.wallet.core.domain.usecase.user.registerUser.dto.RegisterUserInput;
 import org.com.openmarket.wallet.core.domain.usecase.user.registerUser.exception.UserAlreadyExistsException;
@@ -23,6 +24,7 @@ public class UserDataMessagesController {
     private final static ObjectMapper mapper = new ObjectMapper();
 
     private final RegisterUserUsecase registerUserUsecase;
+    private final DisableUserUsecase disableUserUsecase;
 
     @Transactional
     @RabbitListener(queues = USER_DATA_WALLET_QUEUE)
@@ -36,7 +38,8 @@ public class UserDataMessagesController {
 
             switch (messageEvent) {
                 case CREATED -> registerUserUsecase.execute(mountRegisterUserInput(messageConverted));
-                case UPDATED, DELETED -> throw new RuntimeException("Event not implemented");
+                case UPDATED -> throw new RuntimeException("Event not implemented");
+                case DELETED -> disableUserUsecase.execute(messageConverted.getExtId());
                 default -> throw new RuntimeException("Event not recognized!");
             }
         } catch (UserAlreadyExistsException exception) {
