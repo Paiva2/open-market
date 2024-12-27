@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.com.openmarket.items.application.gateway.message.userQueue.dto.UserDataMessageInput;
+import org.com.openmarket.items.core.domain.usecase.user.disableUser.DisableUserUsecase;
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.InsertUserUsecase;
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.dto.InsertUserInput;
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.exception.UserAlreadyExistsException;
@@ -21,6 +22,7 @@ public class UserDataMessageQueue {
     private final ObjectMapper mapper = new ObjectMapper();
 
     private final InsertUserUsecase insertUserUsecase;
+    private final DisableUserUsecase disableUserUsecase;
 
     @RabbitListener(queues = {USER_DATA_ITEM_QUEUE})
     public void receive(@Payload Message messagePayload) {
@@ -32,7 +34,7 @@ public class UserDataMessageQueue {
             switch (input.getEvent()) {
                 case CREATED -> insertUserUsecase.execute(InsertUserInput.toUsecase(input));
                 case UPDATED -> throw new RuntimeException("Event not implemented!" + input.getEvent());
-                case DELETED -> throw new RuntimeException("Event not implemented!" + input.getEvent());
+                case DELETED -> disableUserUsecase.execute(Long.valueOf(input.getExtId()));
                 default -> throw new RuntimeException("Event not recognized!" + input.getEvent());
             }
         } catch (UserAlreadyExistsException e) {
