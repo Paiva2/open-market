@@ -44,6 +44,14 @@ public class UserAdapter extends AbstractUserAdapterFederatedStorage {
         userEntityImpl.setEmail(email);
     }
 
+    @Override
+    public boolean isEnabled() {
+        Boolean val = userEntityImpl.getEnabled();
+        if (val == null) return true;
+        
+        return val;
+    }
+
     public String getPassword() {
         return userEntityImpl.getPassword();
     }
