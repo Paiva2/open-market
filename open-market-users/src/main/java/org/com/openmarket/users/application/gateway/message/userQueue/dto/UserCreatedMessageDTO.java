@@ -12,4 +12,5 @@ public class UserCreatedMessageDTO {
     private String extId;
     private String username;
     private String email;
+    private String password;
 }

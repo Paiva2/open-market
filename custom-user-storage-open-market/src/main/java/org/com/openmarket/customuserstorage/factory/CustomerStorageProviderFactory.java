@@ -8,7 +8,6 @@ import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.storage.UserStorageProviderFactory;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -17,8 +16,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.com.openmarket.customuserstorage.constants.QueueConstants.USER_DATA_QUEUE;
 
 @Configuration
 @Slf4j
@@ -29,7 +26,7 @@ public class CustomerStorageProviderFactory implements UserStorageProviderFactor
 
     @Override
     public CustomerStorageProvider create(KeycloakSession keycloakSession, ComponentModel componentModel) {
-        return new CustomerStorageProvider(keycloakSession, componentModel, createEntityManager(), rabbitTemplate(), userQueue());
+        return new CustomerStorageProvider(keycloakSession, componentModel, createEntityManager(), rabbitTemplate());
     }
 
     public RabbitTemplate rabbitTemplate() {
@@ -38,10 +35,6 @@ public class CustomerStorageProviderFactory implements UserStorageProviderFactor
         return rabbitTemplate;
     }
 
-    public Queue userQueue() {
-        return new Queue(USER_DATA_QUEUE, true);
-    }
-    
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory factory = new CachingConnectionFactory();

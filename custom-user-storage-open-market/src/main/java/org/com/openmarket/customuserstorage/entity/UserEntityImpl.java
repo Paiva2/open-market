@@ -19,6 +19,9 @@ public class UserEntityImpl {
     @Column(name = "usr_password", nullable = false)
     private String password;
 
+    @Column(name = "usr_enabled", nullable = false)
+    private Boolean enabled;
+
     public long getId() {
         return id;
     }
@@ -49,5 +52,13 @@ public class UserEntityImpl {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

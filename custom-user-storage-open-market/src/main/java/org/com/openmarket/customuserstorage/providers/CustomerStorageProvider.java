@@ -21,7 +21,6 @@ import org.keycloak.storage.user.UserLookupProvider;
 import org.keycloak.storage.user.UserQueryProvider;
 import org.keycloak.storage.user.UserRegistrationProvider;
 import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.util.List;
@@ -39,14 +38,11 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
     private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private final Queue userDataQueue;
-
-    public CustomerStorageProvider(KeycloakSession keycloakSession, ComponentModel componentModel, EntityManager entityManager, RabbitTemplate rabbitTemplate, Queue userDataQueue) {
+    public CustomerStorageProvider(KeycloakSession keycloakSession, ComponentModel componentModel, EntityManager entityManager, RabbitTemplate rabbitTemplate) {
         this.session = keycloakSession;
         this.model = componentModel;
         this.entityManager = entityManager;
         this.rabbitTemplate = rabbitTemplate;
-        this.userDataQueue = userDataQueue;
     }
 
     @Override
@@ -164,7 +160,7 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
             rabbitTemplate.convertAndSend(
                 USER_DATA_TOPIC_EXCHANGE,
                 USER_DATA_ROUTING_KEY,
-                mapper.writeValueAsString(new UserCreatedMessageDTO(EnumUserEvents.CREATED, StorageId.externalId(userModel.getId()), userModel.getUsername(), userModel.getEmail()))
+                mapper.writeValueAsString(new UserCreatedMessageDTO(EnumUserEvents.CREATED, StorageId.externalId(userModel.getId()), userModel.getUsername(), userModel.getEmail(), hashedNewPassword))
             );
         } catch (Exception e) {
             log.error("Error while sending new user to broker {}", e.getMessage());
@@ -194,10 +190,16 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
 
         try {
             entityManager.getTransaction().begin();
-            Query query = entityManager.createQuery("delete from UserEntityImpl u where u.id = :userId");
+            Query query = entityManager.createQuery("update UserEntityImpl u set u.enabled = false where u.id = :userId");
             query.setParameter("userId", persistenceId);
             query.executeUpdate();
             entityManager.getTransaction().commit();
+
+            rabbitTemplate.convertAndSend(
+                USER_DATA_TOPIC_EXCHANGE,
+                USER_DATA_ROUTING_KEY,
+                mapper.writeValueAsString(new UserCreatedMessageDTO(EnumUserEvents.DELETED, StorageId.externalId(userModel.getId()), userModel.getUsername(), userModel.getEmail()))
+            );
         } catch (Exception e) {
             log.error("Error while removing user: {}", e.getMessage(), e);
             return false;
@@ -239,20 +241,30 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
         userFound.setEmail(userModel.getEmail());
         userFound.setUserName(userModel.getUsername());
 
-        entityManager.getTransaction().begin();
-        Query queryUpdate = entityManager.createQuery(
-            "update UserEntityImpl " +
-                "set password = :password, " +
-                "userName = :userName, " +
-                "email = :email " +
-                "where id = :externalId"
-        );
-        queryUpdate.setParameter("externalId", userExternalId);
-        queryUpdate.setParameter("password", hashedNewPassword);
-        queryUpdate.setParameter("userName", userFound.getUserName());
-        queryUpdate.setParameter("email", userFound.getEmail());
-        queryUpdate.executeUpdate();
-        entityManager.getTransaction().commit();
+        try {
+            entityManager.getTransaction().begin();
+            Query queryUpdate = entityManager.createQuery(
+                "update UserEntityImpl " +
+                    "set password = :password, " +
+                    "userName = :userName, " +
+                    "email = :email " +
+                    "where id = :externalId"
+            );
+            queryUpdate.setParameter("externalId", userExternalId);
+            queryUpdate.setParameter("password", hashedNewPassword);
+            queryUpdate.setParameter("userName", userFound.getUserName());
+            queryUpdate.setParameter("email", userFound.getEmail());
+            queryUpdate.executeUpdate();
+            entityManager.getTransaction().commit();
+
+            rabbitTemplate.convertAndSend(
+                USER_DATA_TOPIC_EXCHANGE,
+                USER_DATA_ROUTING_KEY,
+                mapper.writeValueAsString(new UserCreatedMessageDTO(EnumUserEvents.UPDATED, StorageId.externalId(userModel.getId()), userModel.getUsername(), userModel.getEmail(), hashedNewPassword))
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         return true;
     }

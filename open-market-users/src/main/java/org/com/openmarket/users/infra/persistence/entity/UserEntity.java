@@ -27,6 +27,9 @@ public class UserEntity {
     @Column(name = "usr_password", nullable = false)
     private String password;
 
+    @Column(name = "usr_enabled", nullable = false)
+    private String enabled;
+
     @CreationTimestamp
     @Column(name = "usr_created_at", nullable = false, updatable = false)
     private Date createdAt;

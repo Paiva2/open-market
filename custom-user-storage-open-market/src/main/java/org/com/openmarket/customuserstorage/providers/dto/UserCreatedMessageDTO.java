@@ -1,14 +1,28 @@
 package org.com.openmarket.customuserstorage.providers.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.com.openmarket.customuserstorage.providers.enumeration.EnumUserEvents;
 
-@AllArgsConstructor
 @Data
 public class UserCreatedMessageDTO {
-    private final EnumUserEvents event;
-    private final String extId;
-    private final String username;
-    private final String email;
+    private EnumUserEvents event;
+    private String extId;
+    private String username;
+    private String email;
+    private String password;
+
+    public UserCreatedMessageDTO(EnumUserEvents event, String extId, String username, String email, String password) {
+        this.event = event;
+        this.extId = extId;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public UserCreatedMessageDTO(EnumUserEvents event, String extId, String username, String email) {
+        this.event = event;
+        this.extId = extId;
+        this.username = username;
+        this.email = email;
+    }
 }
