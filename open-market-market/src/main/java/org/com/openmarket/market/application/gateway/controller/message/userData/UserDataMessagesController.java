@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.com.openmarket.market.application.config.dto.MessageDataDTO;
+import org.com.openmarket.market.domain.core.usecase.user.disableUser.DisableUserUsecase;
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.RegisterUserInput;
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.RegisterUserUsecase;
 import org.com.openmarket.market.domain.enumeration.EnumUserDataMessageEvent;
@@ -22,6 +23,7 @@ public class UserDataMessagesController {
     private final static ObjectMapper mapper = new ObjectMapper();
 
     private final RegisterUserUsecase registerUserUsecase;
+    private final DisableUserUsecase disableUserUsecase;
 
     @RabbitListener(queues = {USER_DATA_MARKET_QUEUE})
     public void execute(@Payload Message messagePayload) {
@@ -33,7 +35,7 @@ public class UserDataMessagesController {
             switch (event) {
                 case CREATED ->
                     registerUserUsecase.execute(RegisterUserInput.toInput(message.getExtId(), message.getUsername(), message.getEmail()));
-                case UPDATED, DELETED -> throw new RuntimeException("Event not implemented yet!");
+                case DELETED -> disableUserUsecase.execute(message.getExtId());
                 default -> throw new RuntimeException("Event not implemented yet!");
             }
         } catch (Exception e) {

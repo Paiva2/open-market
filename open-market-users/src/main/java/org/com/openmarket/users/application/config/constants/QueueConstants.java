@@ -21,9 +21,9 @@ public class QueueConstants {
     }
 
     public static class UserMarket {
-        public final static String USER_DATA_MARKET_QUEUE = "market-user-data";
-        public final static String USER_DATA_MARKET_TOPIC_EXCHANGE = "market-user-data-topic";
-        public final static String USER_DATA_MARKET_ROUTING_KEY = "market.user.data.rk";
+        public final static String USER_DATA_MARKET_QUEUE = "user-data-market";
+        public final static String USER_DATA_MARKET_TOPIC_EXCHANGE = "user-data-market-topic";
+        public final static String USER_DATA_MARKET_ROUTING_KEY = "user.data.market.rk";
     }
 
     public static class Dlq {
