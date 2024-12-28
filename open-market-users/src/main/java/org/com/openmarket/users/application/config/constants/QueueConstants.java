@@ -20,6 +20,12 @@ public class QueueConstants {
         public final static String USER_DATA_WALLET_ROUTING_KEY = "user.data.wallet.rk";
     }
 
+    public static class UserMarket {
+        public final static String USER_DATA_MARKET_QUEUE = "market-user-data";
+        public final static String USER_DATA_MARKET_TOPIC_EXCHANGE = "market-user-data-topic";
+        public final static String USER_DATA_MARKET_ROUTING_KEY = "market.user.data.rk";
+    }
+
     public static class Dlq {
         public final static String DEAD_LETTER_QUEUE = "open-market-dlq";
         public final static String DEAD_LETTER_QUEUE_TOPIC_EXCHANGE = "open-market-dlq-topic";

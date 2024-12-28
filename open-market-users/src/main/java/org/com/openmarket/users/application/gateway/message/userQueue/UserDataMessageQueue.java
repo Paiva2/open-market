@@ -18,6 +18,8 @@ import java.util.List;
 
 import static org.com.openmarket.users.application.config.constants.QueueConstants.User.USER_DATA_QUEUE;
 import static org.com.openmarket.users.application.config.constants.QueueConstants.UserItem.*;
+import static org.com.openmarket.users.application.config.constants.QueueConstants.UserMarket.USER_DATA_MARKET_ROUTING_KEY;
+import static org.com.openmarket.users.application.config.constants.QueueConstants.UserMarket.USER_DATA_MARKET_TOPIC_EXCHANGE;
 import static org.com.openmarket.users.application.config.constants.QueueConstants.UserWallet.*;
 
 @Slf4j
@@ -37,6 +39,7 @@ public class UserDataMessageQueue {
             registerMessageOnConfigDb(bodyConverted);
             sendToItemServiceQueue(bodyConverted);
             sendToWalletServiceQueue(bodyConverted);
+            sendToMarketServiceQueue(bodyConverted);
         } catch (Exception e) {
             String message = "Error while receiving a new message";
             log.error(message, e);
@@ -64,6 +67,11 @@ public class UserDataMessageQueue {
     private void sendToWalletServiceQueue(String message) throws JsonProcessingException {
         UserCreatedMessageDTO messageConverted = mapper.readValue(message, UserCreatedMessageDTO.class);
         rabbitTemplate.convertAndSend(USER_DATA_WALLET_TOPIC_EXCHANGE, USER_DATA_WALLET_ROUTING_KEY, mapper.writeValueAsString(messageConverted));
+    }
+
+    private void sendToMarketServiceQueue(String message) throws JsonProcessingException {
+        UserCreatedMessageDTO messageConverted = mapper.readValue(message, UserCreatedMessageDTO.class);
+        rabbitTemplate.convertAndSend(USER_DATA_MARKET_TOPIC_EXCHANGE, USER_DATA_MARKET_ROUTING_KEY, mapper.writeValueAsString(messageConverted));
     }
 
     private String convertBodyAsString(Message messagePayload) {
