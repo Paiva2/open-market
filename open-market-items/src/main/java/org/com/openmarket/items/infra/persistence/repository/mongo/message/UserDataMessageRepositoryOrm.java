@@ -1,4 +1,4 @@
-package org.com.openmarket.items.infra.persistence.repository.message;
+package org.com.openmarket.items.infra.persistence.repository.mongo.message;
 
 import org.com.openmarket.items.infra.persistence.entity.UserDataMessageEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;

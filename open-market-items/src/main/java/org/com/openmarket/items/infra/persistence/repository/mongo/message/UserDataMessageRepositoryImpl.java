@@ -1,4 +1,4 @@
-package org.com.openmarket.items.infra.persistence.repository.message;
+package org.com.openmarket.items.infra.persistence.repository.mongo.message;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.items.core.domain.interfaces.repository.UserDataMessageRepository;
