@@ -37,9 +37,10 @@ public class RegisterUserUsecase {
 
     private User fillUser(RegisterUserInput input) {
         return User.builder()
-            .externalId(input.getExternalId())
+            .externalId(input.getExtId())
             .email(input.getEmail())
-            .username(input.getUserName())
+            .username(input.getUsername())
+            .enabled(true)
             .build();
     }
 

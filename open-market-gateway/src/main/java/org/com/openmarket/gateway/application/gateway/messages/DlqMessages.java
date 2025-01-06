@@ -35,17 +35,15 @@ public class DlqMessages {
         List<Object> messageXDeath = messagePayload.getMessageProperties().getHeader("x-death");
         HashMap<String, Object> messageSourceData = (HashMap) messageXDeath.get(0);
         String sourceQueue = (String) messageSourceData.get("queue");
-        String sourceExchange = (String) messageSourceData.get("exchange");
-        String sourceRoutingKey = ((List<String>) messageSourceData.get("routing-keys")).get(0);
 
-        if (sourceExchange == null || sourceRoutingKey == null) {
-            log.info("Message discarded because source exchange is null: {}", messagePayload);
+        if (sourceQueue == null) {
+            log.info("Message discarded because source queue is null: {}", messagePayload);
             return;
         }
 
         if (maxRetries == null) {
             messagePayload.getMessageProperties().setHeader(REQUEUE_RETRIES_HEADER, 1);
-            rabbitTemplate.send(sourceExchange, sourceRoutingKey, messagePayload);
+            rabbitTemplate.send(sourceQueue, messagePayload);
             log.info("Message requeued: {}", messagePayload);
             return;
         }
@@ -57,8 +55,6 @@ public class DlqMessages {
                 failedMessageRepository.save(new FailedMessage(
                     gson.toJson(messagePayload),
                     sourceQueue,
-                    sourceRoutingKey,
-                    sourceExchange,
                     0,
                     new Date().toString()
                 ));
@@ -71,7 +67,7 @@ public class DlqMessages {
         }
 
         messagePayload.getMessageProperties().setHeader(REQUEUE_RETRIES_HEADER, maxRetries + 1);
-        rabbitTemplate.send(sourceExchange, sourceRoutingKey, messagePayload);
+        rabbitTemplate.send(sourceQueue, messagePayload);
         log.info("Message requeued: {}", messagePayload);
     }
 }

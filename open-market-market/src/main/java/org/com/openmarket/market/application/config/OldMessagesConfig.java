@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.com.openmarket.market.application.config.dto.MessageDataDTO;
+import org.com.openmarket.market.domain.core.usecase.common.dto.CommonMessageDTO;
 import org.com.openmarket.market.domain.interfaces.PastMessagesRepository;
 import org.com.openmarket.market.infra.persistence.entity.PastMessagesEntity;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
-import static org.com.openmarket.market.application.config.constants.QueueConstants.MarketUserData.*;
+import static org.com.openmarket.market.application.config.constants.QueueConstants.MARKET_QUEUE;
 
 @Slf4j
 @Configuration
@@ -32,11 +32,11 @@ public class OldMessagesConfig {
         try {
             for (PastMessagesEntity message : messages) {
                 List<String> queuesReceives = message.getQueuesAlreadyReceived();
-                MessageDataDTO messageData = mapper.readValue(message.getData(), MessageDataDTO.class);
+                CommonMessageDTO messageData = mapper.readValue(message.getData(), CommonMessageDTO.class);
 
-                rabbitTemplate.convertAndSend(USER_DATA_MARKET_TOPIC_EXCHANGE, USER_DATA_MARKET_ROUTING_KEY, messageData);
+                rabbitTemplate.convertAndSend(MARKET_QUEUE, mapper.writeValueAsString(messageData));
 
-                queuesReceives.add(USER_DATA_MARKET_QUEUE);
+                queuesReceives.add(MARKET_QUEUE);
                 message.setQueuesAlreadyReceived(queuesReceives);
             }
 

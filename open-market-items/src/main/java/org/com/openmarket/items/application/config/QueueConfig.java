@@ -1,9 +1,6 @@
 package org.com.openmarket.items.application.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -14,23 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.com.openmarket.items.application.config.constants.QueueConstants.Dlq.DEAD_LETTER_QUEUE;
-import static org.com.openmarket.items.application.config.constants.QueueConstants.UserItem.*;
+import static org.com.openmarket.items.application.config.constants.QueueConstants.ITEM_QUEUE;
 
 @Configuration
 public class QueueConfig {
     @Bean
     public Queue makeUserDataQueue() {
-        return createQueue(USER_DATA_ITEM_QUEUE);
-    }
-
-    @Bean
-    public TopicExchange makeUserDataExchange() {
-        return createExchange(USER_DATA_ITEM_TOPIC_EXCHANGE);
-    }
-
-    @Bean
-    public Binding makeUserDataBinding() {
-        return createBinding(makeUserDataQueue(), makeUserDataExchange(), USER_DATA_ITEM_ROUTING_KEY);
+        return createQueue(ITEM_QUEUE);
     }
 
     @Bean
@@ -54,13 +41,5 @@ public class QueueConfig {
         }};
 
         return new Queue(queueName, true, false, false, arguments);
-    }
-
-    public TopicExchange createExchange(String exchangeName) {
-        return new TopicExchange(exchangeName);
-    }
-
-    private Binding createBinding(Queue queue, TopicExchange exchange, String routingKey) {
-        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
     }
 }

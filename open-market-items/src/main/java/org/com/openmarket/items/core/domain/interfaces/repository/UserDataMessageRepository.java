@@ -1,11 +1,11 @@
 package org.com.openmarket.items.core.domain.interfaces.repository;
 
-import org.com.openmarket.items.infra.persistence.entity.UserDataMessageEntity;
+import org.com.openmarket.items.infra.persistence.entity.PastMessagesEntity;
 
 import java.util.List;
 
 public interface UserDataMessageRepository {
-    List<UserDataMessageEntity> getMessagesNotRead();
+    List<PastMessagesEntity> getMessagesNotRead();
 
-    List<UserDataMessageEntity> saveAll(List<UserDataMessageEntity> messageEntities);
+    List<PastMessagesEntity> saveAll(List<PastMessagesEntity> messageEntities);
 }

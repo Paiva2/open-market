@@ -50,6 +50,7 @@ public class InsertUserUsecase {
             .externalId(input.getExtId())
             .email(input.getEmail())
             .userName(input.getUsername())
+            .enabled(true)
             .build();
     }
 

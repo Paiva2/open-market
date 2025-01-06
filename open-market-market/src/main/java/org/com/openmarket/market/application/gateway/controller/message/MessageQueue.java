@@ -8,6 +8,7 @@ import org.com.openmarket.market.domain.core.usecase.category.registerCategory.R
 import org.com.openmarket.market.domain.core.usecase.category.registerCategory.dto.RegisterCategoryInput;
 import org.com.openmarket.market.domain.core.usecase.category.registerCategory.exception.CategoryAlreadyExistsException;
 import org.com.openmarket.market.domain.core.usecase.common.dto.CommonMessageDTO;
+import org.com.openmarket.market.domain.core.usecase.user.disableUser.DisableUserUsecase;
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.RegisterUserInput;
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.RegisterUserUsecase;
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.exception.UserAlreadyExistsException;
@@ -28,6 +29,7 @@ public class MessageQueue {
 
     private final RegisterCategoryUsecase registerCategoryUsecase;
     private final RegisterUserUsecase registerUserUsecase;
+    private final DisableUserUsecase disableUserUsecase;
 
     @RabbitListener(queues = {MARKET_QUEUE})
     public void receiveMessage(@Payload Message messagePayload) {
@@ -40,7 +42,7 @@ public class MessageQueue {
                 case CREATED -> handleTypeCreated(messageDTO);
                 case UPDATED -> handleTypeUpdated(messageDTO);
                 case DELETED -> handleTypeDeleted(messageDTO);
-                default -> throw new RuntimeException("Event not recognized!" + messageDTO.getEvent());
+                default -> throw new RuntimeException("Event type not recognized!" + messageDTO.getEvent());
             }
         } catch (UserAlreadyExistsException | CategoryAlreadyExistsException e) {
             String message = "Error while processing new message";
@@ -62,16 +64,21 @@ public class MessageQueue {
                 RegisterUserInput input = mapper.readValue(messageDTO.getData(), RegisterUserInput.class);
                 registerUserUsecase.execute(input);
             }
-            default -> throw new RuntimeException("Event not recognized!" + messageDTO.getEvent());
+            default -> log.error("Event not recognized! {}", messageDTO.getEvent());
         }
     }
 
     private void handleTypeUpdated(CommonMessageDTO messageDTO) {
-        throw new RuntimeException("Event not recognized!" + messageDTO.getEvent());
+        switch (messageDTO.getEvent()) {
+            default -> log.error("Event not recognized! {}", messageDTO.getEvent());
+        }
     }
 
     private void handleTypeDeleted(CommonMessageDTO messageDTO) {
-        throw new RuntimeException("Event not recognized!" + messageDTO.getEvent());
+        switch (messageDTO.getEvent()) {
+            case USER_EVENT -> disableUserUsecase.execute(messageDTO.getData());
+            default -> log.error("Event not recognized! {}", messageDTO.getEvent());
+        }
     }
 
     private String convertBodyMessage(byte[] rawBody) {

@@ -7,8 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.com.openmarket.market.application.config.constants.QueueConstants.MarketUserData.USER_DATA_MARKET_QUEUE;
-
+import static org.com.openmarket.market.application.config.constants.QueueConstants.MARKET_QUEUE;
 
 @Component
 @AllArgsConstructor
@@ -17,7 +16,7 @@ public class PastMessagesRepositoryImpl implements PastMessagesRepository {
 
     @Override
     public List<PastMessagesEntity> getNonReadMessages() {
-        return repository.findAllNotReadByQueueNameAndQueueNotReceivedOrderByCreatedAtDesc("user-data", USER_DATA_MARKET_QUEUE);
+        return repository.findAllNotReadByQueueNameAndQueueNotReceivedOrderByCreatedAtDesc("user-queue", MARKET_QUEUE);
     }
 
     @Override

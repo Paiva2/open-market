@@ -21,17 +21,17 @@ public class RegisterUserUsecase {
     }
 
     private void checkUserExists(RegisterUserInput input) {
-        Optional<User> user = userRepository.findByExternalId(input.getExternalId());
+        Optional<User> user = userRepository.findByExternalId(input.getExtId());
 
         if (user.isPresent()) {
-            throw new UserAlreadyExistsException(input.getExternalId());
+            throw new UserAlreadyExistsException(input.getExtId());
         }
     }
 
     private User fillUser(RegisterUserInput input) {
         return User.builder()
-            .externalId(input.getExternalId())
-            .userName(input.getUserName())
+            .externalId(input.getExtId())
+            .userName(input.getUsername())
             .email(input.getEmail())
             .enabled(true)
             .build();

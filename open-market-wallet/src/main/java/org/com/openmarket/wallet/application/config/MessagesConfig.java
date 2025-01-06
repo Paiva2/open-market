@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.com.openmarket.wallet.application.config.dto.MessageDataDTO;
+import org.com.openmarket.wallet.application.gateway.controller.messages.dto.CommonMessageDTO;
 import org.com.openmarket.wallet.core.interfaces.UserDataMessageRepository;
 import org.com.openmarket.wallet.infra.persistence.entity.UserDataMessageEntity;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.com.openmarket.wallet.application.config.constants.QueueConstants.UserWallet.*;
+import static org.com.openmarket.wallet.application.config.constants.QueueConstants.WALLET_QUEUE;
 
 @Slf4j
 @Component
@@ -33,11 +33,11 @@ public class MessagesConfig {
         try {
             for (UserDataMessageEntity message : messages) {
                 List<String> queuesReceives = message.getQueuesAlreadyReceived();
-                MessageDataDTO messageData = mapper.readValue(message.getData(), MessageDataDTO.class);
+                CommonMessageDTO messageData = mapper.readValue(message.getData(), CommonMessageDTO.class);
 
-                rabbitTemplate.convertAndSend(USER_DATA_WALLET_TOPIC_EXCHANGE, USER_DATA_WALLET_ROUTING_KEY, messageData);
+                rabbitTemplate.convertAndSend(WALLET_QUEUE, mapper.writeValueAsString(messageData));
 
-                queuesReceives.add(USER_DATA_WALLET_QUEUE);
+                queuesReceives.add(WALLET_QUEUE);
                 message.setQueuesAlreadyReceived(queuesReceives);
             }
 

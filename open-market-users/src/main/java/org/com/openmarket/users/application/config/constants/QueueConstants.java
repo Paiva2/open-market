@@ -3,27 +3,19 @@ package org.com.openmarket.users.application.config.constants;
 //todo: move to env vars
 public class QueueConstants {
     public static class User {
-        public final static String USER_DATA_QUEUE = "user-data";
-        public final static String USER_DATA_TOPIC_EXCHANGE = "user-data-topic";
-        public final static String USER_DATA_ROUTING_KEY = "user.data.rk";
+        public final static String USER_QUEUE = "user-queue";
     }
 
-    public static class UserItem {
-        public final static String USER_DATA_ITEM_QUEUE = "user-data-item";
-        public final static String USER_DATA_ITEM_TOPIC_EXCHANGE = "user-data-item-topic";
-        public final static String USER_DATA_ITEM_ROUTING_KEY = "user.data.item.rk";
+    public static class ItemService {
+        public final static String ITEM_QUEUE = "item-queue";
     }
 
-    public static class UserWallet {
-        public final static String USER_DATA_WALLET_QUEUE = "user-data-wallet";
-        public final static String USER_DATA_WALLET_TOPIC_EXCHANGE = "user-data-wallet-topic";
-        public final static String USER_DATA_WALLET_ROUTING_KEY = "user.data.wallet.rk";
+    public static class WalletService {
+        public final static String WALLET_QUEUE = "wallet-queue";
     }
 
-    public static class UserMarket {
-        public final static String USER_DATA_MARKET_QUEUE = "user-data-market";
-        public final static String USER_DATA_MARKET_TOPIC_EXCHANGE = "user-data-market-topic";
-        public final static String USER_DATA_MARKET_ROUTING_KEY = "user.data.market.rk";
+    public static class MarketService {
+        public final static String MARKET_QUEUE = "market-queue";
     }
 
     public static class Dlq {

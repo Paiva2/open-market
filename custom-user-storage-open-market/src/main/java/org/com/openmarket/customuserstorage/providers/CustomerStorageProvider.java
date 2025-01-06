@@ -7,8 +7,10 @@ import jakarta.persistence.TypedQuery;
 import jakarta.ws.rs.core.MultivaluedMap;
 import lombok.extern.slf4j.Slf4j;
 import org.com.openmarket.customuserstorage.entity.UserEntityImpl;
+import org.com.openmarket.customuserstorage.providers.dto.CommonMessageDTO;
 import org.com.openmarket.customuserstorage.providers.dto.UserCreatedMessageDTO;
-import org.com.openmarket.customuserstorage.providers.enumeration.EnumUserEvents;
+import org.com.openmarket.customuserstorage.providers.enumeration.EnumMessageEvent;
+import org.com.openmarket.customuserstorage.providers.enumeration.EnumMessageType;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.credential.CredentialInput;
 import org.keycloak.credential.CredentialInputUpdater;
@@ -27,8 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.com.openmarket.customuserstorage.constants.QueueConstants.USER_DATA_ROUTING_KEY;
-import static org.com.openmarket.customuserstorage.constants.QueueConstants.USER_DATA_TOPIC_EXCHANGE;
+import static org.com.openmarket.customuserstorage.constants.QueueConstants.USER_QUEUE;
 
 @Slf4j
 public class CustomerStorageProvider implements UserStorageProvider, UserLookupProvider, UserQueryProvider, UserRegistrationProvider, CredentialInputValidator, CredentialInputUpdater {
@@ -157,11 +158,13 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
         UserModel userModel = this.getUserByEmail(realmModel, email);
 
         try {
-            rabbitTemplate.convertAndSend(
-                USER_DATA_TOPIC_EXCHANGE,
-                USER_DATA_ROUTING_KEY,
-                mapper.writeValueAsString(new UserCreatedMessageDTO(EnumUserEvents.CREATED, StorageId.externalId(userModel.getId()), userModel.getUsername(), userModel.getEmail(), hashedNewPassword))
-            );
+            CommonMessageDTO commonMessageDTO = CommonMessageDTO.builder()
+                .type(EnumMessageType.CREATED)
+                .event(EnumMessageEvent.USER_EVENT)
+                .data(mapper.writeValueAsString(new UserCreatedMessageDTO(StorageId.externalId(userModel.getId()), userModel.getUsername(), userModel.getEmail(), hashedNewPassword)))
+                .build();
+
+            rabbitTemplate.convertAndSend(USER_QUEUE, mapper.writeValueAsString(commonMessageDTO));
         } catch (Exception e) {
             log.error("Error while sending new user to broker {}", e.getMessage());
             entityManager.getTransaction().begin();
@@ -177,7 +180,6 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
         userModel.setLastName(lastName);
         userModel.setEmail(email);
         userModel.setUsername(formUsername);
-        userModel.credentialManager().updateCredential(UserCredentialModel.password(hashedNewPassword));
 
         return userModel;
     }
@@ -195,11 +197,13 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
             query.executeUpdate();
             entityManager.getTransaction().commit();
 
-            rabbitTemplate.convertAndSend(
-                USER_DATA_TOPIC_EXCHANGE,
-                USER_DATA_ROUTING_KEY,
-                mapper.writeValueAsString(new UserCreatedMessageDTO(EnumUserEvents.DELETED, StorageId.externalId(userModel.getId()), userModel.getUsername(), userModel.getEmail()))
-            );
+            CommonMessageDTO commonMessageDTO = CommonMessageDTO.builder()
+                .type(EnumMessageType.DELETED)
+                .event(EnumMessageEvent.USER_EVENT)
+                .data(StorageId.externalId(userModel.getId()))
+                .build();
+
+            rabbitTemplate.convertAndSend(USER_QUEUE, mapper.writeValueAsString(commonMessageDTO));
         } catch (Exception e) {
             log.error("Error while removing user: {}", e.getMessage(), e);
             return false;
@@ -257,11 +261,13 @@ public class CustomerStorageProvider implements UserStorageProvider, UserLookupP
             queryUpdate.executeUpdate();
             entityManager.getTransaction().commit();
 
-            rabbitTemplate.convertAndSend(
-                USER_DATA_TOPIC_EXCHANGE,
-                USER_DATA_ROUTING_KEY,
-                mapper.writeValueAsString(new UserCreatedMessageDTO(EnumUserEvents.UPDATED, StorageId.externalId(userModel.getId()), userModel.getUsername(), userModel.getEmail(), hashedNewPassword))
-            );
+            CommonMessageDTO commonMessageDTO = CommonMessageDTO.builder()
+                .type(EnumMessageType.UPDATED)
+                .event(EnumMessageEvent.USER_EVENT)
+                .data(mapper.writeValueAsString(new UserCreatedMessageDTO(StorageId.externalId(userModel.getId()), userModel.getUsername(), userModel.getEmail(), hashedNewPassword)))
+                .build();
+
+            rabbitTemplate.convertAndSend(USER_QUEUE, mapper.writeValueAsString(commonMessageDTO));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

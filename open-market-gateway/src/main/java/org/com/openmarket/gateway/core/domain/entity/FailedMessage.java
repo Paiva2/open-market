@@ -24,4 +24,11 @@ public class FailedMessage {
         this.requeueQuantity = requeueQuantity;
         this.createdAt = createdAt;
     }
+
+    public FailedMessage(String message, String queueName, Integer requeueQuantity, String createdAt) {
+        this.message = message;
+        this.queueName = queueName;
+        this.requeueQuantity = requeueQuantity;
+        this.createdAt = createdAt;
+    }
 }

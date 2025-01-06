@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.com.openmarket.wallet.application.config.constants.QueueConstants.UserWallet.USER_DATA_WALLET_QUEUE;
+import static org.com.openmarket.wallet.application.config.constants.QueueConstants.WALLET_QUEUE;
 
 @Component
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class UserDataMessageRepositoryImpl implements UserDataMessageRepository 
 
     @Override
     public List<UserDataMessageEntity> getMessagesNotRead() {
-        return repository.findAllNotReadByQueueNameOrderByCreatedAtDesc(USER_DATA_WALLET_QUEUE);
+        return repository.findAllNotReadByQueueNameOrderByCreatedAtDesc(WALLET_QUEUE);
     }
 
     @Override

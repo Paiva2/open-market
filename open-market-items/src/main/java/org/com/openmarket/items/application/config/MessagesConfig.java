@@ -4,15 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.com.openmarket.items.application.config.dto.MessageDataDTO;
+import org.com.openmarket.items.application.gateway.message.dto.CommonMessageDTO;
 import org.com.openmarket.items.core.domain.interfaces.repository.UserDataMessageRepository;
-import org.com.openmarket.items.infra.persistence.entity.UserDataMessageEntity;
+import org.com.openmarket.items.infra.persistence.entity.PastMessagesEntity;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static org.com.openmarket.items.application.config.constants.QueueConstants.UserItem.*;
+import static org.com.openmarket.items.application.config.constants.QueueConstants.ITEM_QUEUE;
 
 @Slf4j
 @Component
@@ -26,16 +26,16 @@ public class MessagesConfig {
     @PostConstruct
     public void listenNotReadMessages() {
         log.info("Checking for non-read messages!");
-        List<UserDataMessageEntity> messages = userDataMessageRepository.getMessagesNotRead();
+        List<PastMessagesEntity> messages = userDataMessageRepository.getMessagesNotRead();
 
         try {
-            for (UserDataMessageEntity message : messages) {
+            for (PastMessagesEntity message : messages) {
                 List<String> queuesReceives = message.getQueuesAlreadyReceived();
-                MessageDataDTO messageData = mapper.readValue(message.getData(), MessageDataDTO.class);
+                CommonMessageDTO messageData = mapper.readValue(message.getData(), CommonMessageDTO.class);
 
-                rabbitTemplate.convertAndSend(USER_DATA_ITEM_TOPIC_EXCHANGE, USER_DATA_ITEM_ROUTING_KEY, messageData);
+                rabbitTemplate.convertAndSend(ITEM_QUEUE, mapper.writeValueAsString(messageData));
 
-                queuesReceives.add(USER_DATA_ITEM_QUEUE);
+                queuesReceives.add(ITEM_QUEUE);
                 message.setQueuesAlreadyReceived(queuesReceives);
             }
 

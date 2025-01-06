@@ -10,15 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegisterUserInput {
-    private String externalId;
-    private String userName;
+    private String extId;
+    private String username;
     private String email;
-
-    public static RegisterUserInput toInput(String externalId, String userName, String email) {
-        return RegisterUserInput.builder()
-            .externalId(externalId)
-            .userName(userName)
-            .email(email)
-            .build();
-    }
+    private String password;
 }

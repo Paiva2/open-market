@@ -1,4 +1,4 @@
-package org.com.openmarket.items.core.domain.enumeration;
+package org.com.openmarket.customuserstorage.providers.enumeration;
 
 public enum EnumMessageType {
     CREATED,

@@ -1,4 +1,4 @@
-package org.com.openmarket.items.core.domain.enumeration;
+package org.com.openmarket.wallet.application.gateway.controller.messages.enumeration;
 
 public enum EnumMessageType {
     CREATED,
