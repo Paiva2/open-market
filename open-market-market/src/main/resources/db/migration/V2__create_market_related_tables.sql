@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS tb_items (
     itm_id UUID PRIMARY KEY,
+    itm_external_id VARCHAR(250) UNIQUE DEFAULT NULL,
     itm_name VARCHAR(250) UNIQUE NOT NULL,
     itm_description VARCHAR(300) NOT NULL,
     itm_photo_url VARCHAR(500) NOT NULL,
@@ -12,6 +13,7 @@ CREATE TABLE IF NOT EXISTS tb_items (
 
 CREATE TABLE IF NOT EXISTS tb_categories (
     cat_id SERIAL PRIMARY KEY,
+    cat_external_id VARCHAR(250) UNIQUE DEFAULT NULL,
     cat_name VARCHAR(50) UNIQUE NOT NULL,
     cat_created_at TIMESTAMP NOT NULL DEFAULT now(),
     cat_updated_at TIMESTAMP NOT NULL DEFAULT now()

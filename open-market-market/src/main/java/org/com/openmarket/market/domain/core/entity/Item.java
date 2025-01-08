@@ -1,4 +1,4 @@
-package org.com.openmarket.items.core.domain.entity;
+package org.com.openmarket.market.domain.core.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Item {
     private UUID id;
+    private String externalId;
     private String name;
     private String description;
     private String photoUrl;
@@ -26,8 +27,4 @@ public class Item {
     private Date updatedAt;
 
     private List<ItemCategory> itemCategories;
-
-    private List<UserItem> userItems;
-
-    private List<ItemAlteration> itemAlterations;
 }

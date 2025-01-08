@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,6 +24,9 @@ public class CategoryEntity {
     @Column(name = "cat_id")
     private Long id;
 
+    @Column(name = "cat_external_id")
+    private String externalId;
+
     @Column(name = "cat_name", unique = true)
     private String name;
 
@@ -33,4 +37,7 @@ public class CategoryEntity {
     @UpdateTimestamp
     @Column(name = "cat_updated_at")
     private Date updatedAt;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<ItemCategoryEntity> itemCategories;
 }

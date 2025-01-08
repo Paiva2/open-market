@@ -1,7 +1,6 @@
-package org.com.openmarket.items.core.domain.entity;
+package org.com.openmarket.market.domain.core.usecase.item.crateItem.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,10 +10,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class Item {
+@AllArgsConstructor
+public class CreateItemInput {
     private UUID id;
     private String name;
     private String description;
@@ -25,9 +23,5 @@ public class Item {
     private Date createdAt;
     private Date updatedAt;
 
-    private List<ItemCategory> itemCategories;
-
-    private List<UserItem> userItems;
-
-    private List<ItemAlteration> itemAlterations;
+    private List<Long> categoriesIds;
 }

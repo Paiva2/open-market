@@ -7,6 +7,7 @@ import org.com.openmarket.market.infra.persistence.entity.CategoryEntity;
 import org.com.openmarket.market.infra.persistence.mapper.CategoryMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -25,5 +26,11 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     public Category save(Category category) {
         CategoryEntity categoryEntity = repository.save(CategoryMapper.toPersistence(category));
         return CategoryMapper.toDomain(categoryEntity);
+    }
+
+    @Override
+    public List<Category> findCategoriesByExternalId(List<String> externalIds) {
+        List<CategoryEntity> categoryEntities = repository.findCategoriesByExternalId(externalIds);
+        return categoryEntities.stream().map(CategoryMapper::toDomain).toList();
     }
 }

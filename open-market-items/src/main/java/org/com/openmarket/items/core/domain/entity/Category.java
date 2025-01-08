@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +16,4 @@ public class Category {
     private String name;
     private Date createdAt;
     private Date updatedAt;
-
-    private List<ItemCategory> itemCategories;
 }

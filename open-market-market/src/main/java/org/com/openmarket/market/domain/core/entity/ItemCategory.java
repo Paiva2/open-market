@@ -1,4 +1,4 @@
-package org.com.openmarket.items.core.domain.entity;
+package org.com.openmarket.market.domain.core.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

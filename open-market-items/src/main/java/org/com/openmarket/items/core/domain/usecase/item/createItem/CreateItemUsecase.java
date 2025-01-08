@@ -1,19 +1,21 @@
 package org.com.openmarket.items.core.domain.usecase.item.createItem;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.com.openmarket.items.application.gateway.message.dto.CommonMessageDTO;
 import org.com.openmarket.items.core.domain.entity.Category;
 import org.com.openmarket.items.core.domain.entity.Item;
 import org.com.openmarket.items.core.domain.entity.ItemCategory;
 import org.com.openmarket.items.core.domain.entity.User;
 import org.com.openmarket.items.core.domain.enumeration.EnumItemAlteration;
-import org.com.openmarket.items.core.domain.interfaces.repository.CategoryRepository;
-import org.com.openmarket.items.core.domain.interfaces.repository.ItemCategoryRepository;
-import org.com.openmarket.items.core.domain.interfaces.repository.ItemRepository;
-import org.com.openmarket.items.core.domain.interfaces.repository.UserRepository;
+import org.com.openmarket.items.core.domain.enumeration.EnumMessageEvent;
+import org.com.openmarket.items.core.domain.enumeration.EnumMessageType;
+import org.com.openmarket.items.core.domain.interfaces.repository.*;
 import org.com.openmarket.items.core.domain.usecase.common.exception.CategoryNotFoundException;
 import org.com.openmarket.items.core.domain.usecase.common.exception.InvalidFieldException;
 import org.com.openmarket.items.core.domain.usecase.common.exception.UserNotFoundException;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.dto.CreateItemInput;
+import org.com.openmarket.items.core.domain.usecase.item.createItem.dto.CreateItemMessageOutput;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.dto.CreateItemOutput;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.exception.ItemAlreadyExistsException;
 import org.com.openmarket.items.core.domain.usecase.itemAlteration.registerItemAlteration.RegisterItemAlterationUsecase;
@@ -24,13 +26,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.com.openmarket.items.application.config.constants.QueueConstants.Market.MARKET_QUEUE;
+
 @AllArgsConstructor
 @Service
 public class CreateItemUsecase {
+    private final static ObjectMapper mapper = new ObjectMapper();
+
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
     private final ItemCategoryRepository itemCategoryRepository;
+    private final MessageRepository messageRepository;
     private final RegisterItemAlterationUsecase registerItemAlterationUsecase;
 
     public CreateItemOutput execute(Long userId, CreateItemInput input) {
@@ -51,6 +58,7 @@ public class CreateItemUsecase {
 
         persistItemAlteration(user, item);
 
+        sendItemCreation(item);
         return mountOutput(item);
     }
 
@@ -141,6 +149,31 @@ public class CreateItemUsecase {
 
     private void persistItemAlteration(User user, Item item) {
         registerItemAlterationUsecase.execute(user, item, EnumItemAlteration.CREATION);
+    }
+
+    private void sendItemCreation(Item item) {
+        try {
+            CreateItemMessageOutput messageOutput = CreateItemMessageOutput.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .photoUrl(item.getPhotoUrl())
+                .unique(item.getUnique())
+                .baseSellingPrice(item.getBaseSellingPrice())
+                .active(item.getActive())
+                .categoriesIds(item.getItemCategories().stream().map(ItemCategory::getCategory).map(Category::getId).toList())
+                .build();
+            
+            CommonMessageDTO commonMessageDTO = CommonMessageDTO.builder()
+                .type(EnumMessageType.CREATED)
+                .event(EnumMessageEvent.ITEM_EVENT)
+                .data(mapper.writeValueAsString(messageOutput))
+                .build();
+
+            messageRepository.sendMessage(MARKET_QUEUE, mapper.writeValueAsString(commonMessageDTO));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private CreateItemOutput mountOutput(Item item) {

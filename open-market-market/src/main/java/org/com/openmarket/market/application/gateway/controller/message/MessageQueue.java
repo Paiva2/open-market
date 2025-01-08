@@ -8,6 +8,8 @@ import org.com.openmarket.market.domain.core.usecase.category.registerCategory.R
 import org.com.openmarket.market.domain.core.usecase.category.registerCategory.dto.RegisterCategoryInput;
 import org.com.openmarket.market.domain.core.usecase.category.registerCategory.exception.CategoryAlreadyExistsException;
 import org.com.openmarket.market.domain.core.usecase.common.dto.CommonMessageDTO;
+import org.com.openmarket.market.domain.core.usecase.item.crateItem.CreateItemUsecase;
+import org.com.openmarket.market.domain.core.usecase.item.crateItem.dto.CreateItemInput;
 import org.com.openmarket.market.domain.core.usecase.user.disableUser.DisableUserUsecase;
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.RegisterUserInput;
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.RegisterUserUsecase;
@@ -30,6 +32,7 @@ public class MessageQueue {
     private final RegisterCategoryUsecase registerCategoryUsecase;
     private final RegisterUserUsecase registerUserUsecase;
     private final DisableUserUsecase disableUserUsecase;
+    private final CreateItemUsecase createItemUsecase;
 
     @RabbitListener(queues = {MARKET_QUEUE})
     public void receiveMessage(@Payload Message messagePayload) {
@@ -57,12 +60,16 @@ public class MessageQueue {
     private void handleTypeCreated(CommonMessageDTO messageDTO) throws JsonProcessingException {
         switch (messageDTO.getEvent()) {
             case CATEGORY_EVENT -> {
-                RegisterCategoryInput input = new RegisterCategoryInput(messageDTO.getData());
+                RegisterCategoryInput input = mapper.readValue(messageDTO.getData(), RegisterCategoryInput.class);
                 registerCategoryUsecase.execute(input);
             }
             case USER_EVENT -> {
                 RegisterUserInput input = mapper.readValue(messageDTO.getData(), RegisterUserInput.class);
                 registerUserUsecase.execute(input);
+            }
+            case ITEM_EVENT -> {
+                CreateItemInput input = mapper.readValue(messageDTO.getData(), CreateItemInput.class);
+                createItemUsecase.execute(input);
             }
             default -> log.error("Event not recognized! {}", messageDTO.getEvent());
         }

@@ -71,7 +71,7 @@ public class CreateCategoryUsecase {
             CommonMessageDTO message = CommonMessageDTO.builder()
                 .type(EnumMessageType.CREATED)
                 .event(EnumMessageEvent.CATEGORY_EVENT)
-                .data(category.getName())
+                .data(mapper.writeValueAsString(category))
                 .build();
 
             messageRepository.sendMessage(MARKET_QUEUE, mapper.writeValueAsString(message));

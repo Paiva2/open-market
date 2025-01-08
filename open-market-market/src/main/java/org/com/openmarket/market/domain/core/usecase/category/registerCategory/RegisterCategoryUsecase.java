@@ -31,6 +31,7 @@ public class RegisterCategoryUsecase {
 
     private Category fillCategory(RegisterCategoryInput input) {
         return Category.builder()
+            .externalId(input.getId().toString())
             .name(input.getName())
             .build();
     }
