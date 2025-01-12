@@ -22,6 +22,13 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
+    public Optional<Item> findByExternalId(String externalId) {
+        Optional<ItemEntity> itemEntity = repository.findByExternalId(externalId);
+        if (itemEntity.isEmpty()) return Optional.empty();
+        return Optional.of(ItemMapper.toDomain(itemEntity.get()));
+    }
+
+    @Override
     public Item save(Item item) {
         ItemEntity itemEntity = repository.save(ItemMapper.toPersistence(item));
         return ItemMapper.toDomain(itemEntity);

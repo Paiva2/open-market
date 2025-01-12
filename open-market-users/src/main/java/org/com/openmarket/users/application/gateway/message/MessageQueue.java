@@ -16,7 +16,9 @@ import java.util.Date;
 import java.util.List;
 
 import static org.com.openmarket.users.application.config.constants.QueueConstants.ItemService.ITEM_QUEUE;
+import static org.com.openmarket.users.application.config.constants.QueueConstants.MarketService.MARKET_QUEUE;
 import static org.com.openmarket.users.application.config.constants.QueueConstants.User.USER_QUEUE;
+import static org.com.openmarket.users.application.config.constants.QueueConstants.WalletService.WALLET_QUEUE;
 
 @Slf4j
 @Component
@@ -32,8 +34,7 @@ public class MessageQueue {
         try {
             log.info("New message received on queue {}", USER_QUEUE);
             String bodyConverted = convertBodyAsString(messagePayload);
-            //List<String> queuesToReceive = List.of(USER_QUEUE, ITEM_QUEUE, WALLET_QUEUE, MARKET_QUEUE);
-            List<String> queuesToReceive = List.of(USER_QUEUE, ITEM_QUEUE);
+            List<String> queuesToReceive = List.of(USER_QUEUE, ITEM_QUEUE, WALLET_QUEUE, MARKET_QUEUE);
             registerMessageOnConfigDb(bodyConverted, queuesToReceive);
 
             CommonMessageDTO messageDTO = mapper.readValue(bodyConverted, CommonMessageDTO.class);

@@ -56,4 +56,7 @@ public class ItemEntity {
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
     private List<ItemCategoryEntity> itemCategories;
+
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+    private List<UserItemEntity> userItems;
 }

@@ -9,6 +9,8 @@ import org.com.openmarket.items.core.domain.usecase.user.disableUser.DisableUser
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.InsertUserUsecase;
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.dto.InsertUserInput;
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.exception.UserAlreadyExistsException;
+import org.com.openmarket.items.core.domain.usecase.userItem.updateUserItem.UpdateUserItemUsecase;
+import org.com.openmarket.items.core.domain.usecase.userItem.updateUserItem.dto.UpdateUserItemInput;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -26,6 +28,7 @@ public class MessageQueue {
 
     private final InsertUserUsecase insertUserUsecase;
     private final DisableUserUsecase disableUserUsecase;
+    private final UpdateUserItemUsecase updateUserItemUsecase;
 
     @RabbitListener(queues = {ITEM_QUEUE})
     public void receive(@Payload Message messagePayload) {
@@ -60,8 +63,12 @@ public class MessageQueue {
         }
     }
 
-    private void handleUpdated(CommonMessageDTO messageDTO) {
+    private void handleUpdated(CommonMessageDTO messageDTO) throws JsonProcessingException {
         switch (messageDTO.getEvent()) {
+            case USER_ITEM_EVENT -> {
+                UpdateUserItemInput input = mapper.readValue(messageDTO.getData(), UpdateUserItemInput.class);
+                updateUserItemUsecase.execute(input);
+            }
             default -> log.error("Event not implemented! {}", messageDTO.getEvent());
         }
     }

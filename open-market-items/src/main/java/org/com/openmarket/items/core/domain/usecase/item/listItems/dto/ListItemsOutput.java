@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Builder
@@ -51,6 +52,7 @@ public class ListItemsOutput {
     @Builder
     @Data
     public static class ItemOutput {
+        private UUID id;
         private String name;
         private String description;
         private String photoUrl;
@@ -60,6 +62,7 @@ public class ListItemsOutput {
         private List<CategoriesOutput> categories;
 
         public ItemOutput(Item item) {
+            this.id = item.getId();
             this.name = item.getName();
             this.description = item.getDescription();
             this.photoUrl = item.getPhotoUrl();

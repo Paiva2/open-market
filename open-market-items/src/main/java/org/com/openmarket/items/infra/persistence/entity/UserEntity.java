@@ -46,4 +46,7 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<ItemAlterationEntity> itemAlterations;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<UserItemEntity> userItems;
 }

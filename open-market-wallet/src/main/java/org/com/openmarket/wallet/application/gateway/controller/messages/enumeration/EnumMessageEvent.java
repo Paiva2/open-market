@@ -3,6 +3,7 @@ package org.com.openmarket.wallet.application.gateway.controller.messages.enumer
 public enum EnumMessageEvent {
     USER_EVENT,
     ITEM_EVENT,
+    USER_ITEM_EVENT,
     MARKET_EVENT,
     CATEGORY_EVENT,
     WALLET_EVENT

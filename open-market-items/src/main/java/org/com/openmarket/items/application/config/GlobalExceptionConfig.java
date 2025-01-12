@@ -2,6 +2,7 @@ package org.com.openmarket.items.application.config;
 
 import org.com.openmarket.items.core.domain.usecase.common.exception.core.BadRequestException;
 import org.com.openmarket.items.core.domain.usecase.common.exception.core.ConflictException;
+import org.com.openmarket.items.core.domain.usecase.common.exception.core.ForbiddenException;
 import org.com.openmarket.items.core.domain.usecase.common.exception.core.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +58,17 @@ public class GlobalExceptionConfig {
         );
 
         return new ResponseEntity<>(errors, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Map<String, Object>> forbiddenExceptionResolver(ForbiddenException exception) {
+        LinkedHashMap<String, Object> errors = mapErrors(
+            HttpStatus.FORBIDDEN.value(),
+            exception.getMessage(),
+            exception.getClass().getSimpleName()
+        );
+
+        return new ResponseEntity<>(errors, HttpStatus.FORBIDDEN);
     }
 
     private LinkedHashMap<String, Object> mapErrors(Integer status, String message, String exceptionName) {

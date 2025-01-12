@@ -8,4 +8,6 @@ import java.util.UUID;
 
 public interface ItemRepositoryOrm extends JpaRepository<ItemEntity, UUID> {
     Optional<ItemEntity> findByName(String name);
+
+    Optional<ItemEntity> findByExternalId(String externalId);
 }

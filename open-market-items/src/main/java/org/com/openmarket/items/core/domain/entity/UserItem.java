@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +25,7 @@ public class UserItem {
     @Builder
     @Data
     public static class KeyId {
-        private Long userId;
-        private Long itemId;
+        private UUID userId;
+        private UUID itemId;
     }
 }

@@ -43,7 +43,7 @@ public class MessageQueue {
 
             switch (commonMessageDTO.getType()) {
                 case NEW_TRANSACTION -> {
-                    WalletMessageDTO messageConverted = mapper.readValue(bodyConverted, WalletMessageDTO.class);
+                    WalletMessageDTO messageConverted = mapper.readValue(commonMessageDTO.getData(), WalletMessageDTO.class);
                     registerNewTransactionUsecase.execute(mountRegisterNewTransactionInput(messageConverted));
                 }
                 case CREATED -> handleCreated(commonMessageDTO);

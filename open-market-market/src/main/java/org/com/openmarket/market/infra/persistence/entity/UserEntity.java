@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -42,4 +43,10 @@ public class UserEntity {
     @UpdateTimestamp
     @Column(name = "usr_updated_at")
     private Date updatedAt;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<UserItemEntity> userItems;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<ItemSaleEntity> itemSales;
 }
