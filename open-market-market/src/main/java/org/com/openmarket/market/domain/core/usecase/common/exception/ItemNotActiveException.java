@@ -1,6 +1,8 @@
 package org.com.openmarket.market.domain.core.usecase.common.exception;
 
-public class ItemNotActiveException extends RuntimeException {
+import org.com.openmarket.market.domain.core.usecase.common.exception.core.BadRequestException;
+
+public class ItemNotActiveException extends BadRequestException {
     private final static String MESSAGE_DEFAULT = "Item disabled!";
 
     public ItemNotActiveException() {

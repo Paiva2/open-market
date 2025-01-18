@@ -1,6 +1,8 @@
 package org.com.openmarket.market.domain.core.usecase.common.exception;
 
-public class CategoryNotFoundException extends RuntimeException {
+import org.com.openmarket.market.domain.core.usecase.common.exception.core.NotFoundException;
+
+public class CategoryNotFoundException extends NotFoundException {
 
     public CategoryNotFoundException(String message) {
         super(message);

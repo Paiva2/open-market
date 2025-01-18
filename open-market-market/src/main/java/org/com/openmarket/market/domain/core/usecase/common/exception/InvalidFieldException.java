@@ -1,6 +1,8 @@
 package org.com.openmarket.market.domain.core.usecase.common.exception;
 
-public class InvalidFieldException extends RuntimeException {
+import org.com.openmarket.market.domain.core.usecase.common.exception.core.BadRequestException;
+
+public class InvalidFieldException extends BadRequestException {
     public InvalidFieldException(String message) {
         super(message);
     }

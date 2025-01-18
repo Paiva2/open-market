@@ -8,6 +8,7 @@ import org.com.openmarket.market.domain.core.usecase.common.dto.UpdateUserItemMe
 import org.com.openmarket.market.domain.core.usecase.common.dto.UserWalletViewOutput;
 import org.com.openmarket.market.domain.core.usecase.common.dto.WalletMessageInput;
 import org.com.openmarket.market.domain.core.usecase.common.exception.*;
+import org.com.openmarket.market.domain.core.usecase.common.exception.core.ConflictException;
 import org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale.dto.InsertItemSaleInput;
 import org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale.exception.UserBalanceException;
 import org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale.exception.UserItemQuantityException;
@@ -97,7 +98,7 @@ public class InsertItemSaleUsecase {
         Optional<DatabaseLock> databaseLockEntity = databaseLockRepository.getLockByDatabase(WALLET_DATABASE_NAME);
 
         if (databaseLockEntity.isPresent()) {
-            throw new RuntimeException("Another operation is being made. Try again later!");
+            throw new ConflictException("Another operation is being made. Try again later!");
         }
     }
 

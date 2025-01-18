@@ -1,6 +1,8 @@
 package org.com.openmarket.market.domain.core.usecase.common.exception;
 
-public class ItemNotFoundException extends RuntimeException {
+import org.com.openmarket.market.domain.core.usecase.common.exception.core.NotFoundException;
+
+public class ItemNotFoundException extends NotFoundException {
     private final static String MESSAGE_DEFAULT = "Item not found!";
 
     public ItemNotFoundException() {
