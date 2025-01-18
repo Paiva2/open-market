@@ -2,10 +2,7 @@ package org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import org.com.openmarket.market.domain.core.entity.Item;
-import org.com.openmarket.market.domain.core.entity.ItemSale;
-import org.com.openmarket.market.domain.core.entity.User;
-import org.com.openmarket.market.domain.core.entity.UserItem;
+import org.com.openmarket.market.domain.core.entity.*;
 import org.com.openmarket.market.domain.core.usecase.common.dto.CommonMessageDTO;
 import org.com.openmarket.market.domain.core.usecase.common.dto.UpdateUserItemMessageInput;
 import org.com.openmarket.market.domain.core.usecase.common.dto.UserWalletViewOutput;
@@ -30,6 +27,7 @@ import static org.com.openmarket.market.application.config.constants.QueueConsta
 @Component
 @AllArgsConstructor
 public class InsertItemSaleUsecase {
+    private final static String WALLET_DATABASE_NAME = "open-market-wallet-db";
     private final static ObjectMapper mapper = new ObjectMapper();
     private final static Double MARKET_TAX = 0.02; // 2%
     private final static BigDecimal TOTAL_TAX_VALUE = new BigDecimal("1000000");
@@ -40,6 +38,8 @@ public class InsertItemSaleUsecase {
     private final WalletRepository walletRepository;
     private final ItemSaleRepository itemSaleRepository;
     private final MessageRepository messageRepository;
+
+    private final DatabaseLockRepository databaseLockRepository;
 
     public void execute(String externalUserId, String externalItemId, InsertItemSaleInput input, String authorizationToken) {
         User user = findUser(externalUserId);
@@ -54,33 +54,63 @@ public class InsertItemSaleUsecase {
         }
 
         BigDecimal tax = defineSaleTaxes(input, item);
-        UserWalletViewOutput walletView = findUserWallet(authorizationToken);
-        //todo: handle table lock
-        if (walletView.getBalance().compareTo(BigDecimal.ONE) < 1 || tax.compareTo(walletView.getBalance()) > 0) {
-            throw new UserBalanceException("User has no balance available.");
+
+        checkWalletLock();
+        DatabaseLock walletLock = lockWallet();
+
+        try {
+            UserWalletViewOutput walletView = findUserWallet(authorizationToken);
+
+            if (walletView.getBalance().compareTo(BigDecimal.ONE) < 1 || tax.compareTo(walletView.getBalance()) > 0) {
+                throw new UserBalanceException("User has no balance available.");
+            }
+
+            if (!item.getActive()) {
+                throw new ItemNotActiveException();
+            } else if (item.getUnique()) {
+                throw new UniqueItemException();
+            }
+
+            UserItem userItem = checkUserItem(user, item);
+
+            if (!input.getAcceptOffers()) {
+                input.setOnlyOffers(false);
+            }
+
+            checkItemQuantity(userItem, input);
+            checkSaleValue(input);
+
+            ItemSale itemSale = fillItemSale(user, item, input);
+            persistItemSale(itemSale);
+
+            decreaseUserItemQuantity(userItem, input);
+            sendUserItemDecreaseQuantityMessage(user, item, userItem);
+            decreaseWalletTax(tax, user, walletView.getId());
+            unlockWallet(walletLock);
+        } catch (Exception exception) {
+            unlockWallet(walletLock);
+            throw exception;
         }
+    }
 
-        if (!item.getActive()) {
-            throw new ItemNotActiveException();
-        } else if (item.getUnique()) {
-            throw new UniqueItemException();
+    private void checkWalletLock() {
+        Optional<DatabaseLock> databaseLockEntity = databaseLockRepository.getLockByDatabase(WALLET_DATABASE_NAME);
+
+        if (databaseLockEntity.isPresent()) {
+            throw new RuntimeException("Another operation is being made. Try again later!");
         }
+    }
 
-        UserItem userItem = checkUserItem(user, item);
+    private DatabaseLock lockWallet() {
+        return databaseLockRepository.saveLock(
+            DatabaseLock.builder()
+                .databaseName(WALLET_DATABASE_NAME)
+                .build()
+        );
+    }
 
-        if (!input.getAcceptOffers()) {
-            input.setOnlyOffers(false);
-        }
-
-        checkItemQuantity(userItem, input);
-        checkSaleValue(input);
-
-        ItemSale itemSale = fillItemSale(user, item, input);
-        persistItemSale(itemSale);
-
-        decreaseUserItemQuantity(userItem, input);
-        sendUserItemDecreaseQuantityMessage(user, item, userItem);
-        decreaseWalletTax(tax, user, walletView.getId());
+    private void unlockWallet(DatabaseLock lock) {
+        databaseLockRepository.removeLock(lock);
     }
 
     private User findUser(String externalUserId) {
@@ -109,7 +139,7 @@ public class InsertItemSaleUsecase {
         Long itemQuantityAvailability = userItem.getQuantity();
 
         if (itemQuantityAvailability < 1 || input.getQuantity() < 1 || (input.getQuantity() > itemQuantityAvailability)) {
-            throw new UserItemQuantityException(userItem.getQuantity());
+            throw new UserItemQuantityException(userItem.getQuantity().toString());
         }
     }
 

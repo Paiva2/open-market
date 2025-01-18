@@ -96,6 +96,18 @@ services:
       - "15672:15672"
     networks:
       - open-market-network
+  redis:
+    container_name: "cache-open-market"
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass development
+    volumes:
+      - cache:/data
 
 networks:
   open-market-network:
+volumes:
+  cache:
+    driver: local
