@@ -54,10 +54,10 @@ public class ItemEntity {
     @Column(name = "itm_updated_at")
     private Date updatedAt;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
     private List<ItemCategoryEntity> itemCategories;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
     private List<UserItemEntity> userItems;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")

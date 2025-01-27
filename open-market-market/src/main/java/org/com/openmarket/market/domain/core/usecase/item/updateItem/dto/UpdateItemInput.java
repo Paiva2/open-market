@@ -1,0 +1,25 @@
+package org.com.openmarket.market.domain.core.usecase.item.updateItem.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateItemInput {
+    private String id;
+    private String name;
+    private String description;
+    private String photoUrl;
+    private Boolean unique;
+    private BigDecimal baseSellingPrice;
+    private Boolean active;
+
+    private List<String> categoriesIds;
+}

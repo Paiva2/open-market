@@ -44,7 +44,7 @@ public class UserEntity {
     @Column(name = "usr_updated_at")
     private Date updatedAt;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserItemEntity> userItems;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")

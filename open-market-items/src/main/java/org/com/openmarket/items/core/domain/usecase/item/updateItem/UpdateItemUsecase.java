@@ -1,21 +1,23 @@
 package org.com.openmarket.items.core.domain.usecase.item.updateItem;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.com.openmarket.items.application.gateway.message.dto.CommonMessageDTO;
 import org.com.openmarket.items.core.domain.entity.Category;
 import org.com.openmarket.items.core.domain.entity.Item;
 import org.com.openmarket.items.core.domain.entity.ItemCategory;
 import org.com.openmarket.items.core.domain.entity.User;
 import org.com.openmarket.items.core.domain.enumeration.EnumItemAlteration;
-import org.com.openmarket.items.core.domain.interfaces.repository.CategoryRepository;
-import org.com.openmarket.items.core.domain.interfaces.repository.ItemCategoryRepository;
-import org.com.openmarket.items.core.domain.interfaces.repository.ItemRepository;
-import org.com.openmarket.items.core.domain.interfaces.repository.UserRepository;
+import org.com.openmarket.items.core.domain.enumeration.EnumMessageEvent;
+import org.com.openmarket.items.core.domain.enumeration.EnumMessageType;
+import org.com.openmarket.items.core.domain.interfaces.repository.*;
 import org.com.openmarket.items.core.domain.usecase.common.exception.CategoryNotFoundException;
 import org.com.openmarket.items.core.domain.usecase.common.exception.InvalidFieldException;
 import org.com.openmarket.items.core.domain.usecase.common.exception.UserNotFoundException;
 import org.com.openmarket.items.core.domain.usecase.item.common.exception.ItemNotFoundException;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.exception.ItemAlreadyExistsException;
 import org.com.openmarket.items.core.domain.usecase.item.updateItem.dto.UpdateItemInput;
+import org.com.openmarket.items.core.domain.usecase.item.updateItem.dto.UpdateItemMessageOutput;
 import org.com.openmarket.items.core.domain.usecase.item.updateItem.dto.UpdateItemOutput;
 import org.com.openmarket.items.core.domain.usecase.itemAlteration.registerItemAlteration.RegisterItemAlterationUsecase;
 import org.springframework.stereotype.Service;
@@ -24,14 +26,19 @@ import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.*;
 
+import static org.com.openmarket.items.application.config.constants.QueueConstants.Market.MARKET_QUEUE;
+
 @Service
 @AllArgsConstructor
 public class UpdateItemUsecase {
+    private final static ObjectMapper mapper = new ObjectMapper();
+
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final ItemCategoryRepository itemCategoryRepository;
     private final RegisterItemAlterationUsecase registerItemAlterationUsecase;
+    private final MessageRepository messageRepository;
 
     public UpdateItemOutput execute(Long userId, UpdateItemInput input) {
         User user = findUser(userId);
@@ -51,6 +58,7 @@ public class UpdateItemUsecase {
         item.setItemCategories(itemCategoriesUpdated);
 
         registerItemAlteration(user, item);
+        sendAlterationMessage(item);
 
         return mountOutput(item);
     }
@@ -148,6 +156,31 @@ public class UpdateItemUsecase {
 
     private void registerItemAlteration(User user, Item item) {
         registerItemAlterationUsecase.execute(user, item, EnumItemAlteration.UPDATE);
+    }
+
+    private void sendAlterationMessage(Item item) {
+        try {
+            UpdateItemMessageOutput messageOutput = UpdateItemMessageOutput.builder()
+                .id(item.getId().toString())
+                .name(item.getName())
+                .description(item.getDescription())
+                .photoUrl(item.getPhotoUrl())
+                .unique(item.getUnique())
+                .baseSellingPrice(item.getBaseSellingPrice())
+                .active(item.getActive())
+                .categoriesIds(item.getItemCategories().stream().map(ItemCategory::getCategory).map(category -> category.getId().toString()).toList())
+                .build();
+
+            CommonMessageDTO commonMessageDTO = CommonMessageDTO.builder()
+                .type(EnumMessageType.UPDATED)
+                .event(EnumMessageEvent.ITEM_EVENT)
+                .data(mapper.writeValueAsString(messageOutput))
+                .build();
+
+            messageRepository.sendMessage(MARKET_QUEUE, mapper.writeValueAsString(commonMessageDTO));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private UpdateItemOutput mountOutput(Item item) {

@@ -2,18 +2,18 @@ package org.com.openmarket.market.infra.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 import java.util.UUID;
 
-@Data
 @Entity
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tb_items_categories")
@@ -39,11 +39,11 @@ public class ItemCategoryEntity {
     @Column(name = "ict_updated_at", nullable = false)
     private Date updatedAt;
 
-    @Data
-    @Builder
+    @Setter
+    @Getter
     @Embeddable
-    @NoArgsConstructor
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class KeyId {
         @Column(name = "ict_item_id")
         private UUID itemId;

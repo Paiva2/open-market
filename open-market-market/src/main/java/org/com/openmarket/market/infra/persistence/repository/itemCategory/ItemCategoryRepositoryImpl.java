@@ -8,6 +8,7 @@ import org.com.openmarket.market.infra.persistence.mapper.ItemCategoryMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -19,5 +20,16 @@ public class ItemCategoryRepositoryImpl implements ItemCategoryRepository {
         List<ItemCategoryEntity> itemCategoryEntities = itemCategoryList.stream().map(ItemCategoryMapper::toPersistence).toList();
         List<ItemCategoryEntity> entities = repository.saveAll(itemCategoryEntities);
         return entities.stream().map(ItemCategoryMapper::toDomain).toList();
+    }
+
+    @Override
+    public List<ItemCategory> findAllByItem(UUID itemId) {
+        List<ItemCategoryEntity> itemCategories = repository.findAllByItemId(itemId);
+        return itemCategories.stream().map(ItemCategoryMapper::toDomain).toList();
+    }
+
+    @Override
+    public void removeAllByItem(UUID itemId) {
+        repository.deleteAllByItemId(itemId);
     }
 }

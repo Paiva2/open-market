@@ -38,6 +38,6 @@ public class CategoryEntity {
     @Column(name = "cat_updated_at")
     private Date updatedAt;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     private List<ItemCategoryEntity> itemCategories;
 }
