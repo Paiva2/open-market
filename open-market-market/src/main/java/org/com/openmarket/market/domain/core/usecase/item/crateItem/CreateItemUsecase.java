@@ -1,5 +1,6 @@
 package org.com.openmarket.market.domain.core.usecase.item.crateItem;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.market.domain.core.entity.Category;
 import org.com.openmarket.market.domain.core.entity.Item;
@@ -23,6 +24,7 @@ public class CreateItemUsecase {
     private final CategoryRepository categoryRepository;
     private final ItemCategoryRepository itemCategoryRepository;
 
+    @Transactional
     public void execute(CreateItemInput input) {
         checkItemAlreadyExists(input.getName());
         List<Category> categories = findCategories(input.getCategoriesIds().stream().map(Object::toString).toList());

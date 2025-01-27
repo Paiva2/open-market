@@ -12,4 +12,8 @@ import lombok.NoArgsConstructor;
 public class DatabaseLock {
     private String id;
     private String databaseName;
+
+    public DatabaseLock(String databaseName) {
+        this.databaseName = databaseName;
+    }
 }

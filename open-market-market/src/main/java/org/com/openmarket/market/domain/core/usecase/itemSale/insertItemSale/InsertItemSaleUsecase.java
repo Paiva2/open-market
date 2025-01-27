@@ -31,7 +31,7 @@ public class InsertItemSaleUsecase {
     private final static String WALLET_DATABASE_NAME = "open-market-wallet-db";
     private final static ObjectMapper mapper = new ObjectMapper();
     private final static Double MARKET_TAX = 0.02; // 2%
-    private final static BigDecimal TOTAL_TAX_VALUE = new BigDecimal("1000000");
+    private final static BigDecimal MAX_TAX_VALUE = new BigDecimal("1000000");
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -152,10 +152,15 @@ public class InsertItemSaleUsecase {
 
     private BigDecimal defineSaleTaxes(InsertItemSaleInput input, Item item) {
         BigDecimal saleValue = input.getOnlyOffers() ? item.getBaseSellingPrice() : input.getValue();
+
+        if (input.getQuantity() > 1) {
+            saleValue = saleValue.multiply(new BigDecimal(input.getQuantity()));
+        }
+
         BigDecimal totalTax = saleValue.multiply(new BigDecimal(MARKET_TAX));
 
-        if (totalTax.compareTo(TOTAL_TAX_VALUE) > 0) {
-            totalTax = TOTAL_TAX_VALUE;
+        if (totalTax.compareTo(MAX_TAX_VALUE) > 0) {
+            totalTax = MAX_TAX_VALUE;
         }
 
         return totalTax;

@@ -1,5 +1,6 @@
 package org.com.openmarket.market.domain.core.usecase.category.deleteCategory;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.market.domain.core.entity.Category;
 import org.com.openmarket.market.domain.core.usecase.category.deleteCategory.dto.DeleteCategoryInput;
@@ -14,6 +15,7 @@ public class DeleteCategoryUsecase {
     private final CategoryRepository categoryRepository;
     private final ItemCategoryRepository itemCategoryRepository;
 
+    @Transactional
     public void execute(DeleteCategoryInput input) {
         Category category = findCategory(input.getId());
         removeAllItemCategories(category);
