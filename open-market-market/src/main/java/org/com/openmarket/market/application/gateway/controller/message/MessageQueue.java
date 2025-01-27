@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.com.openmarket.market.domain.core.usecase.category.deleteCategory.DeleteCategoryUsecase;
+import org.com.openmarket.market.domain.core.usecase.category.deleteCategory.dto.DeleteCategoryInput;
 import org.com.openmarket.market.domain.core.usecase.category.registerCategory.RegisterCategoryUsecase;
 import org.com.openmarket.market.domain.core.usecase.category.registerCategory.dto.RegisterCategoryInput;
 import org.com.openmarket.market.domain.core.usecase.category.registerCategory.exception.CategoryAlreadyExistsException;
 import org.com.openmarket.market.domain.core.usecase.common.dto.CommonMessageDTO;
+import org.com.openmarket.market.domain.core.usecase.common.exception.CategoryNotFoundException;
 import org.com.openmarket.market.domain.core.usecase.common.exception.ItemNotActiveException;
 import org.com.openmarket.market.domain.core.usecase.item.crateItem.CreateItemUsecase;
 import org.com.openmarket.market.domain.core.usecase.item.crateItem.dto.CreateItemInput;
@@ -34,6 +37,7 @@ public class MessageQueue {
     private final static ObjectMapper mapper = new ObjectMapper();
 
     private final RegisterCategoryUsecase registerCategoryUsecase;
+    private final DeleteCategoryUsecase deleteCategoryUsecase;
 
     private final RegisterUserUsecase registerUserUsecase;
     private final DisableUserUsecase disableUserUsecase;
@@ -55,7 +59,8 @@ public class MessageQueue {
                 case DELETED -> handleTypeDeleted(messageDTO);
                 default -> throw new RuntimeException("Event type not recognized!" + messageDTO.getEvent());
             }
-        } catch (UserAlreadyExistsException | CategoryAlreadyExistsException | ItemNotActiveException e) {
+        } catch (UserAlreadyExistsException | CategoryAlreadyExistsException | ItemNotActiveException |
+                 CategoryNotFoundException e) {
             String message = "Error while processing new message";
             log.error(MessageFormat.format("{0}: {1}", message, e));
         } catch (Exception e) {
@@ -93,9 +98,13 @@ public class MessageQueue {
         }
     }
 
-    private void handleTypeDeleted(CommonMessageDTO messageDTO) {
+    private void handleTypeDeleted(CommonMessageDTO messageDTO) throws JsonProcessingException {
         switch (messageDTO.getEvent()) {
             case USER_EVENT -> disableUserUsecase.execute(messageDTO.getData());
+            case CATEGORY_EVENT -> {
+                DeleteCategoryInput input = mapper.readValue(messageDTO.getData(), DeleteCategoryInput.class);
+                deleteCategoryUsecase.execute(input);
+            }
             default -> log.error("Event not recognized! {}", messageDTO.getEvent());
         }
     }

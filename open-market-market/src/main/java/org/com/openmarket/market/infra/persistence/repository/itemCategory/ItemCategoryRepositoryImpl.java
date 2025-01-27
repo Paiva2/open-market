@@ -32,4 +32,9 @@ public class ItemCategoryRepositoryImpl implements ItemCategoryRepository {
     public void removeAllByItem(UUID itemId) {
         repository.deleteAllByItemId(itemId);
     }
+
+    @Override
+    public void removeAllByCategory(Long categoryId) {
+        repository.deleteAllByCategoryId(categoryId);
+    }
 }

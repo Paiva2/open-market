@@ -12,4 +12,7 @@ public interface ItemCategoryRepositoryOrm extends JpaRepository<ItemCategoryEnt
 
     @Modifying
     void deleteAllByItemId(UUID itemId);
+
+    @Modifying
+    void deleteAllByCategoryId(Long categoryId);
 }

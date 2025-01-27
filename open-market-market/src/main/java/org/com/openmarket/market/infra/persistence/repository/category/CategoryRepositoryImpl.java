@@ -23,6 +23,13 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
+    public Optional<Category> findByExternalId(String externalId) {
+        Optional<CategoryEntity> categoryEntity = repository.findByExternalId(externalId);
+        if (categoryEntity.isEmpty()) return Optional.empty();
+        return Optional.of(CategoryMapper.toDomain(categoryEntity.get()));
+    }
+
+    @Override
     public Category save(Category category) {
         CategoryEntity categoryEntity = repository.save(CategoryMapper.toPersistence(category));
         return CategoryMapper.toDomain(categoryEntity);
@@ -32,5 +39,10 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     public List<Category> findCategoriesByExternalId(List<String> externalIds) {
         List<CategoryEntity> categoryEntities = repository.findCategoriesByExternalId(externalIds);
         return categoryEntities.stream().map(CategoryMapper::toDomain).toList();
+    }
+
+    @Override
+    public void removeById(Long id) {
+        repository.removeById(id);
     }
 }
