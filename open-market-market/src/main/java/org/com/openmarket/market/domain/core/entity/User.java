@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -20,4 +21,7 @@ public class User {
     private Boolean enabled;
     private Date createdAt;
     private Date updatedAt;
+
+    private List<Offer> offers;
+    private List<OfferUserItem> offerUserItems;
 }

@@ -5,26 +5,29 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemSale {
-    private UUID id;
+public class OfferUserItem {
+    private KeyId id;
+    private User user;
+    private Item item;
+    private Offer offer;
     private Long quantity;
-    private BigDecimal value;
-    private Date expirationDate;
-    private Boolean acceptOffers;
-    private Boolean onlyOffers;
     private Date createdAt;
     private Date updatedAt;
 
-    private Item item;
-    private User user;
-    private List<Offer> offers;
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class KeyId {
+        private UUID userId;
+        private UUID itemId;
+        private UUID offerId;
+    }
 }

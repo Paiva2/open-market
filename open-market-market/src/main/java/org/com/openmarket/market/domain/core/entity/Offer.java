@@ -12,20 +12,15 @@ import java.util.UUID;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class Item {
+@AllArgsConstructor
+public class Offer {
     private UUID id;
-    private String externalId;
-    private String name;
-    private String description;
-    private String photoUrl;
-    private Boolean unique;
-    private BigDecimal baseSellingPrice;
-    private Boolean active;
+    private BigDecimal value;
     private Date createdAt;
     private Date updatedAt;
+    private User user;
+    private ItemSale itemSale;
 
-    private List<ItemCategory> itemCategories;
     private List<OfferUserItem> offerUserItems;
 }

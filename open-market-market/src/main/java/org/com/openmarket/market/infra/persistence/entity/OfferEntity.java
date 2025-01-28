@@ -18,44 +18,32 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tb_items_sales")
-public class ItemSaleEntity {
+@Table(name = "tb_offers")
+public class OfferEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "isl_id")
+    @Column(name = "ofr_id")
     private UUID id;
 
-    @Column(name = "isl_quantity")
-    private Long quantity;
-
-    @Column(name = "isl_value")
+    @Column(name = "ofr_value")
     private BigDecimal value;
 
-    @Column(name = "isl_expiration_date")
-    private Date expirationDate;
-
-    @Column(name = "isl_accept_offers")
-    private Boolean acceptOffers;
-
-    @Column(name = "isl_only_offers")
-    private Boolean onlyOffers;
-
     @CreationTimestamp
-    @Column(name = "isl_created_at")
+    @Column(name = "ofr_created_at")
     private Date createdAt;
 
     @UpdateTimestamp
-    @Column(name = "isl_updated_at")
+    @Column(name = "ofr_updated_at")
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "isl_item_id")
-    private ItemEntity item;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "isl_user_id")
+    @JoinColumn(name = "ofr_user_id")
     private UserEntity user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "itemSale")
-    private List<OfferEntity> offers;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ofr_item_sale_id")
+    private ItemSaleEntity itemSale;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "offer")
+    private List<OfferUserItemEntity> offerUserItems;
 }

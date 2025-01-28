@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.market.domain.core.entity.ItemSale;
+import org.com.openmarket.market.domain.core.entity.Offer;
 import org.com.openmarket.market.domain.core.entity.User;
 import org.com.openmarket.market.domain.core.entity.UserItem;
 import org.com.openmarket.market.domain.core.usecase.common.dto.*;
@@ -18,6 +19,7 @@ import org.com.openmarket.market.domain.interfaces.*;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import static org.com.openmarket.market.application.config.constants.QueueConstants.Item.ITEM_QUEUE;
@@ -34,6 +36,8 @@ public class RemoveItemSaleUsecase {
     private final UserItemRepository userItemRepository;
     private final WalletRepository walletRepository;
     private final MessageRepository messageRepository;
+    private final OfferRepository offerRepository;
+    private final OfferUserItemRepository offerUserItemRepository;
 
     @Transactional
     public void execute(String authorizationToken, String externalId, UUID itemSaleId) {
@@ -51,7 +55,7 @@ public class RemoveItemSaleUsecase {
 
         Long newQuantity = restoreUserItemQuantity(user.getId(), itemSale.getItem().getId(), itemSale.getQuantity());
 
-        //todo: find item offers -> remove
+        removeItemSaleOffers(itemSale);
         removeItemSale(itemSale);
 
         UserWalletViewOutput userWallet = findUserWallet(authorizationToken);
@@ -72,6 +76,22 @@ public class RemoveItemSaleUsecase {
         if (!itemSale.getUser().getId().equals(user.getId())) {
             throw new ForbiddenException("Item on sale do not belong to current user!");
         }
+    }
+
+    private void removeItemSaleOffers(ItemSale itemSale) {
+        List<Offer> offers = offerRepository.getItemSaleOffers(itemSale.getId());
+
+        if (offers == null || offers.isEmpty()) return;
+
+        removeAllOfferUsersItems(offers);
+
+        offerRepository.removeOffers(offers);
+    }
+
+    private void removeAllOfferUsersItems(List<Offer> offers) {
+        List<UUID> offersIds = offers.stream().map(Offer::getId).toList();
+
+        offerUserItemRepository.removeOfferUserItemByOfferIds(offersIds);
     }
 
     private void removeItemSale(ItemSale itemSale) {

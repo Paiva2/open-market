@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS tb_offers_user_item (
     oui_user_id UUID NOT NULL,
     oui_item_id UUID NOT NULL,
     oui_offer_id UUID NOT NULL,
-    uit_quantity BIGINT NOT NULL DEFAULT 1,
+    oui_quantity BIGINT NOT NULL DEFAULT 1,
     oui_created_at TIMESTAMP NOT NULL DEFAULT now(),
     oui_updated_at TIMESTAMP NOT NULL DEFAULT now(),
 
