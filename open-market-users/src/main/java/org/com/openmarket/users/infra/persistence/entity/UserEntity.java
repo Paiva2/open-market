@@ -28,7 +28,7 @@ public class UserEntity {
     private String password;
 
     @Column(name = "usr_enabled", nullable = false)
-    private String enabled;
+    private Boolean enabled;
 
     @CreationTimestamp
     @Column(name = "usr_created_at", nullable = false, updatable = false)

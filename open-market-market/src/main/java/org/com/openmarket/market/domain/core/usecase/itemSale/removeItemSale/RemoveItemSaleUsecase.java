@@ -6,10 +6,7 @@ import lombok.AllArgsConstructor;
 import org.com.openmarket.market.domain.core.entity.ItemSale;
 import org.com.openmarket.market.domain.core.entity.User;
 import org.com.openmarket.market.domain.core.entity.UserItem;
-import org.com.openmarket.market.domain.core.usecase.common.dto.CommonMessageDTO;
-import org.com.openmarket.market.domain.core.usecase.common.dto.UpdateUserItemMessageInput;
-import org.com.openmarket.market.domain.core.usecase.common.dto.UserWalletViewOutput;
-import org.com.openmarket.market.domain.core.usecase.common.dto.WalletMessageInput;
+import org.com.openmarket.market.domain.core.usecase.common.dto.*;
 import org.com.openmarket.market.domain.core.usecase.common.exception.ItemSaleNotFoundException;
 import org.com.openmarket.market.domain.core.usecase.common.exception.UserDisabledException;
 import org.com.openmarket.market.domain.core.usecase.common.exception.UserItemNotFoundException;
@@ -46,6 +43,8 @@ public class RemoveItemSaleUsecase {
             throw new UserDisabledException();
         }
 
+        GetAdminWalletOutput systemWalletId = walletRepository.getSystemBankAdminWalletId(authorizationToken);
+
         ItemSale itemSale = findItemSale(itemSaleId);
 
         checkItemSaleUser(itemSale, user);
@@ -57,7 +56,7 @@ public class RemoveItemSaleUsecase {
 
         UserWalletViewOutput userWallet = findUserWallet(authorizationToken);
 
-        restoreUserWalletTaxValueMessage(user.getExternalId(), userWallet, itemSale);
+        restoreUserWalletTaxValueMessage(userWallet, itemSale, systemWalletId);
         restoreUserItemQuantityMessage(user.getExternalId(), itemSale.getItem().getExternalId(), newQuantity);
     }
 
@@ -103,16 +102,16 @@ public class RemoveItemSaleUsecase {
         }
     }
 
-    private void restoreUserWalletTaxValueMessage(String externalUserId, UserWalletViewOutput userWallet, ItemSale itemSale) {
+    private void restoreUserWalletTaxValueMessage(UserWalletViewOutput userWallet, ItemSale itemSale, GetAdminWalletOutput systemWalletId) {
         BigDecimal totalSaleValue = itemSale.getValue().multiply(new BigDecimal(itemSale.getQuantity()));
         BigDecimal totalSaleTax = totalSaleValue.multiply(new BigDecimal(MARKET_TAX));
 
         try {
             WalletMessageInput walletMessageInput = WalletMessageInput.builder()
-                .externalUserId(externalUserId)
+                .externalUserId(systemWalletId.getExternalAdminId())
                 .transaction(WalletMessageInput.NewTransaction.builder()
                     .targetWalletId(userWallet.getId())
-                    .description("Tax retrieval")
+                    .description("Tax retrieval.")
                     .value(totalSaleTax)
                     .type(EnumTransactionType.DEPOSIT.name())
                     .build()

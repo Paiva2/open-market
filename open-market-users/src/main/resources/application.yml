@@ -47,3 +47,9 @@ eureka:
       defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
   instance:
     hostname: localhost
+
+application:
+  access:
+    bank-adm-email: ${BANK_ADM_EMAIL}
+    bank-adm-user: ${BANK_ADM_USER}
+    bank-adm-password: ${BANK_ADM_PASSWORD}

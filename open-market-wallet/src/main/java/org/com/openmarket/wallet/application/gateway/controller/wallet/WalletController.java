@@ -2,6 +2,8 @@ package org.com.openmarket.wallet.application.gateway.controller.wallet;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.wallet.application.gateway.controller.walletLedger.exception.ExternalIdMissingException;
+import org.com.openmarket.wallet.core.domain.usecase.wallet.getBankAdminWalletId.GetBankAdminWalletIdUsecase;
+import org.com.openmarket.wallet.core.domain.usecase.wallet.getBankAdminWalletId.dto.GetAdminWalletOutput;
 import org.com.openmarket.wallet.core.domain.usecase.wallet.getWalletInformations.GetWalletInformationsUsecase;
 import org.com.openmarket.wallet.core.domain.usecase.wallet.getWalletInformations.dto.GetWalletInformationsOutput;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/wallet")
 public class WalletController {
     private final GetWalletInformationsUsecase getWalletInformationsUsecase;
+    private final GetBankAdminWalletIdUsecase getBankAdminWalletIdUsecase;
 
     @GetMapping("/info")
     public ResponseEntity<GetWalletInformationsOutput> getInformations(
@@ -24,6 +27,15 @@ public class WalletController {
     ) {
         String subjectToken = getIdFromToken(jwt);
         GetWalletInformationsOutput output = getWalletInformationsUsecase.execute(subjectToken);
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @GetMapping("/info/system/bank")
+    public ResponseEntity<GetAdminWalletOutput> getSystemBankId(
+        @AuthenticationPrincipal Jwt jwt
+    ) {
+        getIdFromToken(jwt);
+        GetAdminWalletOutput output = getBankAdminWalletIdUsecase.execute();
         return new ResponseEntity<>(output, HttpStatus.OK);
     }
 

@@ -2,6 +2,7 @@ package org.com.openmarket.market.infra.persistence.repository.wallet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.com.openmarket.market.domain.core.usecase.common.dto.GetAdminWalletOutput;
 import org.com.openmarket.market.domain.core.usecase.common.dto.UserWalletViewOutput;
 import org.com.openmarket.market.domain.interfaces.WalletRepository;
 import org.com.openmarket.market.infra.utils.RestUtils;
@@ -20,9 +21,21 @@ public class WalletRepositoryImpl implements WalletRepository {
     public UserWalletViewOutput getUserWalletView(String authorizationToken) {
         try {
             String url = HOST.concat(URL_PREFIX).concat("/info");
-            String body = restUtils.get(url, authorizationToken);
+            String body = (String) restUtils.get(url, authorizationToken, String.class);
 
             return mapper.readValue(body, UserWalletViewOutput.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public GetAdminWalletOutput getSystemBankAdminWalletId(String authorizationToken) {
+        try {
+            String url = HOST.concat(URL_PREFIX).concat("/info/system/bank");
+            String body = (String) restUtils.get(url, authorizationToken, String.class);
+
+            return mapper.readValue(body, GetAdminWalletOutput.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

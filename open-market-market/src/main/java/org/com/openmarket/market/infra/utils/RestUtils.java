@@ -26,13 +26,13 @@ public class RestUtils {
         return clientHttpRequestFactory;
     }
 
-    public String get(String url, String authorizationToken) {
+    public Object get(String url, String authorizationToken, Class<?> responseType) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Bearer " + authorizationToken);
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+        ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
         return response.getBody();
     }
 }

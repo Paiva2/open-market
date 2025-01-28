@@ -1,12 +1,10 @@
 package org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.market.domain.core.entity.*;
-import org.com.openmarket.market.domain.core.usecase.common.dto.CommonMessageDTO;
-import org.com.openmarket.market.domain.core.usecase.common.dto.UpdateUserItemMessageInput;
-import org.com.openmarket.market.domain.core.usecase.common.dto.UserWalletViewOutput;
-import org.com.openmarket.market.domain.core.usecase.common.dto.WalletMessageInput;
+import org.com.openmarket.market.domain.core.usecase.common.dto.*;
 import org.com.openmarket.market.domain.core.usecase.common.exception.*;
 import org.com.openmarket.market.domain.core.usecase.common.exception.core.ConflictException;
 import org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale.dto.InsertItemSaleInput;
@@ -42,6 +40,7 @@ public class InsertItemSaleUsecase {
 
     private final DatabaseLockRepository databaseLockRepository;
 
+    @Transactional
     public void execute(String externalUserId, String externalItemId, InsertItemSaleInput input, String authorizationToken) {
         User user = findUser(externalUserId);
         Item item = findItem(externalItemId);
@@ -60,6 +59,7 @@ public class InsertItemSaleUsecase {
         DatabaseLock walletLock = lockWallet();
 
         try {
+            GetAdminWalletOutput systemWalletId = walletRepository.getSystemBankAdminWalletId(authorizationToken);
             UserWalletViewOutput walletView = findUserWallet(authorizationToken);
 
             if (walletView.getBalance().compareTo(BigDecimal.ONE) < 1 || tax.compareTo(walletView.getBalance()) > 0) {
@@ -86,7 +86,7 @@ public class InsertItemSaleUsecase {
 
             decreaseUserItemQuantity(userItem, input);
             sendUserItemDecreaseQuantityMessage(user, item, userItem);
-            decreaseWalletTax(tax, user, walletView.getId());
+            decreaseWalletTax(tax, user, systemWalletId.getWalletId());
             unlockWallet(walletLock);
         } catch (Exception exception) {
             unlockWallet(walletLock);
@@ -208,12 +208,13 @@ public class InsertItemSaleUsecase {
         }
     }
 
-    private void decreaseWalletTax(BigDecimal tax, User user, UUID walletId) {
+    private void decreaseWalletTax(BigDecimal tax, User user, UUID systemWalletId) {
+
         try {
             WalletMessageInput walletMessageInput = WalletMessageInput.builder()
                 .externalUserId(user.getExternalId())
                 .transaction(WalletMessageInput.NewTransaction.builder()
-                    .targetWalletId(walletId)
+                    .targetWalletId(systemWalletId)
                     .description("Auto tax on inserting item for sale.")
                     .value(tax)
                     .type(EnumTransactionType.PAYMENT.name())

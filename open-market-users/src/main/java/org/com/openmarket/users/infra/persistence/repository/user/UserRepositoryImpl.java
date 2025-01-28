@@ -21,4 +21,18 @@ public class UserRepositoryImpl implements UserRepository {
 
         return Optional.of(UserMapper.toDomain(userEntity.get()));
     }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        Optional<UserEntity> userEntity = userRepositoryOrm.findByEmail(email);
+        if (userEntity.isEmpty()) return Optional.empty();
+
+        return Optional.of(UserMapper.toDomain(userEntity.get()));
+    }
+
+    @Override
+    public User save(User user) {
+        UserEntity userEntity = userRepositoryOrm.save(UserMapper.toPersistence(user));
+        return UserMapper.toDomain(userEntity);
+    }
 }
