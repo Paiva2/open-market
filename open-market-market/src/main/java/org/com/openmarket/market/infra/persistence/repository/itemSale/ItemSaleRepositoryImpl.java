@@ -2,11 +2,17 @@ package org.com.openmarket.market.infra.persistence.repository.itemSale;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.market.domain.core.entity.ItemSale;
+import org.com.openmarket.market.domain.core.usecase.common.dto.PageableList;
 import org.com.openmarket.market.domain.interfaces.ItemSaleRepository;
 import org.com.openmarket.market.infra.persistence.entity.ItemSaleEntity;
 import org.com.openmarket.market.infra.persistence.mapper.ItemSaleMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,5 +37,20 @@ public class ItemSaleRepositoryImpl implements ItemSaleRepository {
     @Override
     public void remove(UUID id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public PageableList<ItemSale> findAllPaginated(int page, int size, String name, BigDecimal min, BigDecimal max) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.DESC, "isl_created_at");
+        Page<ItemSaleEntity> itemSales = repository.findAllPaginatedFiltered(name, min, max, pageable);
+
+        return new PageableList<>(
+            page + 1,
+            size,
+            itemSales.getTotalElements(),
+            itemSales.getTotalPages(),
+            itemSales.isLast(),
+            itemSales.stream().map(ItemSaleMapper::toDomain).toList()
+        );
     }
 }

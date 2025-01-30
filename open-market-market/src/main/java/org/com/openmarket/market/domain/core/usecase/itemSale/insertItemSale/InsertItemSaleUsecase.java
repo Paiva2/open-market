@@ -209,7 +209,6 @@ public class InsertItemSaleUsecase {
     }
 
     private void decreaseWalletTax(BigDecimal tax, User user, UUID systemWalletId) {
-
         try {
             WalletMessageInput walletMessageInput = WalletMessageInput.builder()
                 .externalUserId(user.getExternalId())
