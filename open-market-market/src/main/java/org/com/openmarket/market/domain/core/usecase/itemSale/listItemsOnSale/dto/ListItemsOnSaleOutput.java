@@ -32,10 +32,11 @@ public class ListItemsOnSaleOutput {
         this.value = itemSale.getValue();
         this.acceptOffers = itemSale.getAcceptOffers();
         this.onlyOffers = itemSale.getOnlyOffers();
-        
+
         this.item = ItemOutput.builder()
             .id(item.getId())
             .name(item.getName())
+            .externalId(item.getExternalId())
             .description(item.getDescription())
             .photoUrl(item.getPhotoUrl())
             .baseSellingPrice(item.getBaseSellingPrice())
@@ -54,6 +55,7 @@ public class ListItemsOnSaleOutput {
     @AllArgsConstructor
     public static class ItemOutput {
         private UUID id;
+        private String externalId;
         private String name;
         private String description;
         private String photoUrl;

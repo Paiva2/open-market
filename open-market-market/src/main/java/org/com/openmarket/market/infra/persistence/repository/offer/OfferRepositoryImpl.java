@@ -2,9 +2,14 @@ package org.com.openmarket.market.infra.persistence.repository.offer;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.market.domain.core.entity.Offer;
+import org.com.openmarket.market.domain.core.usecase.common.dto.PageableList;
 import org.com.openmarket.market.domain.interfaces.OfferRepository;
 import org.com.openmarket.market.infra.persistence.entity.OfferEntity;
 import org.com.openmarket.market.infra.persistence.mapper.OfferMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,5 +30,20 @@ public class OfferRepositoryImpl implements OfferRepository {
     public void removeOffers(List<Offer> offers) {
         List<OfferEntity> offersEntities = offers.stream().map(OfferMapper::toPersistence).toList();
         repository.deleteAll(offersEntities);
+    }
+
+    @Override
+    public PageableList<Offer> findAllByItemSale(UUID itemSaleId, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt");
+        Page<OfferEntity> offerEntities = repository.findAllByItemSale(itemSaleId, pageable);
+
+        return new PageableList<>(
+            offerEntities.getNumber() + 1,
+            offerEntities.getSize(),
+            offerEntities.getTotalElements(),
+            offerEntities.getTotalPages(),
+            offerEntities.isLast(),
+            offerEntities.stream().map(OfferMapper::toDomain).toList()
+        );
     }
 }
