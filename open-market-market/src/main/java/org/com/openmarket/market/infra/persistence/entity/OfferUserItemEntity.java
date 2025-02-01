@@ -18,20 +18,19 @@ import java.util.UUID;
 @AllArgsConstructor
 @Table(name = "tb_offers_user_item")
 public class OfferUserItemEntity {
-    @EmbeddedId
-    private KeyId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "oui_id")
+    private UUID id;
 
-    @MapsId("userId")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "oui_user_id")
-    private UserEntity user;
+    @JoinColumns({
+        @JoinColumn(name = "oui_user_id", referencedColumnName = "uit_user_id"),
+        @JoinColumn(name = "oui_item_id", referencedColumnName = "uit_item_id"),
+        @JoinColumn(name = "oui_attribute_item_id", referencedColumnName = "uit_item_attribute_id")
+    })
+    private UserItemEntity userItem;
 
-    @MapsId("itemId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "oui_item_id")
-    private ItemEntity item;
-
-    @MapsId("offerId")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "oui_offer_id")
     private OfferEntity offer;
@@ -46,20 +45,4 @@ public class OfferUserItemEntity {
     @UpdateTimestamp
     @Column(name = "oui_updated_at")
     private Date updatedAt;
-
-    @Setter
-    @Getter
-    @Embeddable
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class KeyId {
-        @JoinColumn(name = "oui_user_id")
-        private UUID userId;
-
-        @JoinColumn(name = "oui_item_id")
-        private UUID itemId;
-
-        @JoinColumn(name = "oui_offer_id")
-        private UUID offerId;
-    }
 }

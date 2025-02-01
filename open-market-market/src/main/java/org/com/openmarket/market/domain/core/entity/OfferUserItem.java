@@ -13,21 +13,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OfferUserItem {
-    private KeyId id;
-    private User user;
-    private Item item;
+    private UUID id;
+    private UserItem userItem;
     private Offer offer;
     private Long quantity;
     private Date createdAt;
     private Date updatedAt;
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class KeyId {
-        private UUID userId;
-        private UUID itemId;
-        private UUID offerId;
-    }
 }

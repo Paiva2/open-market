@@ -50,10 +50,11 @@ public class RemoveItemSaleUsecase {
         GetAdminWalletOutput systemWalletId = walletRepository.getSystemBankAdminWalletId(authorizationToken);
 
         ItemSale itemSale = findItemSale(itemSaleId);
+        UserItem userItem = itemSale.getUserItem();
 
-        checkItemSaleUser(itemSale, user);
+        checkItemSaleUser(userItem, user);
 
-        Long newQuantity = restoreUserItemQuantity(user.getId(), itemSale.getItem().getId(), itemSale.getQuantity());
+        Long newQuantity = restoreUserItemQuantity(userItem, itemSale.getQuantity());
 
         removeItemSaleOffers(itemSale);
         removeItemSale(itemSale);
@@ -61,7 +62,7 @@ public class RemoveItemSaleUsecase {
         UserWalletViewOutput userWallet = findUserWallet(authorizationToken);
 
         restoreUserWalletTaxValueMessage(userWallet, itemSale, systemWalletId);
-        restoreUserItemQuantityMessage(user.getExternalId(), itemSale.getItem().getExternalId(), newQuantity);
+        restoreUserItemQuantityMessage(userItem, newQuantity);
     }
 
     private User findUser(String externalId) {
@@ -69,11 +70,11 @@ public class RemoveItemSaleUsecase {
     }
 
     private ItemSale findItemSale(UUID itemSaleId) {
-        return itemSaleRepository.findById(itemSaleId).orElseThrow(ItemSaleNotFoundException::new);
+        return itemSaleRepository.findByIdWithDeps(itemSaleId).orElseThrow(ItemSaleNotFoundException::new);
     }
 
-    private void checkItemSaleUser(ItemSale itemSale, User user) {
-        if (!itemSale.getUser().getId().equals(user.getId())) {
+    private void checkItemSaleUser(UserItem userItem, User user) {
+        if (!userItem.getUser().getId().equals(user.getId())) {
             throw new ForbiddenException("Item on sale do not belong to current user!");
         }
     }
@@ -102,11 +103,12 @@ public class RemoveItemSaleUsecase {
         return walletRepository.getUserWalletView(authorizationToken);
     }
 
-    private void restoreUserItemQuantityMessage(String externalUserId, String externalItemId, Long quantity) {
+    private void restoreUserItemQuantityMessage(UserItem userItem, Long quantity) {
         try {
             UpdateUserItemMessageInput updateUserItemMessageInput = UpdateUserItemMessageInput.builder()
-                .externalUserId(externalUserId)
-                .externalItemId(externalItemId)
+                .externalUserId(userItem.getUser().getExternalId())
+                .externalItemId(userItem.getItem().getExternalId())
+                .externalAttributeId(userItem.getAttribute().getExternalId())
                 .userItemInput(new UpdateUserItemMessageInput.UserItemInput(quantity))
                 .build();
 
@@ -149,8 +151,7 @@ public class RemoveItemSaleUsecase {
         }
     }
 
-    private Long restoreUserItemQuantity(UUID userId, UUID itemId, Long quantity) {
-        UserItem userItem = userItemRepository.getUserItem(userId, itemId).orElseThrow(UserItemNotFoundException::new);
+    private Long restoreUserItemQuantity(UserItem userItem, Long quantity) {
         userItem.setQuantity(userItem.getQuantity() + quantity);
 
         if (quantity > 0) {

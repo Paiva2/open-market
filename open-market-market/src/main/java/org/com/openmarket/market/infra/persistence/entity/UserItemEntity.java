@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -21,6 +22,7 @@ public class UserItemEntity {
     @EmbeddedId
     private KeyId id;
 
+    @MapsId("attributeId")
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "uit_item_attribute_id")
     private AttributeItemEntity attribute;
@@ -46,12 +48,21 @@ public class UserItemEntity {
     @Column(name = "uit_updated_at", nullable = false)
     private Date updatedAt;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<ItemSaleEntity> itemSales;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<OfferUserItemEntity> offersUserItems;
+
     @Data
     @Builder
     @Embeddable
     @NoArgsConstructor
     @AllArgsConstructor
     public static class KeyId {
+        @Column(name = "uit_item_attribute_id")
+        private UUID attributeId;
+
         @Column(name = "uit_user_id")
         private UUID userId;
 

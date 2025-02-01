@@ -41,7 +41,7 @@ public class InsertItemSaleUsecase {
     private final DatabaseLockRepository databaseLockRepository;
 
     @Transactional
-    public void execute(String externalUserId, String externalItemId, InsertItemSaleInput input, String authorizationToken) {
+    public void execute(String externalUserId, String externalItemId, String externalAttributeId, InsertItemSaleInput input, String authorizationToken) {
         User user = findUser(externalUserId);
         Item item = findItem(externalItemId);
 
@@ -72,7 +72,7 @@ public class InsertItemSaleUsecase {
                 throw new UniqueItemException();
             }
 
-            UserItem userItem = checkUserItem(user, item);
+            UserItem userItem = checkUserItem(user, item, externalAttributeId);
 
             if (!input.getAcceptOffers()) {
                 input.setOnlyOffers(false);
@@ -81,7 +81,7 @@ public class InsertItemSaleUsecase {
             checkItemQuantity(userItem, input);
             checkSaleValue(input);
 
-            ItemSale itemSale = fillItemSale(user, item, input);
+            ItemSale itemSale = fillItemSale(userItem, input);
             persistItemSale(itemSale);
 
             decreaseUserItemQuantity(userItem, input);
@@ -126,8 +126,8 @@ public class InsertItemSaleUsecase {
         return walletRepository.getUserWalletView(authorizationToken);
     }
 
-    private UserItem checkUserItem(User user, Item item) {
-        Optional<UserItem> userItem = userItemRepository.getUserItem(user.getId(), item.getId());
+    private UserItem checkUserItem(User user, Item item, String externalAttributeId) {
+        Optional<UserItem> userItem = userItemRepository.getUserItemWithExternalAttributeId(user.getId(), item.getId(), externalAttributeId);
 
         if (userItem.isEmpty()) {
             throw new UserItemNotFoundException();
@@ -166,15 +166,14 @@ public class InsertItemSaleUsecase {
         return totalTax;
     }
 
-    private ItemSale fillItemSale(User user, Item item, InsertItemSaleInput input) {
+    private ItemSale fillItemSale(UserItem userItem, InsertItemSaleInput input) {
         return ItemSale.builder()
             .quantity(input.getQuantity())
             .value(input.getValue())
             .expirationDate(fillExpirationDate(input))
             .acceptOffers(input.getAcceptOffers())
             .onlyOffers(input.getOnlyOffers())
-            .user(user)
-            .item(item)
+            .userItem(userItem)
             .build();
     }
 
@@ -193,6 +192,7 @@ public class InsertItemSaleUsecase {
             UpdateUserItemMessageInput updateUserItemMessageInput = UpdateUserItemMessageInput.builder()
                 .externalUserId(user.getExternalId())
                 .externalItemId(item.getExternalId())
+                .externalAttributeId(userItem.getAttribute().getExternalId())
                 .userItemInput(new UpdateUserItemMessageInput.UserItemInput(userItem.getQuantity()))
                 .build();
 

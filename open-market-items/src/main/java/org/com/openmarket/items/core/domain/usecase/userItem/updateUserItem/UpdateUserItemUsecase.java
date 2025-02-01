@@ -40,7 +40,7 @@ public class UpdateUserItemUsecase {
             throw new ItemNotActiveException();
         }
 
-        UserItem userItem = findUserItem(user.getId(), item.getId());
+        UserItem userItem = findUserItem(user.getId(), item.getId(), input.getExternalAttributeId());
         updateUserItem(userItem, input);
         userItem = persistUserItem(userItem);
 
@@ -55,8 +55,8 @@ public class UpdateUserItemUsecase {
         return itemRepository.findById(UUID.fromString(externalItemId)).orElseThrow(ItemNotFoundException::new);
     }
 
-    private UserItem findUserItem(UUID userId, UUID itemId) {
-        return userItemRepository.findUserItem(userId, itemId).orElseThrow(UserItemNotFoundException::new);
+    private UserItem findUserItem(UUID userId, UUID itemId, String externalAttributeId) {
+        return userItemRepository.findUserItem(userId, itemId, UUID.fromString(externalAttributeId)).orElseThrow(UserItemNotFoundException::new);
     }
 
     private void updateUserItem(UserItem userItem, UpdateUserItemInput input) {

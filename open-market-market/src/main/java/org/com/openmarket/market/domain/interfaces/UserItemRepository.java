@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserItemRepository {
-    Optional<UserItem> getUserItem(UUID userId, UUID itemId);
+    Optional<UserItem> getUserItemWithExternalAttributeId(UUID userId, UUID itemId, String externalAttributeId);
 
     UserItem persist(UserItem userItem);
 }

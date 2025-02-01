@@ -14,6 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AttributeItem {
     private UUID id;
+    private String externalId;
     private String attributes;
     private Date createdAt;
     private Date updatedAt;

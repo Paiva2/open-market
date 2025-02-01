@@ -13,13 +13,13 @@ import java.util.UUID;
 public interface OfferRepositoryOrm extends JpaRepository<OfferEntity, UUID> {
     @Query("select off from OfferEntity off where off.itemSale.id = :itemSaleId")
     List<OfferEntity> findAllByItemSaleId(@Param("itemSaleId") UUID itemSaleId);
-    
+
     @Query("""
-                select ofr from OfferEntity ofr
-                join fetch ofr.user usr
-                left join fetch ofr.offerUserItems oui
-                left join fetch oui.item itm
-                where ofr.itemSale.id = :itemSaleId
+            select ofr from OfferEntity ofr
+            join fetch ofr.user usr
+            left join fetch ofr.offerUserItems oui
+            join fetch oui.userItem.item itm
+            where ofr.itemSale.id = :itemSaleId
         """)
     Page<OfferEntity> findAllByItemSale(@Param("itemSaleId") UUID itemSaleId, Pageable pageable);
 }

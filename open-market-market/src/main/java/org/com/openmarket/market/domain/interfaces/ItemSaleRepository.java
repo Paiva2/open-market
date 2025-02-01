@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface ItemSaleRepository {
     ItemSale save(ItemSale itemSale);
 
-    Optional<ItemSale> findById(UUID id);
+    Optional<ItemSale> findByIdWithDeps(UUID id);
 
     void remove(UUID id);
 

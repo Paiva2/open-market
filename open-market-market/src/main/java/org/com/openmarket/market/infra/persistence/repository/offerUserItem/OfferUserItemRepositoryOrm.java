@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.UUID;
 
-public interface OfferUserItemRepositoryOrm extends JpaRepository<OfferUserItemEntity, OfferUserItemEntity.KeyId> {
+public interface OfferUserItemRepositoryOrm extends JpaRepository<OfferUserItemEntity, UUID> {
     @Modifying
     @Query("delete from OfferUserItemEntity oui where oui.offer.id in (:offerIds)")
     void removeAllByOfferIds(@Param("offerIds") List<UUID> offerIds);

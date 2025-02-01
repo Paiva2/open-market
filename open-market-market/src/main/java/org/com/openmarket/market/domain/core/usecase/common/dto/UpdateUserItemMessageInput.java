@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class UpdateUserItemMessageInput {
     private String externalUserId;
     private String externalItemId;
+    private String externalAttributeId;
     private UserItemInput userItemInput;
 
     @Data

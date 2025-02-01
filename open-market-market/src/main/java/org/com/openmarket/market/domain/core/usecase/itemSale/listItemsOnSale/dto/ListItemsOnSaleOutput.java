@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.com.openmarket.market.domain.core.entity.Item;
 import org.com.openmarket.market.domain.core.entity.ItemSale;
 import org.com.openmarket.market.domain.core.entity.User;
+import org.com.openmarket.market.domain.core.entity.UserItem;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -24,8 +25,9 @@ public class ListItemsOnSaleOutput {
     private UserOutput seller;
 
     public ListItemsOnSaleOutput(ItemSale itemSale) {
-        Item item = itemSale.getItem();
-        User user = itemSale.getUser();
+        UserItem userItem = itemSale.getUserItem();
+        Item item = userItem.getItem();
+        User user = userItem.getUser();
 
         this.id = itemSale.getId();
         this.quantity = itemSale.getQuantity();

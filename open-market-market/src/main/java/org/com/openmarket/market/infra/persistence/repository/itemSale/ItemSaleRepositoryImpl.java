@@ -28,8 +28,8 @@ public class ItemSaleRepositoryImpl implements ItemSaleRepository {
     }
 
     @Override
-    public Optional<ItemSale> findById(UUID id) {
-        Optional<ItemSaleEntity> itemSale = repository.findById(id);
+    public Optional<ItemSale> findByIdWithDeps(UUID id) {
+        Optional<ItemSaleEntity> itemSale = repository.findByIdWithDeps(id);
         if (itemSale.isEmpty()) return Optional.empty();
         return Optional.of(ItemSaleMapper.toDomain(itemSale.get()));
     }

@@ -48,11 +48,5 @@ public class UserEntity {
     private List<UserItemEntity> userItems;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<ItemSaleEntity> itemSales;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<OfferEntity> offers;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<OfferUserItemEntity> offerUserItems;
 }

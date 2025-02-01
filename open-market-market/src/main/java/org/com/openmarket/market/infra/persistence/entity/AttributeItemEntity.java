@@ -26,6 +26,9 @@ public class AttributeItemEntity {
     @Column(name = "aui_attributes", columnDefinition = "JSONB")
     private String attributes;
 
+    @Column(name = "aui_external_id")
+    private String externalId;
+
     @CreationTimestamp
     @Column(name = "aui_created_at")
     private Date createdAt;
@@ -33,4 +36,7 @@ public class AttributeItemEntity {
     @UpdateTimestamp
     @Column(name = "aui_updated_at")
     private Date updatedAt;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "attribute")
+    private UserItemEntity userItem;
 }

@@ -16,8 +16,8 @@ public class UserItemRepositoryImpl implements UserItemRepository {
     private final UserItemRepositoryOrm repository;
 
     @Override
-    public Optional<UserItem> findUserItem(UUID userId, UUID itemId) {
-        Optional<UserItemEntity> userItemEntity = repository.findUserItem(userId, itemId);
+    public Optional<UserItem> findUserItem(UUID userId, UUID itemId, UUID attributeId) {
+        Optional<UserItemEntity> userItemEntity = repository.findUserItem(userId, itemId, attributeId);
         if (userItemEntity.isEmpty()) return Optional.empty();
         return Optional.of(UserItemMapper.toDomain(userItemEntity.get()));
     }

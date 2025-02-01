@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS tb_items_categories (
 CREATE TABLE IF NOT EXISTS tb_attributes_item (
       aui_id UUID PRIMARY KEY UNIQUE,
       aui_attributes JSONB DEFAULT NULL,
+      aui_external_id VARCHAR(250) UNIQUE DEFAULT NULL,
       aui_created_at TIMESTAMP NOT NULL DEFAULT now(),
       aui_updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
@@ -55,6 +56,7 @@ CREATE TABLE IF NOT EXISTS tb_items_sales (
     isl_id UUID PRIMARY KEY,
     isl_item_id UUID NOT NULL,
     isl_user_id UUID NOT NULL,
+    isl_attribute_item_id UUID NOT NULL,
     isl_quantity BIGINT NOT NULL DEFAULT 1,
     isl_value NUMERIC(12, 2) NOT NULL,
     isl_expiration_date TIMESTAMP NOT NULL,
@@ -63,8 +65,8 @@ CREATE TABLE IF NOT EXISTS tb_items_sales (
     isl_created_at TIMESTAMP NOT NULL DEFAULT now(),
     isl_updated_at TIMESTAMP NOT NULL DEFAULT now(),
 
-    CONSTRAINT fk_items_ref FOREIGN KEY (isl_item_id) REFERENCES tb_items (itm_id),
-    CONSTRAINT fk_users_ref FOREIGN KEY (isl_user_id) REFERENCES tb_users (usr_id)
+    CONSTRAINT fk_user_item_ref FOREIGN KEY (isl_item_id, isl_user_id, isl_attribute_item_id)
+        REFERENCES tb_users_items (uit_user_id, uit_item_id, uit_item_attribute_id)
 );
 
 CREATE TABLE IF NOT EXISTS tb_offers (
@@ -80,14 +82,16 @@ CREATE TABLE IF NOT EXISTS tb_offers (
 );
 
 CREATE TABLE IF NOT EXISTS tb_offers_user_item (
+    oui_id UUID PRIMARY KEY,
     oui_user_id UUID NOT NULL,
     oui_item_id UUID NOT NULL,
+    oui_attribute_item_id UUID NOT NULL,
     oui_offer_id UUID NOT NULL,
     oui_quantity BIGINT NOT NULL DEFAULT 1,
     oui_created_at TIMESTAMP NOT NULL DEFAULT now(),
     oui_updated_at TIMESTAMP NOT NULL DEFAULT now(),
 
-    CONSTRAINT fk_users_ref FOREIGN KEY (oui_user_id) REFERENCES tb_users (usr_id),
-    CONSTRAINT fk_items_ref FOREIGN KEY (oui_item_id) REFERENCES tb_items (itm_id),
-    CONSTRAINT fk_offers_ref FOREIGN KEY (oui_offer_id) REFERENCES tb_offers (ofr_id)
+    CONSTRAINT fk_offers_ref FOREIGN KEY (oui_offer_id) REFERENCES tb_offers (ofr_id),
+    CONSTRAINT fk_user_item_ref FOREIGN KEY (oui_user_id, oui_item_id, oui_attribute_item_id)
+        REFERENCES tb_users_items (uit_user_id, uit_item_id, uit_item_attribute_id)
 );

@@ -20,17 +20,22 @@ public class ItemSaleMapper {
         ItemSale itemSale = new ItemSale();
         copyProperties(entity, itemSale);
 
-        if (entity.getItem() != null) {
-            Item item = new Item();
-            copyProperties(entity.getItem(), item);
-            itemSale.setItem(item);
+        if (entity.getUserItem() != null) {
+            if (entity.getUserItem().getItem() != null) {
+                Item item = new Item();
+                copyProperties(entity.getUserItem().getItem(), item);
+
+                itemSale.getUserItem().setItem(item);
+            }
+
+            if (entity.getUserItem().getUser() != null) {
+                User user = new User();
+                copyProperties(entity.getUserItem().getUser(), user);
+
+                itemSale.getUserItem().setUser(user);
+            }
         }
 
-        if (entity.getUser() != null) {
-            User user = new User();
-            copyProperties(entity.getUser(), user);
-            itemSale.setUser(user);
-        }
 
         if (entity.getOffers() != null) {
             List<Offer> offers = new ArrayList<>();
@@ -52,17 +57,22 @@ public class ItemSaleMapper {
         ItemSaleEntity itemSale = new ItemSaleEntity();
         copyProperties(entity, itemSale);
 
-        if (entity.getItem() != null) {
-            ItemEntity item = new ItemEntity();
-            copyProperties(entity.getItem(), item);
-            itemSale.setItem(item);
+        if (itemSale.getUserItem() != null) {
+            if (entity.getUserItem().getItem() != null) {
+                ItemEntity item = new ItemEntity();
+                copyProperties(entity.getUserItem().getItem(), item);
+
+                itemSale.getUserItem().setItem(item);
+            }
+
+            if (entity.getUserItem().getUser() != null) {
+                UserEntity user = new UserEntity();
+                copyProperties(entity.getUserItem().getUser(), user);
+
+                itemSale.getUserItem().setUser(user);
+            }
         }
 
-        if (entity.getUser() != null) {
-            UserEntity user = new UserEntity();
-            copyProperties(entity.getUser(), user);
-            itemSale.setUser(user);
-        }
 
         if (entity.getOffers() != null) {
             List<OfferEntity> offersEntities = new ArrayList<>();
@@ -70,7 +80,7 @@ public class ItemSaleMapper {
             for (Offer offer : entity.getOffers()) {
                 OfferEntity offerEntity = new OfferEntity();
                 copyProperties(offer, offerEntity);
-                
+
                 offersEntities.add(offerEntity);
             }
 

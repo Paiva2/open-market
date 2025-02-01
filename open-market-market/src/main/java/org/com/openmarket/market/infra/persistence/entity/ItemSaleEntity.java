@@ -48,13 +48,13 @@ public class ItemSaleEntity {
     @Column(name = "isl_updated_at")
     private Date updatedAt;
 
+    @JoinColumns({
+        @JoinColumn(name = "isl_user_id", referencedColumnName = "uit_user_id"),
+        @JoinColumn(name = "isl_item_id", referencedColumnName = "uit_item_id"),
+        @JoinColumn(name = "isl_attribute_item_id", referencedColumnName = "uit_item_attribute_id"),
+    })
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "isl_item_id")
-    private ItemEntity item;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "isl_user_id")
-    private UserEntity user;
+    private UserItemEntity userItem;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "itemSale")
     private List<OfferEntity> offers;

@@ -24,7 +24,6 @@ public class ItemSale {
     private Date createdAt;
     private Date updatedAt;
 
-    private Item item;
-    private User user;
+    private UserItem userItem;
     private List<Offer> offers;
 }

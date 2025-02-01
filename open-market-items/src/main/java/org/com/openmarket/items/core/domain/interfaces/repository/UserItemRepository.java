@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserItemRepository {
-    Optional<UserItem> findUserItem(UUID userId, UUID itemId);
+    Optional<UserItem> findUserItem(UUID userId, UUID itemId, UUID attributeId);
 
     UserItem save(UserItem userItem);
 }
