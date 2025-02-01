@@ -44,7 +44,8 @@ current balance, operations listing, etc.
 
 ### Market
 
-...
+Service to handle items sale, this is the service that handle all market operations, such as: insert item for sale,
+remove, list items on sale, make offers, and other things related to market.
 
 ## Features
 
@@ -76,26 +77,25 @@ current balance, operations listing, etc.
     - [x] Simple sort options
 
 - [ ] Advanced Item Management (Item on sale)
-    - [ ] List items for sale
-    - [ ] Remove listings
+    - [x] List items for sale
+    - [x] Remove listings
     - [ ] Scheduled listings/removals
 
 - [ ] Essential Search & Filters (Item on sale)
-    - [ ] Search by name
-    - [ ] Basic category filters
-    - [ ] Price range filters
-    - [ ] Simple sort options
-    - [ ] Multiple criteria search
+    - [x] Search by name
+    - [x] Price range filters
+    - [x] Simple sort options
+    - [x] Multiple criteria search
     - [ ] Category filtering
 
 - [ ] Basic Trading (Item on sale)
     - [ ] Make offers
     - [ ] Accept/Reject offers
     - [ ] View trade history
+    - [x] List Offers made to item on sale
 
 - [ ] Enhanced Trading Features (Item on sale)
     - [ ] Counter-offers
-    - [ ] Offer expiration time
     - [ ] Notification system on trading operations
     - [ ] Receive items/balance on operation finishing
 
@@ -106,5 +106,5 @@ current balance, operations listing, etc.
     - [ ] Price alerts
 
 - [ ] Economic Features (Item on sale)
-    - [ ] Tax system
-    - [ ] Fee structure
+    - [x] Tax system
+    - [x] Fee structure
