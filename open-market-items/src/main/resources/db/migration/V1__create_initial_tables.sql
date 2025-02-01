@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS tb_items
     itm_unique             BOOLEAN             NOT NULL DEFAULT FALSE,
     itm_base_selling_price NUMERIC(12, 2)      NOT NULL DEFAULT 0,
     itm_active             BOOLEAN             NOT NULL DEFAULT TRUE,
+    itm_stackable          BOOLEAN             NOT NULL DEFAULT TRUE,
     itm_created_at         TIMESTAMP           NOT NULL DEFAULT now(),
     itm_updated_at         TIMESTAMP           NOT NULL DEFAULT now()
 );

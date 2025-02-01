@@ -163,7 +163,7 @@ public class CreateItemUsecase {
                 .active(item.getActive())
                 .categoriesIds(item.getItemCategories().stream().map(ItemCategory::getCategory).map(Category::getId).toList())
                 .build();
-            
+
             CommonMessageDTO commonMessageDTO = CommonMessageDTO.builder()
                 .type(EnumMessageType.CREATED)
                 .event(EnumMessageEvent.ITEM_EVENT)

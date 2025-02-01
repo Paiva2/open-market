@@ -12,21 +12,9 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserItem {
-    private KeyId id;
-    private AttributeItem attribute;
-    private User user;
-    private Item item;
-    private Long quantity;
+public class AttributeItem {
+    private UUID id;
+    private String attributes;
     private Date createdAt;
     private Date updatedAt;
-
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class KeyId {
-        private UUID userId;
-        private UUID itemId;
-    }
 }

@@ -21,6 +21,10 @@ public class UserItemEntity {
     @EmbeddedId
     private KeyId id;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "uit_item_attribute_id")
+    private AttributeItemEntity attribute;
+
     @MapsId("itemId")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "uit_item_id")

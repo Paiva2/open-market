@@ -1,7 +1,10 @@
 package org.com.openmarket.items.infra.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.UUID;
@@ -15,6 +18,10 @@ import java.util.UUID;
 public class UserItemEntity {
     @EmbeddedId
     private KeyId id;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "uit_attribute_id")
+    private AttributeItemEntity attribute;
 
     @MapsId("userId")
     @ManyToOne(fetch = FetchType.EAGER)
@@ -35,10 +42,11 @@ public class UserItemEntity {
     @Column(name = "uit_updated_at")
     private Date updatedAt;
 
-    @Data
-    @Builder
-    @NoArgsConstructor
     @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    @Embeddable
     public static class KeyId {
         private UUID userId;
         private UUID itemId;
