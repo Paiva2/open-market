@@ -19,8 +19,9 @@ public class UserItemEntity {
     @EmbeddedId
     private KeyId id;
 
+    @MapsId("attributeId")
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "uit_attribute_id")
+    @JoinColumn(name = "uit_item_attribute_id")
     private AttributeItemEntity attribute;
 
     @MapsId("userId")
@@ -48,7 +49,13 @@ public class UserItemEntity {
     @Setter
     @Embeddable
     public static class KeyId {
+        @Column(name = "uit_item_attribute_id")
+        private UUID attributeId;
+
+        @Column(name = "uit_user_id")
         private UUID userId;
+
+        @Column(name = "uit_item_id")
         private UUID itemId;
     }
 }

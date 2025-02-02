@@ -1,18 +1,17 @@
 package org.com.openmarket.market.infra.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Builder
 @NoArgsConstructor
@@ -48,25 +47,21 @@ public class UserItemEntity {
     @Column(name = "uit_updated_at", nullable = false)
     private Date updatedAt;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userItem")
     private List<ItemSaleEntity> itemSales;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userItem")
     private List<OfferUserItemEntity> offersUserItems;
 
-    @Data
+    @Getter
+    @Setter
     @Builder
     @Embeddable
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class KeyId {
-        @Column(name = "uit_item_attribute_id")
+    public static class KeyId implements Serializable {
         private UUID attributeId;
-
-        @Column(name = "uit_user_id")
         private UUID userId;
-
-        @Column(name = "uit_item_id")
         private UUID itemId;
     }
 }

@@ -26,6 +26,7 @@ public class UserItem {
     @Builder
     @Data
     public static class KeyId {
+        private UUID attributeId;
         private UUID userId;
         private UUID itemId;
     }

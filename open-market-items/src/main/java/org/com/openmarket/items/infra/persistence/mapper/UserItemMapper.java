@@ -1,8 +1,10 @@
 package org.com.openmarket.items.infra.persistence.mapper;
 
+import org.com.openmarket.items.core.domain.entity.AttributeItem;
 import org.com.openmarket.items.core.domain.entity.Item;
 import org.com.openmarket.items.core.domain.entity.User;
 import org.com.openmarket.items.core.domain.entity.UserItem;
+import org.com.openmarket.items.infra.persistence.entity.AttributeItemEntity;
 import org.com.openmarket.items.infra.persistence.entity.ItemEntity;
 import org.com.openmarket.items.infra.persistence.entity.UserEntity;
 import org.com.openmarket.items.infra.persistence.entity.UserItemEntity;
@@ -24,6 +26,13 @@ public class UserItemMapper {
             User user = new User();
             copyProperties(persistenceEntity.getUser(), user);
             userItem.setUser(user);
+        }
+
+
+        if (persistenceEntity.getAttribute() != null) {
+            AttributeItem attributeItem = new AttributeItem();
+            copyProperties(persistenceEntity.getAttribute(), attributeItem);
+            userItem.setAttribute(attributeItem);
         }
 
         if (persistenceEntity.getId() != null) {
@@ -50,6 +59,12 @@ public class UserItemMapper {
             UserEntity user = new UserEntity();
             copyProperties(persistenceEntity.getUser(), user);
             userItem.setUser(user);
+        }
+
+        if (persistenceEntity.getAttribute() != null) {
+            AttributeItemEntity attributeItem = new AttributeItemEntity();
+            copyProperties(persistenceEntity.getAttribute(), attributeItem);
+            userItem.setAttribute(attributeItem);
         }
 
         if (persistenceEntity.getId() != null) {

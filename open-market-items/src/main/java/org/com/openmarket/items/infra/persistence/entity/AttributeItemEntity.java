@@ -33,4 +33,7 @@ public class AttributeItemEntity {
     @UpdateTimestamp
     @Column(name = "aui_updated_at")
     private Date updatedAt;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "attribute")
+    private UserItemEntity userItem;
 }

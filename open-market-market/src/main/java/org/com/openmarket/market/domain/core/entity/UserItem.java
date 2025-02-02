@@ -30,7 +30,7 @@ public class UserItem {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class KeyId {
-        private UUID attributeItemId;
+        private UUID attributeId;
         private UUID userId;
         private UUID itemId;
     }

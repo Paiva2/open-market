@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS tb_items_sales (
     isl_id UUID PRIMARY KEY,
     isl_item_id UUID NOT NULL,
     isl_user_id UUID NOT NULL,
-    isl_attribute_item_id UUID NOT NULL,
+    isl_item_attribute_id UUID NOT NULL,
     isl_quantity BIGINT NOT NULL DEFAULT 1,
     isl_value NUMERIC(12, 2) NOT NULL,
     isl_expiration_date TIMESTAMP NOT NULL,
@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS tb_items_sales (
     isl_created_at TIMESTAMP NOT NULL DEFAULT now(),
     isl_updated_at TIMESTAMP NOT NULL DEFAULT now(),
 
-    CONSTRAINT fk_user_item_ref FOREIGN KEY (isl_item_id, isl_user_id, isl_attribute_item_id)
-        REFERENCES tb_users_items (uit_user_id, uit_item_id, uit_item_attribute_id)
+    CONSTRAINT fk_user_item_ref FOREIGN KEY (isl_item_id, isl_user_id, isl_item_attribute_id)
+        REFERENCES tb_users_items (uit_item_id, uit_user_id, uit_item_attribute_id)
 );
 
 CREATE TABLE IF NOT EXISTS tb_offers (
