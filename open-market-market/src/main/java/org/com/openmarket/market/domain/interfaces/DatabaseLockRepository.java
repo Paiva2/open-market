@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface DatabaseLockRepository {
     DatabaseLock saveLock(DatabaseLock databaseLockEntity);
 
-    Optional<DatabaseLock> getLockByDatabase(String databaseName);
+    Optional<DatabaseLock> getLockByDatabaseAndUser(String databaseName, String externalUserId);
 
     void removeLock(DatabaseLock databaseLockEntity);
 }

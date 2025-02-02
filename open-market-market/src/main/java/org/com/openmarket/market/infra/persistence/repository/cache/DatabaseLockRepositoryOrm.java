@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface DatabaseLockRepositoryOrm extends CrudRepository<DatabaseLockEntity, String> {
-    Optional<DatabaseLockEntity> findByDatabaseName(String databaseName);
+    Optional<DatabaseLockEntity> findByDatabaseNameAndExternalUserId(String databaseName, String externalUserId);
 }

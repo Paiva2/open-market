@@ -8,7 +8,6 @@ import org.com.openmarket.market.domain.core.usecase.common.dto.*;
 import org.com.openmarket.market.domain.core.usecase.common.exception.*;
 import org.com.openmarket.market.domain.core.usecase.common.exception.core.ConflictException;
 import org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale.dto.InsertItemSaleInput;
-import org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale.exception.UserBalanceException;
 import org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale.exception.UserItemQuantityException;
 import org.com.openmarket.market.domain.enumeration.EnumMessageEvent;
 import org.com.openmarket.market.domain.enumeration.EnumMessageType;
@@ -55,8 +54,8 @@ public class InsertItemSaleUsecase {
 
         BigDecimal tax = defineSaleTaxes(input, item);
 
-        checkWalletLock();
-        DatabaseLock walletLock = lockWallet();
+        checkWalletLock(user);
+        DatabaseLock walletLock = lockWallet(user);
 
         try {
             GetAdminWalletOutput systemWalletId = walletRepository.getSystemBankAdminWalletId(authorizationToken);
@@ -72,7 +71,7 @@ public class InsertItemSaleUsecase {
                 throw new UniqueItemException();
             }
 
-            UserItem userItem = checkUserItem(user, item, externalAttributeId);
+            UserItem userItem = findUserItem(user, item, externalAttributeId);
 
             if (!input.getAcceptOffers()) {
                 input.setOnlyOffers(false);
@@ -94,17 +93,18 @@ public class InsertItemSaleUsecase {
         }
     }
 
-    private void checkWalletLock() {
-        Optional<DatabaseLock> databaseLockEntity = databaseLockRepository.getLockByDatabase(WALLET_DATABASE_NAME);
+    private void checkWalletLock(User user) {
+        Optional<DatabaseLock> databaseLockEntity = databaseLockRepository.getLockByDatabaseAndUser(WALLET_DATABASE_NAME, user.getExternalId());
 
         if (databaseLockEntity.isPresent()) {
-            throw new ConflictException("Another operation is being made. Try again later!");
+            throw new ConflictException("Another operation is being made on user wallet. Try again later!");
         }
     }
 
-    private DatabaseLock lockWallet() {
+    private DatabaseLock lockWallet(User user) {
         return databaseLockRepository.saveLock(
             DatabaseLock.builder()
+                .externalUserId(user.getExternalId())
                 .databaseName(WALLET_DATABASE_NAME)
                 .build()
         );
@@ -126,7 +126,7 @@ public class InsertItemSaleUsecase {
         return walletRepository.getUserWalletView(authorizationToken);
     }
 
-    private UserItem checkUserItem(User user, Item item, String externalAttributeId) {
+    private UserItem findUserItem(User user, Item item, String externalAttributeId) {
         Optional<UserItem> userItem = userItemRepository.getUserItemWithExternalAttributeId(user.getId(), item.getId(), externalAttributeId);
 
         if (userItem.isEmpty()) {

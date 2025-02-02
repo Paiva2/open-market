@@ -12,8 +12,10 @@ import lombok.NoArgsConstructor;
 public class DatabaseLock {
     private String id;
     private String databaseName;
+    private String externalUserId;
 
-    public DatabaseLock(String databaseName) {
+    public DatabaseLock(String databaseName, String externalUserId) {
         this.databaseName = databaseName;
+        this.externalUserId = externalUserId;
     }
 }

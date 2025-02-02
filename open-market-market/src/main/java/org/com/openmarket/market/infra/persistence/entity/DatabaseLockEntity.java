@@ -12,11 +12,13 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@RedisHash(value = "db_lock_entity", timeToLive = 60L) // TTL 5min
+@RedisHash(value = "db_lock_entity", timeToLive = 60L) // TTL 1min
 public class DatabaseLockEntity implements Serializable {
     @Id
     private String id;
 
     @Indexed
     private String databaseName;
+
+    private String externalUserId;
 }

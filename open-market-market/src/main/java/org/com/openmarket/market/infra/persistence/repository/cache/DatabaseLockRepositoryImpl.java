@@ -19,8 +19,8 @@ public class DatabaseLockRepositoryImpl implements DatabaseLockRepository {
         return DatabaseLockMapper.toDomain(databaseLock);
     }
 
-    public Optional<DatabaseLock> getLockByDatabase(String databaseName) {
-        Optional<DatabaseLockEntity> databaseLock = repository.findByDatabaseName(databaseName);
+    public Optional<DatabaseLock> getLockByDatabaseAndUser(String databaseName, String externalUserId) {
+        Optional<DatabaseLockEntity> databaseLock = repository.findByDatabaseNameAndExternalUserId(databaseName, externalUserId);
         if (databaseLock.isEmpty()) return Optional.empty();
         return Optional.of(DatabaseLockMapper.toDomain(databaseLock.get()));
     }
