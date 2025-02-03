@@ -41,8 +41,13 @@ public class ListOffersByItemSaleOutput {
                     .unique(offerUserItem.getUserItem().getItem().getUnique())
                     .baseSellingPrice(offerUserItem.getUserItem().getItem().getBaseSellingPrice())
                     .active(offerUserItem.getUserItem().getItem().getActive())
-                    .build()
-                ).quantity(offerUserItem.getUserItem().getQuantity())
+                    .attribute(AttributeOutput.builder()
+                        .id(offerUserItem.getUserItem().getAttribute().getId())
+                        .attributes(offerUserItem.getUserItem().getAttribute().getAttributes())
+                        .externalId(offerUserItem.getUserItem().getAttribute().getExternalId())
+                        .build()
+                    ).build()
+                ).quantity(offerUserItem.getQuantity())
                 .build()
             ).toList();
         } else {
@@ -82,5 +87,16 @@ public class ListOffersByItemSaleOutput {
         private Boolean unique;
         private BigDecimal baseSellingPrice;
         private Boolean active;
+        private AttributeOutput attribute;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AttributeOutput {
+        private UUID id;
+        private String externalId;
+        private String attributes;
     }
 }

@@ -1,9 +1,13 @@
 package org.com.openmarket.market.infra.persistence.mapper;
 
+import org.com.openmarket.market.domain.core.entity.AttributeItem;
 import org.com.openmarket.market.domain.core.entity.Offer;
 import org.com.openmarket.market.domain.core.entity.OfferUserItem;
+import org.com.openmarket.market.domain.core.entity.UserItem;
+import org.com.openmarket.market.infra.persistence.entity.ItemSaleEntity;
 import org.com.openmarket.market.infra.persistence.entity.OfferEntity;
 import org.com.openmarket.market.infra.persistence.entity.OfferUserItemEntity;
+import org.com.openmarket.market.infra.persistence.entity.UserEntity;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
@@ -27,8 +31,19 @@ public class OfferMapper {
                 OfferUserItem offerUserItem = new OfferUserItem();
                 copyProperties(offerUserItemEntity, offerUserItem);
 
-                if (offerUserItemEntity.getUserItem().getItem() != null) {
-                    offerUserItem.getUserItem().setItem(ItemMapper.toDomain(offerUserItemEntity.getUserItem().getItem()));
+                if (offerUserItemEntity.getUserItem() != null) {
+                    UserItem userItem = new UserItem();
+                    offerUserItem.setUserItem(userItem);
+
+                    if (offerUserItemEntity.getUserItem().getItem() != null) {
+                        offerUserItem.getUserItem().setItem(ItemMapper.toDomain(offerUserItemEntity.getUserItem().getItem()));
+                    }
+
+                    if (offerUserItemEntity.getUserItem().getAttribute() != null) {
+                        AttributeItem attributeItem = new AttributeItem();
+                        copyProperties(offerUserItemEntity.getUserItem().getAttribute(), attributeItem);
+                        offerUserItem.getUserItem().setAttribute(attributeItem);
+                    }
                 }
 
                 offerUserItems.add(offerUserItem);
@@ -45,6 +60,18 @@ public class OfferMapper {
 
         OfferEntity offer = new OfferEntity();
         copyProperties(entity, offer);
+
+        if (entity.getUser() != null) {
+            UserEntity user = new UserEntity();
+            copyProperties(entity.getUser(), user);
+            offer.setUser(user);
+        }
+
+        if (entity.getItemSale() != null) {
+            ItemSaleEntity itemSaleEntity = new ItemSaleEntity();
+            copyProperties(entity.getItemSale(), itemSaleEntity);
+            offer.setItemSale(itemSaleEntity);
+        }
 
         return offer;
     }

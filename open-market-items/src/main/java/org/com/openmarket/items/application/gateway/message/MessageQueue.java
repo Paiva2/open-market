@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.com.openmarket.items.application.gateway.message.dto.CommonMessageDTO;
+import org.com.openmarket.items.core.domain.usecase.common.exception.UserItemNotFoundException;
+import org.com.openmarket.items.core.domain.usecase.item.common.exception.ItemNotActiveException;
+import org.com.openmarket.items.core.domain.usecase.item.common.exception.ItemNotFoundException;
 import org.com.openmarket.items.core.domain.usecase.user.disableUser.DisableUserUsecase;
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.InsertUserUsecase;
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.dto.InsertUserInput;
@@ -43,7 +46,8 @@ public class MessageQueue {
                 case UPDATED -> handleUpdated(messageDTO);
                 default -> throw new RuntimeException("Event type not recognized!" + messageDTO.getType());
             }
-        } catch (UserAlreadyExistsException e) {
+        } catch (UserAlreadyExistsException | UserItemNotFoundException | ItemNotFoundException |
+                 ItemNotActiveException e) {
             String message = "Error while processing new message";
             log.error(MessageFormat.format("{0}: {1}", message, e));
         } catch (Exception e) {

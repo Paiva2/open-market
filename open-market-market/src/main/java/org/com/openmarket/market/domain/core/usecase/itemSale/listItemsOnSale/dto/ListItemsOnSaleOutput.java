@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.com.openmarket.market.domain.core.entity.Item;
-import org.com.openmarket.market.domain.core.entity.ItemSale;
-import org.com.openmarket.market.domain.core.entity.User;
-import org.com.openmarket.market.domain.core.entity.UserItem;
+import org.com.openmarket.market.domain.core.entity.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -28,6 +25,7 @@ public class ListItemsOnSaleOutput {
         UserItem userItem = itemSale.getUserItem();
         Item item = userItem.getItem();
         User user = userItem.getUser();
+        AttributeItem attribute = userItem.getAttribute();
 
         this.id = itemSale.getId();
         this.quantity = itemSale.getQuantity();
@@ -42,7 +40,12 @@ public class ListItemsOnSaleOutput {
             .description(item.getDescription())
             .photoUrl(item.getPhotoUrl())
             .baseSellingPrice(item.getBaseSellingPrice())
-            .build();
+            .attribute(AttributeOutput.builder()
+                .id(attribute.getId())
+                .externalId(attribute.getExternalId())
+                .attributes(attribute.getAttributes())
+                .build()
+            ).build();
 
         this.seller = UserOutput.builder()
             .id(user.getId())
@@ -62,6 +65,7 @@ public class ListItemsOnSaleOutput {
         private String description;
         private String photoUrl;
         private BigDecimal baseSellingPrice;
+        private AttributeOutput attribute;
     }
 
     @Data
@@ -72,5 +76,15 @@ public class ListItemsOnSaleOutput {
         private UUID id;
         private String userName;
         private String email;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AttributeOutput {
+        private UUID id;
+        private String externalId;
+        private String attributes;
     }
 }

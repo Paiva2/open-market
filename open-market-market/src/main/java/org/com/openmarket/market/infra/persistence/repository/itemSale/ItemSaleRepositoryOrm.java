@@ -14,7 +14,7 @@ import java.util.UUID;
 public interface ItemSaleRepositoryOrm extends JpaRepository<ItemSaleEntity, UUID> {
     @Query(value = """
         select * from tb_items_sales isl
-        join tb_users_items uit on (uit.uit_user_id = isl.isl_user_id and uit.uit_item_id = isl.isl_item_id and uit.uit_item_attribute_id = isl.isl_attribute_item_id)
+        join tb_users_items uit on (uit.uit_user_id = isl.isl_user_id and uit.uit_item_id = isl.isl_item_id and uit.uit_item_attribute_id = isl.isl_item_attribute_id)
         join tb_attributes_item atr on atr.aui_id = uit.uit_item_attribute_id
         join tb_users usr on usr.usr_id = uit.uit_user_id
         join tb_items itm on itm.itm_id = uit.uit_item_id

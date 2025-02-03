@@ -50,6 +50,7 @@ public class InsertItemSaleUsecase {
 
         if (input.getOnlyOffers()) {
             input.setValue(BigDecimal.ZERO);
+            input.setAcceptOffers(true);
         }
 
         BigDecimal tax = defineSaleTaxes(input, item);

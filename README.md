@@ -89,7 +89,9 @@ remove, list items on sale, make offers, and other things related to market.
     - [ ] Category filtering
 
 - [ ] Basic Trading (Item on sale)
-    - [ ] Make offers
+    - [x] Make offers
+    - [ ] Remove offers
+    - [ ] Edit offers
     - [ ] Accept/Reject offers
     - [ ] View trade history
     - [x] List Offers made to item on sale

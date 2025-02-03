@@ -28,7 +28,6 @@ public class UserItemMapper {
             userItem.setUser(user);
         }
 
-
         if (persistenceEntity.getAttribute() != null) {
             AttributeItem attributeItem = new AttributeItem();
             copyProperties(persistenceEntity.getAttribute(), attributeItem);

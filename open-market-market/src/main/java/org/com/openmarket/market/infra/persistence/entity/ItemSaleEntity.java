@@ -49,9 +49,9 @@ public class ItemSaleEntity {
     private Date updatedAt;
 
     @JoinColumns({
+        @JoinColumn(name = "isl_item_attribute_id", referencedColumnName = "uit_item_attribute_id"),
         @JoinColumn(name = "isl_user_id", referencedColumnName = "uit_user_id"),
-        @JoinColumn(name = "isl_item_id", referencedColumnName = "uit_item_id"),
-        @JoinColumn(name = "isl_attribute_item_id", referencedColumnName = "uit_item_attribute_id"),
+        @JoinColumn(name = "isl_item_id", referencedColumnName = "uit_item_id")
     })
     @ManyToOne(fetch = FetchType.LAZY)
     private UserItemEntity userItem;

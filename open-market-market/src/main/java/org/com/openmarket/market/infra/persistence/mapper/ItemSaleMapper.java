@@ -1,13 +1,7 @@
 package org.com.openmarket.market.infra.persistence.mapper;
 
-import org.com.openmarket.market.domain.core.entity.Item;
-import org.com.openmarket.market.domain.core.entity.ItemSale;
-import org.com.openmarket.market.domain.core.entity.Offer;
-import org.com.openmarket.market.domain.core.entity.User;
-import org.com.openmarket.market.infra.persistence.entity.ItemEntity;
-import org.com.openmarket.market.infra.persistence.entity.ItemSaleEntity;
-import org.com.openmarket.market.infra.persistence.entity.OfferEntity;
-import org.com.openmarket.market.infra.persistence.entity.UserEntity;
+import org.com.openmarket.market.domain.core.entity.*;
+import org.com.openmarket.market.infra.persistence.entity.*;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
@@ -21,6 +15,9 @@ public class ItemSaleMapper {
         copyProperties(entity, itemSale);
 
         if (entity.getUserItem() != null) {
+            UserItem userItem = new UserItem();
+            itemSale.setUserItem(userItem);
+
             if (entity.getUserItem().getItem() != null) {
                 Item item = new Item();
                 copyProperties(entity.getUserItem().getItem(), item);
@@ -33,6 +30,12 @@ public class ItemSaleMapper {
                 copyProperties(entity.getUserItem().getUser(), user);
 
                 itemSale.getUserItem().setUser(user);
+            }
+
+            if (entity.getUserItem().getAttribute() != null) {
+                AttributeItem attributeItem = new AttributeItem();
+                copyProperties(entity.getUserItem().getAttribute(), attributeItem);
+                itemSale.getUserItem().setAttribute(attributeItem);
             }
         }
 
@@ -57,7 +60,12 @@ public class ItemSaleMapper {
         ItemSaleEntity itemSale = new ItemSaleEntity();
         copyProperties(entity, itemSale);
 
-        if (itemSale.getUserItem() != null) {
+        if (entity.getUserItem() != null) {
+            UserItemEntity userItem = new UserItemEntity();
+            itemSale.setUserItem(userItem);
+
+            copyProperties(entity.getUserItem(), userItem);
+
             if (entity.getUserItem().getItem() != null) {
                 ItemEntity item = new ItemEntity();
                 copyProperties(entity.getUserItem().getItem(), item);
@@ -71,8 +79,19 @@ public class ItemSaleMapper {
 
                 itemSale.getUserItem().setUser(user);
             }
-        }
 
+            if (entity.getUserItem().getAttribute() != null) {
+                AttributeItemEntity attributeItem = new AttributeItemEntity();
+                copyProperties(entity.getUserItem().getAttribute(), attributeItem);
+                itemSale.getUserItem().setAttribute(attributeItem);
+            }
+
+            if (entity.getUserItem().getId() != null) {
+                UserItemEntity.KeyId id = new UserItemEntity.KeyId();
+                copyProperties(entity.getUserItem().getId(), id);
+                itemSale.getUserItem().setId(id);
+            }
+        }
 
         if (entity.getOffers() != null) {
             List<OfferEntity> offersEntities = new ArrayList<>();

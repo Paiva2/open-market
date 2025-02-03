@@ -46,6 +46,9 @@ public class ItemEntity {
     @Column(name = "itm_active")
     private Boolean active;
 
+    @Column(name = "itm_stackable")
+    private Boolean stackable;
+
     @CreationTimestamp
     @Column(name = "itm_created_at")
     private Date createdAt;

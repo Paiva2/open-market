@@ -1,10 +1,13 @@
 package org.com.openmarket.market.application.gateway.controller.offer;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.market.application.gateway.controller.common.exception.ExternalIdMissingException;
 import org.com.openmarket.market.domain.core.usecase.common.dto.PageableList;
 import org.com.openmarket.market.domain.core.usecase.offer.listOffersByItemSale.ListOffersByItemSaleUsecase;
 import org.com.openmarket.market.domain.core.usecase.offer.listOffersByItemSale.dto.ListOffersByItemSaleOutput;
+import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.MakeOfferUsecase;
+import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.dto.MakeOfferInput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +21,7 @@ import java.util.UUID;
 @RequestMapping("/market")
 public class OfferController {
     private final ListOffersByItemSaleUsecase listOffersByItemSaleUsecase;
+    private final MakeOfferUsecase makeOfferUsecase;
 
     @GetMapping("/offers/list/item-sale/{itemSaleId}")
     ResponseEntity<PageableList<ListOffersByItemSaleOutput>> getOffersByItemSale(
@@ -30,6 +34,18 @@ public class OfferController {
         PageableList<ListOffersByItemSaleOutput> output = listOffersByItemSaleUsecase.execute(itemSaleId, page, size);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @PostMapping("/offers/new/item-sale/{itemSaleId}")
+    public ResponseEntity<ListOffersByItemSaleOutput> createOffer(
+        @AuthenticationPrincipal Jwt jwt,
+        @PathVariable("itemSaleId") UUID itemSaleId,
+        @RequestBody @Valid MakeOfferInput input
+    ) {
+        String externalId = getIdFromToken(jwt);
+        makeOfferUsecase.execute(itemSaleId, input, externalId, jwt.getTokenValue());
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     private String getIdFromToken(Jwt jwt) {

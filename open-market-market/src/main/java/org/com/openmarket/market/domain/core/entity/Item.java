@@ -23,6 +23,7 @@ public class Item {
     private Boolean unique;
     private BigDecimal baseSellingPrice;
     private Boolean active;
+    private Boolean stackable;
     private Date createdAt;
     private Date updatedAt;
 

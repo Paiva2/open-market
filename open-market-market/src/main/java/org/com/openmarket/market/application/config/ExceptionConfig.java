@@ -6,6 +6,7 @@ import org.com.openmarket.market.domain.core.usecase.common.exception.core.Forbi
 import org.com.openmarket.market.domain.core.usecase.common.exception.core.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -18,6 +19,17 @@ import java.util.Map;
 public class ExceptionConfig {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        Map<String, Object> errors = mapErrors(
+            exception.getMessage(),
+            exception.getClass().getSimpleName(),
+            HttpStatus.BAD_REQUEST.value()
+        );
+
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
         Map<String, Object> errors = mapErrors(
             exception.getMessage(),
             exception.getClass().getSimpleName(),

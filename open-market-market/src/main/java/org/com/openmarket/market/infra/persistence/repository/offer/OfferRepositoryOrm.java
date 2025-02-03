@@ -18,7 +18,7 @@ public interface OfferRepositoryOrm extends JpaRepository<OfferEntity, UUID> {
             select ofr from OfferEntity ofr
             join fetch ofr.user usr
             left join fetch ofr.offerUserItems oui
-            join fetch oui.userItem.item itm
+            left join fetch oui.userItem ui
             where ofr.itemSale.id = :itemSaleId
         """)
     Page<OfferEntity> findAllByItemSale(@Param("itemSaleId") UUID itemSaleId, Pageable pageable);

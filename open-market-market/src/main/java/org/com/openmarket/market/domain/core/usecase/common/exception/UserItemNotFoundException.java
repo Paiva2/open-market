@@ -8,4 +8,8 @@ public class UserItemNotFoundException extends NotFoundException {
     public UserItemNotFoundException() {
         super(MESSAGE_DEFAULT);
     }
+
+    public UserItemNotFoundException(String message) {
+        super(message);
+    }
 }

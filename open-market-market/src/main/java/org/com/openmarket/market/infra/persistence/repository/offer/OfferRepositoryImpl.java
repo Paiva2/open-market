@@ -46,4 +46,10 @@ public class OfferRepositoryImpl implements OfferRepository {
             offerEntities.stream().map(OfferMapper::toDomain).toList()
         );
     }
+
+    @Override
+    public Offer persist(Offer offer) {
+        OfferEntity offerEntity = repository.save(OfferMapper.toPersistence(offer));
+        return OfferMapper.toDomain(offerEntity);
+    }
 }

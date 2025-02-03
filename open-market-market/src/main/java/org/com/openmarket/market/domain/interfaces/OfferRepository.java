@@ -12,4 +12,6 @@ public interface OfferRepository {
     void removeOffers(List<Offer> offers);
 
     PageableList<Offer> findAllByItemSale(UUID itemSaleId, int page, int size);
+
+    Offer persist(Offer offer);
 }
