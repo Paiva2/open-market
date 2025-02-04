@@ -40,12 +40,12 @@ public class ItemSaleRepositoryImpl implements ItemSaleRepository {
     }
 
     @Override
-    public PageableList<ItemSale> findAllPaginated(int page, int size, String name, BigDecimal min, BigDecimal max) {
+    public PageableList<ItemSale> findAllPaginated(int page, int size, String name, String externalCategoryId, BigDecimal min, BigDecimal max) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.DESC, "isl_created_at");
-        Page<ItemSaleEntity> itemSales = repository.findAllPaginatedFiltered(name, min, max, pageable);
+        Page<ItemSaleEntity> itemSales = repository.findAllPaginatedFiltered(name, externalCategoryId, min, max, pageable);
 
         return new PageableList<>(
-            page + 1,
+            page,
             size,
             itemSales.getTotalElements(),
             itemSales.getTotalPages(),

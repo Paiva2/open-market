@@ -56,11 +56,12 @@ public class ItemSaleController {
         @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
         @RequestParam(value = "size", required = false, defaultValue = "5") Integer size,
         @RequestParam(value = "itemName", required = false) String itemName,
+        @RequestParam(value = "categoryId", required = false) String categoryId,
         @RequestParam(value = "min", required = false) BigDecimal min,
         @RequestParam(value = "max", required = false) BigDecimal max
     ) {
         getIdFromToken(jwt);
-        PageableList<ListItemsOnSaleOutput> output = listItemsOnSaleUsecase.execute(page, size, itemName, min, max);
+        PageableList<ListItemsOnSaleOutput> output = listItemsOnSaleUsecase.execute(page, size, itemName, categoryId, min, max);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
     }

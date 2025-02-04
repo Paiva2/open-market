@@ -86,7 +86,7 @@ remove, list items on sale, make offers, and other things related to market.
     - [x] Price range filters
     - [x] Simple sort options
     - [x] Multiple criteria search
-    - [ ] Category filtering
+    - [x] Category filtering
 
 - [ ] Basic Trading (Item on sale)
     - [x] Make offers

@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class ListItemsOnSaleUsecase {
     private final ItemSaleRepository itemSaleRepository;
 
-    public PageableList<ListItemsOnSaleOutput> execute(int page, int size, String itemName, BigDecimal min, BigDecimal max) {
+    public PageableList<ListItemsOnSaleOutput> execute(int page, int size, String itemName, String externalCategoryId, BigDecimal min, BigDecimal max) {
         if (page < 1) {
             page = 1;
         }
@@ -25,7 +25,7 @@ public class ListItemsOnSaleUsecase {
             size = 50;
         }
 
-        PageableList<ItemSale> itemSales = findItemSales(page, size, itemName, min, max);
+        PageableList<ItemSale> itemSales = findItemSales(page, size, itemName, externalCategoryId, min, max);
 
         return new PageableList<>(
             itemSales.getPage(),
@@ -37,7 +37,7 @@ public class ListItemsOnSaleUsecase {
         );
     }
 
-    private PageableList<ItemSale> findItemSales(int page, int size, String itemName, BigDecimal min, BigDecimal max) {
-        return itemSaleRepository.findAllPaginated(page, size, itemName, min, max);
+    private PageableList<ItemSale> findItemSales(int page, int size, String itemName, String externalCategoryId, BigDecimal min, BigDecimal max) {
+        return itemSaleRepository.findAllPaginated(page, size, itemName, externalCategoryId, min, max);
     }
 }

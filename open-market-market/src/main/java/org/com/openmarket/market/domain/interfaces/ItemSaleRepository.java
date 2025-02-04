@@ -14,5 +14,5 @@ public interface ItemSaleRepository {
 
     void remove(UUID id);
 
-    PageableList<ItemSale> findAllPaginated(int page, int size, String name, BigDecimal min, BigDecimal max);
+    PageableList<ItemSale> findAllPaginated(int page, int size, String name, String externalCategoryId, BigDecimal min, BigDecimal max);
 }
