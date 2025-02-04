@@ -19,6 +19,7 @@ public class CreateItemMessageOutput {
     private Boolean unique;
     private BigDecimal baseSellingPrice;
     private Boolean active;
+    private Boolean stackable;
 
     private List<Long> categoriesIds;
 }

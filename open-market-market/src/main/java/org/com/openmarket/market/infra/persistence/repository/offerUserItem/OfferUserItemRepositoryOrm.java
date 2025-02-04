@@ -21,4 +21,9 @@ public interface OfferUserItemRepositoryOrm extends JpaRepository<OfferUserItemE
         "and usi.item.id = :itemId " +
         "and usi.attribute.id = :attributeId")
     Optional<OfferUserItemEntity> findByUserItemAndAttribute(@Param("userId") UUID userId, @Param("itemId") UUID itemId, @Param("attributeId") UUID attributeId);
+
+    @Query("select oui from OfferUserItemEntity oui " +
+        "join fetch oui.userItem ui " +
+        "where oui.offer.id = :offerId")
+    List<OfferUserItemEntity> findAllByOfferIdWithUserItem(@Param("offerId") UUID offerId);
 }

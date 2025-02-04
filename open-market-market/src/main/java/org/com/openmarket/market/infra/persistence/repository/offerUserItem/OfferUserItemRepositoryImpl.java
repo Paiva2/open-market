@@ -34,4 +34,15 @@ public class OfferUserItemRepositoryImpl implements OfferUserItemRepository {
         if (offerUserItem.isEmpty()) return Optional.empty();
         return Optional.of(OfferUserItemMapper.toDomain(offerUserItem.get()));
     }
+
+    @Override
+    public List<OfferUserItem> findByOfferIdWithDeps(UUID offerId) {
+        List<OfferUserItemEntity> offerUserItems = repository.findAllByOfferIdWithUserItem(offerId);
+        return offerUserItems.stream().map(OfferUserItemMapper::toDomain).toList();
+    }
+
+    @Override
+    public void removeAll(List<OfferUserItem> offerUserItems) {
+        repository.deleteAll(offerUserItems.stream().map(OfferUserItemMapper::toPersistence).toList());
+    }
 }

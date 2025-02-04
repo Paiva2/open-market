@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -51,5 +52,17 @@ public class OfferRepositoryImpl implements OfferRepository {
     public Offer persist(Offer offer) {
         OfferEntity offerEntity = repository.save(OfferMapper.toPersistence(offer));
         return OfferMapper.toDomain(offerEntity);
+    }
+
+    @Override
+    public Optional<Offer> findById(UUID id) {
+        Optional<OfferEntity> offerEntity = repository.findByIdWithDeps(id);
+        if (offerEntity.isEmpty()) return Optional.empty();
+        return Optional.of(OfferMapper.toDomain(offerEntity.get()));
+    }
+
+    @Override
+    public void delete(UUID offerId) {
+        repository.deleteById(offerId);
     }
 }

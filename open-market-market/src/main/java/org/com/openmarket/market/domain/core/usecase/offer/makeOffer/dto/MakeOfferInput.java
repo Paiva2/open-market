@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -22,8 +21,8 @@ public class MakeOfferInput {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UserItemInput {
-        private UUID itemId;
-        private UUID attributeId;
+        private String externalItemId;
+        private String externalAttributeId;
         private Long quantity;
     }
 }

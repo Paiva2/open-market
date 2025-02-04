@@ -10,8 +10,8 @@ public interface UserItemRepository {
     Optional<UserItem> getUserItemWithExternalAttributeId(UUID userId, UUID itemId, String externalAttributeId);
 
     UserItem persist(UserItem userItem);
-    
-    Optional<UserItem> findUserItemWithQuantity(UUID userId, UUID itemId, UUID attributeId);
+
+    Optional<UserItem> findUserItemWithQuantity(UUID userId, String externalItemId, String externalAttributeId);
 
     List<UserItem> persistAll(List<UserItem> userItems);
 }

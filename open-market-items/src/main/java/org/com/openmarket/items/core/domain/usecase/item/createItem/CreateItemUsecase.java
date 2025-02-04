@@ -1,6 +1,7 @@
 package org.com.openmarket.items.core.domain.usecase.item.createItem;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.items.application.gateway.message.dto.CommonMessageDTO;
 import org.com.openmarket.items.core.domain.entity.Category;
@@ -40,6 +41,7 @@ public class CreateItemUsecase {
     private final MessageRepository messageRepository;
     private final RegisterItemAlterationUsecase registerItemAlterationUsecase;
 
+    @Transactional
     public CreateItemOutput execute(Long userId, CreateItemInput input) {
         validateRequiredFields(input);
 
@@ -123,6 +125,7 @@ public class CreateItemUsecase {
             .unique(input.getUnique())
             .baseSellingPrice(input.getBaseSellingPrice())
             .active(true)
+            .stackable(input.getStackable())
             .build();
     }
 
@@ -161,6 +164,7 @@ public class CreateItemUsecase {
                 .unique(item.getUnique())
                 .baseSellingPrice(item.getBaseSellingPrice())
                 .active(item.getActive())
+                .stackable(item.getStackable())
                 .categoriesIds(item.getItemCategories().stream().map(ItemCategory::getCategory).map(Category::getId).toList())
                 .build();
 

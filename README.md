@@ -90,7 +90,7 @@ remove, list items on sale, make offers, and other things related to market.
 
 - [ ] Basic Trading (Item on sale)
     - [x] Make offers
-    - [ ] Remove offers
+    - [x] Remove offers
     - [ ] Edit offers
     - [ ] Accept/Reject offers
     - [ ] View trade history

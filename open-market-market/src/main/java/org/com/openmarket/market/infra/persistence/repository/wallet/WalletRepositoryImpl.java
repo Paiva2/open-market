@@ -2,6 +2,7 @@ package org.com.openmarket.market.infra.persistence.repository.wallet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.com.openmarket.market.domain.core.usecase.common.dto.GetAdminWalletOutput;
 import org.com.openmarket.market.domain.core.usecase.common.dto.UserWalletViewOutput;
 import org.com.openmarket.market.domain.interfaces.WalletRepository;
@@ -9,6 +10,7 @@ import org.com.openmarket.market.infra.utils.RestUtils;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 @AllArgsConstructor
 public class WalletRepositoryImpl implements WalletRepository {
     private final static ObjectMapper mapper = new ObjectMapper();
@@ -25,7 +27,8 @@ public class WalletRepositoryImpl implements WalletRepository {
 
             return mapper.readValue(body, UserWalletViewOutput.class);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage());
+            throw new RuntimeException("Error while fetching user wallet...");
         }
     }
 
@@ -37,7 +40,8 @@ public class WalletRepositoryImpl implements WalletRepository {
 
             return mapper.readValue(body, GetAdminWalletOutput.class);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage());
+            throw new RuntimeException("Error while fetching admin wallet...");
         }
     }
 }

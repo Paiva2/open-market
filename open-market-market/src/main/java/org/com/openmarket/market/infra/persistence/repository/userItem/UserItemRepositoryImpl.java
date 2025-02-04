@@ -28,10 +28,10 @@ public class UserItemRepositoryImpl implements UserItemRepository {
         UserItemEntity userItemEntity = repository.save(UserItemMapper.toPersistence(userItem));
         return UserItemMapper.toDomain(userItemEntity);
     }
-    
+
     @Override
-    public Optional<UserItem> findUserItemWithQuantity(UUID userId, UUID itemId, UUID attributeId) {
-        Optional<UserItemEntity> userItemEntities = repository.findByUserAndItemIdAndAttributeIdWithQuantity(userId, itemId, attributeId);
+    public Optional<UserItem> findUserItemWithQuantity(UUID userId, String externalItemId, String externalAttributeId) {
+        Optional<UserItemEntity> userItemEntities = repository.findByUserAndItemIdAndAttributeIdWithQuantity(userId, externalItemId, externalAttributeId);
         if (userItemEntities.isEmpty()) return Optional.empty();
         return Optional.of(UserItemMapper.toDomain(userItemEntities.get()));
     }

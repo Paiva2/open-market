@@ -20,6 +20,7 @@ public class Item {
     private String description;
     private String photoUrl;
     private Boolean unique;
+    private Boolean stackable;
     private BigDecimal baseSellingPrice;
     private Boolean active;
     private Date createdAt;

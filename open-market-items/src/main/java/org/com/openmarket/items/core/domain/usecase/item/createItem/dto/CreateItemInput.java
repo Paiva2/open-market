@@ -17,6 +17,7 @@ public class CreateItemInput {
     private String description;
     private String photoUrl;
     private Boolean unique;
+    private Boolean stackable;
     private BigDecimal baseSellingPrice;
     private List<Long> categoriesIds;
 }

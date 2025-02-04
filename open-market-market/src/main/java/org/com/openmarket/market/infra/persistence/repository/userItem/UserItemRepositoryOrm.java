@@ -24,9 +24,9 @@ public interface UserItemRepositoryOrm extends JpaRepository<UserItemEntity, Use
             join fetch ui.item itm
             join fetch ui.attribute atb
             where usr.id = :userId
-            and itm.id = :itemId
-            and atb.id = :attributeId
+            and itm.externalId = :externalItemId
+            and atb.externalId = :externalAttributeId
             and ui.quantity > 0
         """)
-    Optional<UserItemEntity> findByUserAndItemIdAndAttributeIdWithQuantity(@Param("userId") UUID userId, @Param("itemId") UUID itemId, @Param("attributeId") UUID attributeId);
+    Optional<UserItemEntity> findByUserAndItemIdAndAttributeIdWithQuantity(@Param("userId") UUID userId, @Param("externalItemId") String externalItemId, @Param("externalAttributeId") String externalAttributeId);
 }

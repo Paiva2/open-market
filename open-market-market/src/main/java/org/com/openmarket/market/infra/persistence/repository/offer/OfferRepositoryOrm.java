@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface OfferRepositoryOrm extends JpaRepository<OfferEntity, UUID> {
@@ -22,4 +23,7 @@ public interface OfferRepositoryOrm extends JpaRepository<OfferEntity, UUID> {
             where ofr.itemSale.id = :itemSaleId
         """)
     Page<OfferEntity> findAllByItemSale(@Param("itemSaleId") UUID itemSaleId, Pageable pageable);
+
+    @Query("select off from OfferEntity off join fetch off.user usr where off.id = :offerId")
+    Optional<OfferEntity> findByIdWithDeps(@Param("offerId") UUID offerId);
 }

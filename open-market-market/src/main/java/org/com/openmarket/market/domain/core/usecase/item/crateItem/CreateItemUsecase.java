@@ -71,6 +71,7 @@ public class CreateItemUsecase {
             .photoUrl(input.getPhotoUrl())
             .unique(input.getUnique())
             .baseSellingPrice(input.getBaseSellingPrice())
+            .stackable(input.getStackable())
             .active(true)
             .build();
     }

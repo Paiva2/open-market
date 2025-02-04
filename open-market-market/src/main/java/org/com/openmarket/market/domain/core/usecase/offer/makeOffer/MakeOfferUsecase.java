@@ -222,19 +222,19 @@ public class MakeOfferUsecase {
 
     private HashMap<String, UserItem> findUserItems(User user, MakeOfferInput input) {
         HashMap<String, UserItem> userItems = new HashMap<>();
-        List<UUID> userItemsNotAvailable = new ArrayList<>();
-        List<UUID> userItemsUnique = new ArrayList<>();
+        List<String> userItemsNotAvailable = new ArrayList<>();
+        List<String> userItemsUnique = new ArrayList<>();
 
         for (MakeOfferInput.UserItemInput userItemInput : input.getUserItems()) {
-            Optional<UserItem> userItem = userItemRepository.findUserItemWithQuantity(user.getId(), userItemInput.getItemId(), userItemInput.getAttributeId());
+            Optional<UserItem> userItem = userItemRepository.findUserItemWithQuantity(user.getId(), userItemInput.getExternalItemId(), userItemInput.getExternalAttributeId());
 
             if (userItem.isEmpty() || userItem.get().getQuantity() < userItemInput.getQuantity() || !userItem.get().getItem().getActive()) {
-                userItemsNotAvailable.add(userItemInput.getItemId());
+                userItemsNotAvailable.add(userItemInput.getExternalItemId());
             } else if (userItem.get().getItem().getUnique()) {
-                userItemsUnique.add(userItemInput.getItemId());
+                userItemsUnique.add(userItemInput.getExternalItemId());
             } else {
                 UserItem userItemFound = userItem.get();
-                userItems.put(userItemFound.getAttribute().getId().toString(), userItemFound);
+                userItems.put(userItemFound.getAttribute().getExternalId(), userItemFound);
             }
         }
 
@@ -272,7 +272,7 @@ public class MakeOfferUsecase {
         List<OfferUserItem> offerUserItems = new ArrayList<>();
 
         for (MakeOfferInput.UserItemInput userItemInput : input.getUserItems()) {
-            UserItem userItem = userItems.get(userItemInput.getAttributeId().toString());
+            UserItem userItem = userItems.get(userItemInput.getExternalAttributeId());
 
             OfferUserItem offerUserItem = OfferUserItem.builder()
                 .userItem(userItem)
@@ -288,7 +288,7 @@ public class MakeOfferUsecase {
 
     private List<UserItem> decreaseUserItemsQuantityOffered(HashMap<String, UserItem> userItems, MakeOfferInput input) {
         for (MakeOfferInput.UserItemInput userItemInput : input.getUserItems()) {
-            UserItem userItem = userItems.get(userItemInput.getAttributeId().toString());
+            UserItem userItem = userItems.get(userItemInput.getExternalAttributeId());
             userItem.setQuantity(userItem.getQuantity() - userItemInput.getQuantity());
         }
 

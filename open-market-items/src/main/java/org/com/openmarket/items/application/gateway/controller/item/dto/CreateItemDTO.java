@@ -32,6 +32,9 @@ public class CreateItemDTO {
     private Boolean unique;
 
     @NotNull
+    private Boolean stackable;
+
+    @NotNull
     private BigDecimal baseSellingPrice;
 
     @NotNull
@@ -45,6 +48,7 @@ public class CreateItemDTO {
             .unique(this.unique)
             .baseSellingPrice(this.baseSellingPrice)
             .categoriesIds(this.categoriesIds)
+            .stackable(this.stackable)
             .build();
     }
 }
