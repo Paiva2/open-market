@@ -65,4 +65,11 @@ public class OfferRepositoryImpl implements OfferRepository {
     public void delete(UUID offerId) {
         repository.deleteById(offerId);
     }
+
+    @Override
+    public Optional<Offer> findByItemSaleAndUser(UUID itemSaleId, UUID userId) {
+        Optional<OfferEntity> offerEntity = repository.findByItemSaleAndUser(itemSaleId, userId);
+        if (offerEntity.isEmpty()) return Optional.empty();
+        return Optional.of(OfferMapper.toDomain(offerEntity.get()));
+    }
 }

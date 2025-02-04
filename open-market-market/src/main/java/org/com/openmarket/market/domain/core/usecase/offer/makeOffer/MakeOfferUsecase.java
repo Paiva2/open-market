@@ -11,6 +11,7 @@ import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.dto.MakeOff
 import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.dto.OfferUserItemAlreadyOfferedException;
 import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.exception.InvalidItemSaleQuantityException;
 import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.exception.InvalidOfferException;
+import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.exception.OfferAlreadyMadeException;
 import org.com.openmarket.market.domain.enumeration.EnumMessageEvent;
 import org.com.openmarket.market.domain.enumeration.EnumMessageType;
 import org.com.openmarket.market.domain.enumeration.EnumTransactionType;
@@ -48,6 +49,9 @@ public class MakeOfferUsecase {
         }
 
         ItemSale itemSale = findItemSale(itemSaleId);
+
+        checkUserAlreadyOffered(user, itemSale);
+
         checkItemSaleOwner(itemSale, user);
         checkItemSaleExpDate(itemSale);
         checkOfferConstraints(itemSale, input);
@@ -94,6 +98,14 @@ public class MakeOfferUsecase {
 
     private User findUser(String externalId) {
         return userRepository.findByExternalId(externalId).orElseThrow(UserNotFoundException::new);
+    }
+
+    private void checkUserAlreadyOffered(User user, ItemSale itemSale) {
+        Optional<Offer> offer = offerRepository.findByItemSaleAndUser(itemSale.getId(), user.getId());
+
+        if (offer.isPresent()) {
+            throw new OfferAlreadyMadeException("User already has made an offer.");
+        }
     }
 
     private ItemSale findItemSale(UUID itemSaleId) {

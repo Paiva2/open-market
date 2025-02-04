@@ -19,4 +19,6 @@ public interface OfferRepository {
     Optional<Offer> findById(UUID id);
 
     void delete(UUID offerId);
+
+    Optional<Offer> findByItemSaleAndUser(UUID itemSaleId, UUID userId);
 }

@@ -26,4 +26,7 @@ public interface OfferRepositoryOrm extends JpaRepository<OfferEntity, UUID> {
 
     @Query("select off from OfferEntity off join fetch off.user usr where off.id = :offerId")
     Optional<OfferEntity> findByIdWithDeps(@Param("offerId") UUID offerId);
+
+    @Query("select off from OfferEntity off where off.itemSale.id = :itemSaleId and off.user.id = :userId")
+    Optional<OfferEntity> findByItemSaleAndUser(@Param("itemSaleId") UUID itemSaleId, @Param("userId") UUID userId);
 }
