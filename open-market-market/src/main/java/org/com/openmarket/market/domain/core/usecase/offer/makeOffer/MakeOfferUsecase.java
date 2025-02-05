@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.market.domain.core.entity.*;
-import org.com.openmarket.market.domain.core.usecase.common.dto.*;
+import org.com.openmarket.market.domain.core.usecase.common.dto.CommonMessageDTO;
+import org.com.openmarket.market.domain.core.usecase.common.dto.UpdateUserItemMessageInput;
+import org.com.openmarket.market.domain.core.usecase.common.dto.UserWalletViewOutput;
+import org.com.openmarket.market.domain.core.usecase.common.dto.WalletMessageInput;
 import org.com.openmarket.market.domain.core.usecase.common.exception.*;
 import org.com.openmarket.market.domain.core.usecase.common.exception.core.ConflictException;
 import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.dto.MakeOfferInput;
@@ -30,6 +33,7 @@ import static org.com.openmarket.market.application.config.constants.QueueConsta
 public class MakeOfferUsecase {
     private final static ObjectMapper mapper = new ObjectMapper();
     private final static String WALLET_DATABASE_NAME = "open-market-wallet-db";
+    private final static String BANK_ADM_WALLET_ID = "BANK_ADM_WALLET_ID";
 
     private final UserRepository userRepository;
     private final ItemSaleRepository itemSaleRepository;
@@ -82,7 +86,7 @@ public class MakeOfferUsecase {
 
             if (input.getValue().compareTo(BigDecimal.ZERO) > 0) {
                 checkUserWalletValue(userWallet, input);
-                decreaseWalletValue(authToken, user, itemSale, input.getValue());
+                decreaseWalletValue(user, itemSale, input.getValue());
             }
 
             if (userItemsUpdated != null) {
@@ -153,14 +157,18 @@ public class MakeOfferUsecase {
         }
     }
 
-    private void decreaseWalletValue(String authToken, User user, ItemSale itemSale, BigDecimal value) {
-        GetAdminWalletOutput adminWalletOutput = walletRepository.getSystemBankAdminWalletId(authToken);
+    private void decreaseWalletValue(User user, ItemSale itemSale, BigDecimal value) {
+        String bankAdminWalletId = System.getenv(BANK_ADM_WALLET_ID);
+
+        if (bankAdminWalletId == null) {
+            throw new RuntimeException("Bank admin wallet id is null!");
+        }
 
         try {
             WalletMessageInput walletMessageInput = WalletMessageInput.builder()
                 .externalUserId(user.getExternalId())
                 .transaction(WalletMessageInput.NewTransaction.builder()
-                    .targetWalletId(adminWalletOutput.getWalletId())
+                    .targetWalletId(UUID.fromString(bankAdminWalletId))
                     .description(MessageFormat.format("Offer made to Item on sale identifier: {0}", itemSale.getId()))
                     .value(value)
                     .type(EnumTransactionType.TRANSFER.name())

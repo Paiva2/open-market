@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.market.domain.core.entity.*;
-import org.com.openmarket.market.domain.core.usecase.common.dto.*;
+import org.com.openmarket.market.domain.core.usecase.common.dto.CommonMessageDTO;
+import org.com.openmarket.market.domain.core.usecase.common.dto.UpdateUserItemMessageInput;
+import org.com.openmarket.market.domain.core.usecase.common.dto.UserWalletViewOutput;
+import org.com.openmarket.market.domain.core.usecase.common.dto.WalletMessageInput;
 import org.com.openmarket.market.domain.core.usecase.common.exception.*;
 import org.com.openmarket.market.domain.core.usecase.common.exception.core.ConflictException;
 import org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale.dto.InsertItemSaleInput;
@@ -26,6 +29,7 @@ import static org.com.openmarket.market.application.config.constants.QueueConsta
 @AllArgsConstructor
 public class InsertItemSaleUsecase {
     private final static String WALLET_DATABASE_NAME = "open-market-wallet-db";
+    private final static String SYSTEM_WALLET_ID = "BANK_ADM_WALLET_ID";
     private final static ObjectMapper mapper = new ObjectMapper();
     private final static Double MARKET_TAX = 0.02; // 2%
     private final static BigDecimal MAX_TAX_VALUE = new BigDecimal("1000000");
@@ -59,7 +63,12 @@ public class InsertItemSaleUsecase {
         DatabaseLock walletLock = lockWallet(user);
 
         try {
-            GetAdminWalletOutput systemWalletId = walletRepository.getSystemBankAdminWalletId(authorizationToken);
+            String systemWalletId = System.getenv(SYSTEM_WALLET_ID);
+
+            if (systemWalletId == null) {
+                throw new RuntimeException("System Wallet ID is null!");
+            }
+
             UserWalletViewOutput walletView = findUserWallet(authorizationToken);
 
             if (walletView.getBalance().compareTo(BigDecimal.ONE) < 1 || tax.compareTo(walletView.getBalance()) > 0) {
@@ -86,7 +95,7 @@ public class InsertItemSaleUsecase {
 
             decreaseUserItemQuantity(userItem, input);
             sendUserItemDecreaseQuantityMessage(user, item, userItem);
-            decreaseWalletTax(tax, user, systemWalletId.getWalletId());
+            decreaseWalletTax(tax, user, UUID.fromString(systemWalletId));
             unlockWallet(walletLock);
         } catch (Exception exception) {
             unlockWallet(walletLock);

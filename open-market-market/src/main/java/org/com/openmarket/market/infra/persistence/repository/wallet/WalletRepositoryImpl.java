@@ -3,14 +3,13 @@ package org.com.openmarket.market.infra.persistence.repository.wallet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.com.openmarket.market.domain.core.usecase.common.dto.GetAdminWalletOutput;
 import org.com.openmarket.market.domain.core.usecase.common.dto.UserWalletViewOutput;
 import org.com.openmarket.market.domain.interfaces.WalletRepository;
 import org.com.openmarket.market.infra.utils.RestUtils;
 import org.springframework.stereotype.Component;
 
-@Component
 @Slf4j
+@Component
 @AllArgsConstructor
 public class WalletRepositoryImpl implements WalletRepository {
     private final static ObjectMapper mapper = new ObjectMapper();
@@ -29,19 +28,6 @@ public class WalletRepositoryImpl implements WalletRepository {
         } catch (Exception e) {
             log.error(e.getMessage());
             throw new RuntimeException("Error while fetching user wallet...");
-        }
-    }
-
-    @Override
-    public GetAdminWalletOutput getSystemBankAdminWalletId(String authorizationToken) {
-        try {
-            String url = HOST.concat(URL_PREFIX).concat("/info/system/bank");
-            String body = (String) restUtils.get(url, authorizationToken, String.class);
-
-            return mapper.readValue(body, GetAdminWalletOutput.class);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new RuntimeException("Error while fetching admin wallet...");
         }
     }
 }

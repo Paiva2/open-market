@@ -7,7 +7,10 @@ import org.com.openmarket.market.domain.core.entity.Offer;
 import org.com.openmarket.market.domain.core.entity.OfferUserItem;
 import org.com.openmarket.market.domain.core.entity.User;
 import org.com.openmarket.market.domain.core.entity.UserItem;
-import org.com.openmarket.market.domain.core.usecase.common.dto.*;
+import org.com.openmarket.market.domain.core.usecase.common.dto.CommonMessageDTO;
+import org.com.openmarket.market.domain.core.usecase.common.dto.UpdateUserItemMessageInput;
+import org.com.openmarket.market.domain.core.usecase.common.dto.UserWalletViewOutput;
+import org.com.openmarket.market.domain.core.usecase.common.dto.WalletMessageInput;
 import org.com.openmarket.market.domain.core.usecase.common.exception.OfferNotFoundException;
 import org.com.openmarket.market.domain.core.usecase.common.exception.UserDisabledException;
 import org.com.openmarket.market.domain.core.usecase.common.exception.UserItemNotFoundException;
@@ -29,6 +32,7 @@ import static org.com.openmarket.market.application.config.constants.QueueConsta
 @Service
 @AllArgsConstructor
 public class CancelOfferUsecase {
+    private final static String SYSTEM_BANK_EXTERNAL_ID = "BANK_ADM_EXTERNAL_ID";
     private final static ObjectMapper mapper = new ObjectMapper();
 
     private final UserRepository userRepository;
@@ -52,10 +56,10 @@ public class CancelOfferUsecase {
         List<OfferUserItem> offerUserItems = checkOfferHasItem(offer);
 
         if (offer.getValue().compareTo(BigDecimal.ZERO) > 0) {
-            GetAdminWalletOutput adminWallet = findBankAdminWallet(authToken);
+            String bankAdminExternalId = System.getenv(SYSTEM_BANK_EXTERNAL_ID);
             UserWalletViewOutput userWallet = findUserWallet(authToken);
 
-            sendWalletOfferedValueBack(adminWallet.getExternalAdminId(), userWallet.getId(), offer);
+            sendWalletOfferedValueBack(bankAdminExternalId, userWallet.getId(), offer);
         }
 
         if (!offerUserItems.isEmpty()) {
@@ -82,10 +86,6 @@ public class CancelOfferUsecase {
 
     private List<OfferUserItem> checkOfferHasItem(Offer offer) {
         return offerUserItemRepository.findByOfferIdWithDeps(offer.getId());
-    }
-
-    private GetAdminWalletOutput findBankAdminWallet(String authToken) {
-        return walletRepository.getSystemBankAdminWalletId(authToken);
     }
 
     private UserWalletViewOutput findUserWallet(String authToken) {
