@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS tb_users
     usr_updated_at  TIMESTAMP           NOT NULL DEFAULT now()
 );
 
+CREATE INDEX usr_external_id_index ON tb_users (usr_external_id);
+
 CREATE FUNCTION update_updated_at_tb_users()
     RETURNS TRIGGER AS
 $$

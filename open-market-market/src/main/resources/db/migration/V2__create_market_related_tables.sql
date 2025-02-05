@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS tb_items (
     itm_updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
 
+CREATE INDEX itm_external_id_index ON tb_items (itm_external_id);
+
 CREATE TABLE IF NOT EXISTS tb_categories (
     cat_id SERIAL PRIMARY KEY,
     cat_external_id VARCHAR(250) UNIQUE DEFAULT NULL,
@@ -19,6 +21,8 @@ CREATE TABLE IF NOT EXISTS tb_categories (
     cat_created_at TIMESTAMP NOT NULL DEFAULT now(),
     cat_updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
+
+CREATE INDEX cat_external_id_index ON tb_categories (cat_external_id);
 
 CREATE TABLE IF NOT EXISTS tb_items_categories (
     ict_item_id uuid,
@@ -37,6 +41,8 @@ CREATE TABLE IF NOT EXISTS tb_attributes_item (
       aui_created_at TIMESTAMP NOT NULL DEFAULT now(),
       aui_updated_at TIMESTAMP NOT NULL DEFAULT now()
 );
+
+CREATE INDEX aui_external_id_index ON tb_attributes_item (aui_external_id);
 
 CREATE TABLE IF NOT EXISTS tb_users_items (
     uit_user_id UUID NOT NULL,
