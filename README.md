@@ -79,9 +79,14 @@ remove, list items on sale, make offers, and other things related to market.
 - [ ] Advanced Item Management (Item on sale)
     - [x] List items for sale
     - [x] Remove listings
-    - [ ] Scheduled listings/removals
+    - [x] Scheduled listings/removals
 
-- [ ] Essential Search & Filters (Item on sale)
+- [ ] Market core (Item on sale)
+    - [ ] Buy Item on sale
+    - [x] Insert items for sale
+    - [x] Remove items for sale
+
+- [x] Essential Search & Filters (Item on sale)
     - [x] Search by name
     - [x] Price range filters
     - [x] Simple sort options

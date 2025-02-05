@@ -22,6 +22,7 @@ public class WalletMessageInput {
     @AllArgsConstructor
     public static class NewTransaction {
         private UUID targetWalletId;
+        private String externalUserTargetId;
         private String description;
         private BigDecimal value;
         private String type;

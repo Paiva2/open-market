@@ -34,4 +34,11 @@ public class WalletRepositoryImpl implements WalletRepository {
         if (walletEntity.isEmpty()) return Optional.empty();
         return Optional.of(WalletMapper.toDomain(walletEntity.get()));
     }
+
+    @Override
+    public Optional<Wallet> findByExternalUserId(String externalUserId) {
+        Optional<WalletEntity> walletEntity = repository.findByExternalUserId(externalUserId);
+        if (walletEntity.isEmpty()) return Optional.empty();
+        return Optional.of(WalletMapper.toDomain(walletEntity.get()));
+    }
 }

@@ -27,9 +27,16 @@ public class RegisterNewTransactionUsecase {
     private final WalletLedgerRepository walletLedgerRepository;
 
     public void execute(RegisterNewTransactionInput input) {
-        User user = findUser(input.getExternalUserId());
-        Wallet userWallet = findWallet(user.getId());
-        Wallet targetWallet = findTargetWallet(input.getTargetWalletId());
+        User userPaying = findUser(input.getExternalUserId());
+        Wallet userWallet = findWallet(userPaying.getId());
+
+        Wallet targetWallet = null;
+
+        if (input.getTargetWalletId() != null) {
+            targetWallet = findTargetWallet(input.getTargetWalletId());
+        } else if (input.getTargetUserExternalId() != null) {
+            targetWallet = findTargetWalletByExternalUserId(input.getTargetUserExternalId());
+        }
 
         checkValue(input.getValue());
         EnumTransactionType transactionType = checkType(input.getType());
@@ -48,6 +55,16 @@ public class RegisterNewTransactionUsecase {
 
     private Wallet findTargetWallet(UUID walletId) {
         Optional<Wallet> wallet = walletRepository.findById(walletId);
+
+        if (wallet.isEmpty()) {
+            throw new WalletNotFoundException("Target wallet not found!");
+        }
+
+        return wallet.get();
+    }
+
+    private Wallet findTargetWalletByExternalUserId(String externalUserId) {
+        Optional<Wallet> wallet = walletRepository.findByExternalUserId(externalUserId);
 
         if (wallet.isEmpty()) {
             throw new WalletNotFoundException("Target wallet not found!");

@@ -15,6 +15,7 @@ import java.util.UUID;
 public class RegisterNewTransactionInput {
     private String externalUserId;
     private UUID targetWalletId;
+    private String targetUserExternalId;
     private String description;
     private BigDecimal value;
     private String type;

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,4 +33,11 @@ public interface ItemSaleRepositoryOrm extends JpaRepository<ItemSaleEntity, UUI
 
     @Query("select isl from ItemSaleEntity isl join fetch isl.userItem ui where isl.id = :id")
     Optional<ItemSaleEntity> findByIdWithDeps(@Param("id") UUID id);
+
+    @Query("select isl from ItemSaleEntity isl " +
+        "join fetch isl.userItem usi " +
+        "left join fetch isl.offers off " +
+        "left join fetch off.user usr " +
+        "where isl.expirationDate < current_timestamp")
+    List<ItemSaleEntity> findAllExpired();
 }

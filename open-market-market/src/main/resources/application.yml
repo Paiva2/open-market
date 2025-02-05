@@ -50,3 +50,6 @@ eureka:
       defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
   instance:
     hostname: localhost
+
+open-market:
+  bank-admin-external-id: ${BANK_ADM_EXTERNAL_ID}

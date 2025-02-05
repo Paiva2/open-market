@@ -18,6 +18,8 @@ public class ItemSaleMapper {
             UserItem userItem = new UserItem();
             itemSale.setUserItem(userItem);
 
+            copyProperties(entity.getUserItem(), itemSale.getUserItem());
+
             if (entity.getUserItem().getItem() != null) {
                 Item item = new Item();
                 copyProperties(entity.getUserItem().getItem(), item);
@@ -37,14 +39,26 @@ public class ItemSaleMapper {
                 copyProperties(entity.getUserItem().getAttribute(), attributeItem);
                 itemSale.getUserItem().setAttribute(attributeItem);
             }
-        }
 
+            if (entity.getUserItem().getId() != null) {
+                UserItem.KeyId id = new UserItem.KeyId();
+                copyProperties(entity.getUserItem().getId(), id);
+                itemSale.getUserItem().setId(id);
+            }
+        }
 
         if (entity.getOffers() != null) {
             List<Offer> offers = new ArrayList<>();
             for (OfferEntity offerEntity : entity.getOffers()) {
                 Offer offer = new Offer();
                 copyProperties(offerEntity, offer);
+
+                if (offerEntity.getUser() != null) {
+                    User user = new User();
+                    copyProperties(offerEntity.getUser(), user);
+                    offer.setUser(user);
+                }
+
                 offers.add(offer);
             }
 

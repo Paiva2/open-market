@@ -73,6 +73,7 @@ public class MessageQueue {
         return RegisterNewTransactionInput.builder()
             .externalUserId(messageConverted.getExternalUserId())
             .targetWalletId(messageConverted.getTransaction().getTargetWalletId())
+            .targetUserExternalId(messageConverted.getTransaction().getExternalUserTargetId())
             .description(messageConverted.getTransaction().getDescription())
             .value(messageConverted.getTransaction().getValue())
             .type(messageConverted.getTransaction().getType())

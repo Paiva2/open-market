@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,5 +53,16 @@ public class ItemSaleRepositoryImpl implements ItemSaleRepository {
             itemSales.isLast(),
             itemSales.stream().map(ItemSaleMapper::toDomain).toList()
         );
+    }
+
+    @Override
+    public List<ItemSale> findAllExpired() {
+        List<ItemSaleEntity> itemSaleEntities = repository.findAllExpired();
+        return itemSaleEntities.stream().map(ItemSaleMapper::toDomain).toList();
+    }
+
+    @Override
+    public void deleteAll(List<ItemSale> itemSales) {
+        repository.deleteAll(itemSales.stream().map(ItemSaleMapper::toPersistence).toList());
     }
 }

@@ -11,4 +11,6 @@ public interface WalletRepository {
     Optional<Wallet> findByUserId(UUID userId);
 
     Optional<Wallet> findById(UUID walletId);
+
+    Optional<Wallet> findByExternalUserId(String externalUserId);
 }

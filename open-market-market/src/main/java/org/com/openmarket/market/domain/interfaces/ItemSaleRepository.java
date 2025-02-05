@@ -4,6 +4,7 @@ import org.com.openmarket.market.domain.core.entity.ItemSale;
 import org.com.openmarket.market.domain.core.usecase.common.dto.PageableList;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,4 +16,8 @@ public interface ItemSaleRepository {
     void remove(UUID id);
 
     PageableList<ItemSale> findAllPaginated(int page, int size, String name, String externalCategoryId, BigDecimal min, BigDecimal max);
+
+    List<ItemSale> findAllExpired();
+
+    void deleteAll(List<ItemSale> itemSales);
 }
