@@ -49,6 +49,21 @@ public class OfferRepositoryImpl implements OfferRepository {
     }
 
     @Override
+    public PageableList<Offer> findAllByUser(UUID userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt");
+        Page<OfferEntity> offerEntities = repository.findAllByUserId(userId, pageable);
+
+        return new PageableList<>(
+            offerEntities.getNumber() + 1,
+            offerEntities.getSize(),
+            offerEntities.getTotalElements(),
+            offerEntities.getTotalPages(),
+            offerEntities.isLast(),
+            offerEntities.stream().map(OfferMapper::toDomain).toList()
+        );
+    }
+
+    @Override
     public Offer persist(Offer offer) {
         OfferEntity offerEntity = repository.save(OfferMapper.toPersistence(offer));
         return OfferMapper.toDomain(offerEntity);

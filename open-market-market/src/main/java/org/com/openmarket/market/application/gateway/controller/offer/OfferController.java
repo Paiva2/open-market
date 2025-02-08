@@ -9,6 +9,8 @@ import org.com.openmarket.market.domain.core.usecase.offer.editOffer.EditOfferUs
 import org.com.openmarket.market.domain.core.usecase.offer.editOffer.dto.EditOfferInput;
 import org.com.openmarket.market.domain.core.usecase.offer.listOffersByItemSale.ListOffersByItemSaleUsecase;
 import org.com.openmarket.market.domain.core.usecase.offer.listOffersByItemSale.dto.ListOffersByItemSaleOutput;
+import org.com.openmarket.market.domain.core.usecase.offer.listOffersMade.ListOffersMadeUsecase;
+import org.com.openmarket.market.domain.core.usecase.offer.listOffersMade.dto.ListOffersMadeOutput;
 import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.MakeOfferUsecase;
 import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.dto.MakeOfferInput;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,7 @@ public class OfferController {
     private final MakeOfferUsecase makeOfferUsecase;
     private final CancelOfferUsecase cancelOfferUsecase;
     private final EditOfferUsecase editOfferUsecase;
+    private final ListOffersMadeUsecase listOffersMadeUsecase;
 
     @GetMapping("/offers/list/item-sale/{itemSaleId}")
     ResponseEntity<PageableList<ListOffersByItemSaleOutput>> getOffersByItemSale(
@@ -37,6 +40,18 @@ public class OfferController {
     ) {
         getIdFromToken(jwt);
         PageableList<ListOffersByItemSaleOutput> output = listOffersByItemSaleUsecase.execute(itemSaleId, page, size);
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @GetMapping("/offers/list/made")
+    ResponseEntity<PageableList<ListOffersMadeOutput>> listOffersMade(
+        @AuthenticationPrincipal Jwt jwt,
+        @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+        @RequestParam(value = "size", required = false, defaultValue = "5") Integer size
+    ) {
+        String userExternalId = getIdFromToken(jwt);
+        PageableList<ListOffersMadeOutput> output = listOffersMadeUsecase.execute(userExternalId, page, size);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
     }
