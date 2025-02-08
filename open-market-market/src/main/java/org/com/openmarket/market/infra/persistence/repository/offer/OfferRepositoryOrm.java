@@ -24,7 +24,7 @@ public interface OfferRepositoryOrm extends JpaRepository<OfferEntity, UUID> {
         """)
     Page<OfferEntity> findAllByItemSale(@Param("itemSaleId") UUID itemSaleId, Pageable pageable);
 
-    @Query("select off from OfferEntity off join fetch off.user usr where off.id = :offerId")
+    @Query("select off from OfferEntity off join fetch off.itemSale isl join fetch off.user usr where off.id = :offerId")
     Optional<OfferEntity> findByIdWithDeps(@Param("offerId") UUID offerId);
 
     @Query("select off from OfferEntity off where off.itemSale.id = :itemSaleId and off.user.id = :userId")

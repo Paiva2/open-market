@@ -1,9 +1,6 @@
 package org.com.openmarket.market.infra.persistence.mapper;
 
-import org.com.openmarket.market.domain.core.entity.AttributeItem;
-import org.com.openmarket.market.domain.core.entity.Offer;
-import org.com.openmarket.market.domain.core.entity.OfferUserItem;
-import org.com.openmarket.market.domain.core.entity.UserItem;
+import org.com.openmarket.market.domain.core.entity.*;
 import org.com.openmarket.market.infra.persistence.entity.ItemSaleEntity;
 import org.com.openmarket.market.infra.persistence.entity.OfferEntity;
 import org.com.openmarket.market.infra.persistence.entity.OfferUserItemEntity;
@@ -22,6 +19,12 @@ public class OfferMapper {
 
         if (entity.getUser() != null) {
             offer.setUser(UserMapper.toDomain(entity.getUser()));
+        }
+
+        if (entity.getItemSale() != null) {
+            ItemSale itemSale = new ItemSale();
+            copyProperties(entity.getItemSale(), itemSale);
+            offer.setItemSale(itemSale);
         }
 
         if (entity.getOfferUserItems() != null && !entity.getOfferUserItems().isEmpty()) {

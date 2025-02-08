@@ -76,7 +76,7 @@ remove, list items on sale, make offers, and other things related to market.
     - [x] Price range filters
     - [x] Simple sort options
 
-- [ ] Advanced Item Management (Item on sale)
+- [x] Advanced Item Management (Item on sale)
     - [x] List items for sale
     - [x] Remove listings
     - [x] Scheduled listings/removals
@@ -96,7 +96,7 @@ remove, list items on sale, make offers, and other things related to market.
 - [ ] Basic Trading (Item on sale)
     - [x] Make offers
     - [x] Remove offers
-    - [ ] Edit offers
+    - [x] Edit offers
     - [ ] Accept/Reject offers
     - [ ] View trade history
     - [x] List Offers made to item on sale

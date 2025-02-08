@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import org.com.openmarket.market.application.gateway.controller.common.exception.ExternalIdMissingException;
 import org.com.openmarket.market.domain.core.usecase.common.dto.PageableList;
 import org.com.openmarket.market.domain.core.usecase.offer.cancelOffer.CancelOfferUsecase;
+import org.com.openmarket.market.domain.core.usecase.offer.editOffer.EditOfferUsecase;
+import org.com.openmarket.market.domain.core.usecase.offer.editOffer.dto.EditOfferInput;
 import org.com.openmarket.market.domain.core.usecase.offer.listOffersByItemSale.ListOffersByItemSaleUsecase;
 import org.com.openmarket.market.domain.core.usecase.offer.listOffersByItemSale.dto.ListOffersByItemSaleOutput;
 import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.MakeOfferUsecase;
@@ -24,6 +26,7 @@ public class OfferController {
     private final ListOffersByItemSaleUsecase listOffersByItemSaleUsecase;
     private final MakeOfferUsecase makeOfferUsecase;
     private final CancelOfferUsecase cancelOfferUsecase;
+    private final EditOfferUsecase editOfferUsecase;
 
     @GetMapping("/offers/list/item-sale/{itemSaleId}")
     ResponseEntity<PageableList<ListOffersByItemSaleOutput>> getOffersByItemSale(
@@ -48,6 +51,18 @@ public class OfferController {
         makeOfferUsecase.execute(itemSaleId, input, externalId, jwt.getTokenValue());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/offers/update/{offerId}")
+    public ResponseEntity<Void> editOffer(
+        @AuthenticationPrincipal Jwt jwt,
+        @PathVariable("offerId") UUID offerId,
+        @RequestBody @Valid EditOfferInput input
+    ) {
+        String externalId = getIdFromToken(jwt);
+        editOfferUsecase.execute(externalId, offerId, input, jwt.getTokenValue());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/offers/cancel/{offerId}")

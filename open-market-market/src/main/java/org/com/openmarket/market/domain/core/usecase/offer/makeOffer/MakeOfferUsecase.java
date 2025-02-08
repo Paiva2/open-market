@@ -84,7 +84,7 @@ public class MakeOfferUsecase {
                 persistOfferUserItems(offerUserItems);
             }
 
-            if (input.getValue().compareTo(BigDecimal.ZERO) > 0) {
+            if (input.getValue() != null && input.getValue().compareTo(BigDecimal.ZERO) > 0) {
                 checkUserWalletValue(userWallet, input);
                 decreaseWalletValue(user, itemSale, input.getValue());
             }
@@ -225,18 +225,12 @@ public class MakeOfferUsecase {
     }
 
     private void checkOfferConstraints(ItemSale itemSale, MakeOfferInput input) {
+        if (!itemSale.getAcceptOffers()) {
+            throw new InvalidOfferException("This sale doesn't allow offers!");
+        }
+
         if ((input.getUserItems() == null || input.getUserItems().isEmpty()) && input.getValue().compareTo(BigDecimal.ZERO) <= 0) {
             throw new InvalidOfferException("Invalid offer. Offers must have an value or items!");
-        }
-
-        if (itemSale.getOnlyOffers() && (input.getValue().compareTo(BigDecimal.ZERO) > 0)) {
-            throw new InvalidOfferException("This sale doesn't allow values, only offers!");
-        } else if (itemSale.getOnlyOffers() && (input.getUserItems() == null || input.getUserItems().isEmpty())) {
-            throw new InvalidOfferException("This sale is available only to offers!");
-        }
-
-        if (!itemSale.getAcceptOffers() && (input.getUserItems() != null && !input.getUserItems().isEmpty())) {
-            throw new InvalidOfferException("This sale doesn't allow offers!");
         }
     }
 
