@@ -36,17 +36,31 @@ public class OfferMapper {
 
                 if (offerUserItemEntity.getUserItem() != null) {
                     UserItem userItem = new UserItem();
-                    offerUserItem.setUserItem(userItem);
+                    copyProperties(offerUserItemEntity.getUserItem(), userItem);
+
+                    if (offerUserItemEntity.getUserItem().getId() != null) {
+                        UserItem.KeyId keyId = new UserItem.KeyId();
+                        copyProperties(offerUserItemEntity.getUserItem().getId(), keyId);
+                        userItem.setId(keyId);
+                    }
+
+                    if (offerUserItemEntity.getUserItem().getUser() != null) {
+                        User user = new User();
+                        BeanUtils.copyProperties(offerUserItemEntity.getUserItem().getUser(), user);
+                        userItem.setUser(user);
+                    }
 
                     if (offerUserItemEntity.getUserItem().getItem() != null) {
-                        offerUserItem.getUserItem().setItem(ItemMapper.toDomain(offerUserItemEntity.getUserItem().getItem()));
+                        userItem.setItem(ItemMapper.toDomain(offerUserItemEntity.getUserItem().getItem()));
                     }
 
                     if (offerUserItemEntity.getUserItem().getAttribute() != null) {
                         AttributeItem attributeItem = new AttributeItem();
                         copyProperties(offerUserItemEntity.getUserItem().getAttribute(), attributeItem);
-                        offerUserItem.getUserItem().setAttribute(attributeItem);
+                        userItem.setAttribute(attributeItem);
                     }
+
+                    offerUserItem.setUserItem(userItem);
                 }
 
                 offerUserItems.add(offerUserItem);

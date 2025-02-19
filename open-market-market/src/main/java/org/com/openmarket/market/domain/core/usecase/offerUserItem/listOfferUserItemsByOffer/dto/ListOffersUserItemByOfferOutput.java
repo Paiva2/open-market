@@ -19,7 +19,7 @@ public class ListOffersUserItemByOfferOutput {
     private UUID id;
     private Long quantity;
     private Date createdAt;
-    private UserItemOutput item;
+    private UserItemOutput itemOffered;
 
     public ListOffersUserItemByOfferOutput(OfferUserItem offerUserItem) {
         UserItem userItem = offerUserItem.getUserItem();
@@ -27,7 +27,7 @@ public class ListOffersUserItemByOfferOutput {
         this.id = offerUserItem.getId();
         this.quantity = offerUserItem.getQuantity();
         this.createdAt = offerUserItem.getCreatedAt();
-        this.item = UserItemOutput.builder()
+        this.itemOffered = UserItemOutput.builder()
             .user(UserOutput.builder()
                 .id(userItem.getUser().getId())
                 .externalId(userItem.getUser().getExternalId())

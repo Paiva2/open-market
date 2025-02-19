@@ -29,4 +29,9 @@ public interface UserItemRepositoryOrm extends JpaRepository<UserItemEntity, Use
             and ui.quantity > 0
         """)
     Optional<UserItemEntity> findByUserAndItemIdAndAttributeIdWithQuantity(@Param("userId") UUID userId, @Param("externalItemId") String externalItemId, @Param("externalAttributeId") String externalAttributeId);
+    
+    @Query("select ui from UserItemEntity ui " +
+        "join ItemSaleEntity isl on isl.userItem.id = ui.id " +
+        "where isl.id = :itemSaleId")
+    Optional<UserItemEntity> findByItemSale(@Param("itemSaleId") UUID itemSaleId);
 }

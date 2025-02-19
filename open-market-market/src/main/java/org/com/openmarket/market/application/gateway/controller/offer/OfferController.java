@@ -13,6 +13,7 @@ import org.com.openmarket.market.domain.core.usecase.offer.listOffersMade.ListOf
 import org.com.openmarket.market.domain.core.usecase.offer.listOffersMade.dto.ListOffersMadeOutput;
 import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.MakeOfferUsecase;
 import org.com.openmarket.market.domain.core.usecase.offer.makeOffer.dto.MakeOfferInput;
+import org.com.openmarket.market.domain.core.usecase.offer.refuseOffer.RefuseOfferUsecase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,6 +31,7 @@ public class OfferController {
     private final CancelOfferUsecase cancelOfferUsecase;
     private final EditOfferUsecase editOfferUsecase;
     private final ListOffersMadeUsecase listOffersMadeUsecase;
+    private final RefuseOfferUsecase refuseOfferUsecase;
 
     @GetMapping("/offers/list/item-sale/{itemSaleId}")
     ResponseEntity<PageableList<ListOffersByItemSaleOutput>> getOffersByItemSale(
@@ -87,6 +89,17 @@ public class OfferController {
     ) {
         String externalId = getIdFromToken(jwt);
         cancelOfferUsecase.execute(jwt.getTokenValue(), externalId, offerId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/offers/refuse/{offerId}")
+    public ResponseEntity<Void> refuseOffer(
+        @AuthenticationPrincipal Jwt jwt,
+        @PathVariable("offerId") UUID offerId
+    ) {
+        String externalId = getIdFromToken(jwt);
+        refuseOfferUsecase.execute(externalId, offerId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

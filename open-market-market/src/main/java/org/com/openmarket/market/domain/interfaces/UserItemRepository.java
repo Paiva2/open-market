@@ -14,4 +14,6 @@ public interface UserItemRepository {
     Optional<UserItem> findUserItemWithQuantity(UUID userId, String externalItemId, String externalAttributeId);
 
     List<UserItem> persistAll(List<UserItem> userItems);
+
+    Optional<UserItem> findByItemSaleId(UUID itemSaleId);
 }

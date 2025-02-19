@@ -42,4 +42,11 @@ public class UserItemRepositoryImpl implements UserItemRepository {
         List<UserItemEntity> userItemsSaved = repository.saveAll(userItemEntities);
         return userItemsSaved.stream().map(UserItemMapper::toDomain).toList();
     }
+
+    @Override
+    public Optional<UserItem> findByItemSaleId(UUID itemSaleId) {
+        Optional<UserItemEntity> userItemEntity = repository.findByItemSale(itemSaleId);
+        if (userItemEntity.isEmpty()) return Optional.empty();
+        return Optional.of(UserItemMapper.toDomain(userItemEntity.get()));
+    }
 }
