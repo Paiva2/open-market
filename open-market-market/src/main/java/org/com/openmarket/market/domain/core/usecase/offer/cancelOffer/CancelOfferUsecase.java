@@ -13,7 +13,7 @@ import org.com.openmarket.market.domain.core.usecase.common.dto.UserWalletViewOu
 import org.com.openmarket.market.domain.core.usecase.common.dto.WalletMessageInput;
 import org.com.openmarket.market.domain.core.usecase.common.exception.OfferNotFoundException;
 import org.com.openmarket.market.domain.core.usecase.common.exception.UserDisabledException;
-import org.com.openmarket.market.domain.core.usecase.common.exception.UserItemNotFoundException;
+import org.com.openmarket.market.domain.core.usecase.common.exception.UserNotFoundException;
 import org.com.openmarket.market.domain.core.usecase.common.exception.core.ForbiddenException;
 import org.com.openmarket.market.domain.enumeration.EnumMessageEvent;
 import org.com.openmarket.market.domain.enumeration.EnumMessageType;
@@ -43,7 +43,7 @@ public class CancelOfferUsecase {
     private final WalletRepository walletRepository;
 
     @Transactional
-    public void execute(String authToken, String externalUserId, UUID offerId) {
+    public void execute(String externalUserId, UUID offerId) {
         User user = findUser(externalUserId);
 
         if (!user.getEnabled()) {
@@ -57,7 +57,7 @@ public class CancelOfferUsecase {
 
         if (offer.getValue().compareTo(BigDecimal.ZERO) > 0) {
             String bankAdminExternalId = System.getenv(SYSTEM_BANK_EXTERNAL_ID);
-            UserWalletViewOutput userWallet = findUserWallet(authToken);
+            UserWalletViewOutput userWallet = findUserWallet();
 
             sendWalletOfferedValueBack(bankAdminExternalId, userWallet.getId(), offer);
         }
@@ -71,7 +71,7 @@ public class CancelOfferUsecase {
     }
 
     private User findUser(String externalUserId) {
-        return userRepository.findByExternalId(externalUserId).orElseThrow(UserItemNotFoundException::new);
+        return userRepository.findByExternalId(externalUserId).orElseThrow(UserNotFoundException::new);
     }
 
     private Offer findOffer(UUID offerId) {
@@ -88,8 +88,8 @@ public class CancelOfferUsecase {
         return offerUserItemRepository.findByOfferIdWithDeps(offer.getId());
     }
 
-    private UserWalletViewOutput findUserWallet(String authToken) {
-        return walletRepository.getUserWalletView(authToken);
+    private UserWalletViewOutput findUserWallet() {
+        return walletRepository.getUserWalletView();
     }
 
     private void sendWalletOfferedValueBack(String bankAdminId, UUID userWalletId, Offer offer) {

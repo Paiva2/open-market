@@ -26,15 +26,13 @@ public class ItemSaleController {
     private final RemoveItemSaleUsecase removeItemSaleUsecase;
     private final ListItemsOnSaleUsecase listItemsOnSaleUsecase;
 
-    @PostMapping("/item-sale/item/{externalItemId}/attribute/{externalAttributeId}")
+    @PostMapping("/item-sale/insert")
     ResponseEntity<Void> insertItemForSale(
         @AuthenticationPrincipal Jwt jwt,
-        @PathVariable("externalItemId") String externalItemId,
-        @PathVariable("externalAttributeId") String externalAttributeId,
         @RequestBody @Valid InsertItemSaleInput input
     ) {
         String externalUserId = getIdFromToken(jwt);
-        insertItemSaleUsecase.execute(externalUserId, externalItemId, externalAttributeId, input, jwt.getTokenValue());
+        insertItemSaleUsecase.execute(externalUserId, input);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -45,7 +43,7 @@ public class ItemSaleController {
         @PathVariable("itemSaleId") UUID itemSaleId
     ) {
         String externalUserId = getIdFromToken(jwt);
-        removeItemSaleUsecase.execute(jwt.getTokenValue(), externalUserId, itemSaleId);
+        removeItemSaleUsecase.execute(externalUserId, itemSaleId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

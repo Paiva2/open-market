@@ -44,7 +44,7 @@ public class RemoveItemSaleUsecase {
     private final OfferUserItemRepository offerUserItemRepository;
 
     @Transactional
-    public void execute(String authorizationToken, String externalId, UUID itemSaleId) {
+    public void execute(String externalId, UUID itemSaleId) {
         User user = findUser(externalId);
 
         if (!user.getEnabled()) {
@@ -67,7 +67,7 @@ public class RemoveItemSaleUsecase {
         removeItemSaleOffers(itemSale);
         removeItemSale(itemSale);
 
-        UserWalletViewOutput userWallet = findUserWallet(authorizationToken);
+        UserWalletViewOutput userWallet = findUserWallet();
 
         restoreUserWalletTaxValueMessage(userWallet, itemSale, systemWalletId);
         restoreUserItemQuantityMessage(userItem, newQuantity);
@@ -107,8 +107,8 @@ public class RemoveItemSaleUsecase {
         itemSaleRepository.remove(itemSale.getId());
     }
 
-    private UserWalletViewOutput findUserWallet(String authorizationToken) {
-        return walletRepository.getUserWalletView(authorizationToken);
+    private UserWalletViewOutput findUserWallet() {
+        return walletRepository.getUserWalletView();
     }
 
     private void restoreUserItemQuantityMessage(UserItem userItem, Long quantity) {

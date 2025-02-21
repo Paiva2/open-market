@@ -46,7 +46,7 @@ public class EditOfferUsecase {
     private final DatabaseLockRepository databaseLockRepository;
 
     @Transactional
-    public void execute(String externalUserId, UUID offerId, EditOfferInput input, String authToken) {
+    public void execute(String externalUserId, UUID offerId, EditOfferInput input) {
         User user = findUser(externalUserId);
 
         if (!user.getEnabled()) {
@@ -65,7 +65,7 @@ public class EditOfferUsecase {
         checkUserWalletLock(user);
         DatabaseLock walletLock = lockWallet(user);
 
-        handleOfferValue(user, offer, offer.getItemSale(), input, commonMessageDTOS, authToken, walletLock);
+        handleOfferValue(user, offer, offer.getItemSale(), input, commonMessageDTOS, walletLock);
 
         sendAllMessages(commonMessageDTOS, walletLock);
         unlockWallet(walletLock);
@@ -231,7 +231,7 @@ public class EditOfferUsecase {
         }
     }
 
-    private CommonMessageDTO mountChangeWalletValueMessage(User user, ItemSale itemSale, BigDecimal value, boolean newValueIsHigher, String authToken, DatabaseLock walletLock) {
+    private CommonMessageDTO mountChangeWalletValueMessage(User user, ItemSale itemSale, BigDecimal value, boolean newValueIsHigher, DatabaseLock walletLock) {
         String bankAdminId = System.getenv(BANK_ADM_EXTERNAL_ID);
 
         try {
@@ -240,7 +240,7 @@ public class EditOfferUsecase {
             String description = MessageFormat.format("Offer made to Item on sale identifier: {0}", itemSale.getId());
 
             if (newValueIsHigher) {
-                UserWalletViewOutput userWalletViewOutput = walletRepository.getUserWalletView(authToken);
+                UserWalletViewOutput userWalletViewOutput = walletRepository.getUserWalletView();
 
                 if (userWalletViewOutput.getBalance().compareTo(value) < 0) {
                     throw new UserBalanceException("User has no balance available!");
@@ -290,7 +290,7 @@ public class EditOfferUsecase {
         }
     }
 
-    private void handleOfferValue(User user, Offer offer, ItemSale itemSale, EditOfferInput input, LinkedList<CommonMessageDTO> commonMessageDTOS, String authToken, DatabaseLock walletLock) {
+    private void handleOfferValue(User user, Offer offer, ItemSale itemSale, EditOfferInput input, LinkedList<CommonMessageDTO> commonMessageDTOS, DatabaseLock walletLock) {
         if (offer.getValue().compareTo(input.getValue()) == 0) return;
 
         if (offer.getValue().compareTo(BigDecimal.ZERO) < 0) {
@@ -310,7 +310,7 @@ public class EditOfferUsecase {
         offer.setValue(input.getValue());
         offerRepository.persist(offer);
 
-        CommonMessageDTO commonMessageDTO = mountChangeWalletValueMessage(user, itemSale, differenceVal, newValueIsHigher, authToken, walletLock);
+        CommonMessageDTO commonMessageDTO = mountChangeWalletValueMessage(user, itemSale, differenceVal, newValueIsHigher, walletLock);
         commonMessageDTOS.add(commonMessageDTO);
     }
 

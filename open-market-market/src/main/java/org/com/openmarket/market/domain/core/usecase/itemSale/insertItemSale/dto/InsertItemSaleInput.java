@@ -16,4 +16,6 @@ public class InsertItemSaleInput {
     private EnumTimeOnSale timeOnSale;
     private Boolean acceptOffers;
     private Boolean onlyOffers;
+    private String externalItemId;
+    private String externalAttributeId;
 }

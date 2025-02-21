@@ -65,7 +65,7 @@ public class OfferController {
         @RequestBody @Valid MakeOfferInput input
     ) {
         String externalId = getIdFromToken(jwt);
-        makeOfferUsecase.execute(itemSaleId, input, externalId, jwt.getTokenValue());
+        makeOfferUsecase.execute(itemSaleId, input, externalId);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -77,7 +77,7 @@ public class OfferController {
         @RequestBody @Valid EditOfferInput input
     ) {
         String externalId = getIdFromToken(jwt);
-        editOfferUsecase.execute(externalId, offerId, input, jwt.getTokenValue());
+        editOfferUsecase.execute(externalId, offerId, input);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -88,7 +88,7 @@ public class OfferController {
         @PathVariable("offerId") UUID offerId
     ) {
         String externalId = getIdFromToken(jwt);
-        cancelOfferUsecase.execute(jwt.getTokenValue(), externalId, offerId);
+        cancelOfferUsecase.execute(externalId, offerId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.com.openmarket.market.domain.core.usecase.common.dto.UserWalletViewOutput;
 import org.com.openmarket.market.domain.interfaces.WalletRepository;
-import org.com.openmarket.market.infra.utils.RestUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
 @Component
@@ -16,13 +16,17 @@ public class WalletRepositoryImpl implements WalletRepository {
     private final static String HOST = "http://localhost:8080";
     private final static String URL_PREFIX = "/api/wallet";
 
-    private final RestUtils restUtils;
+    private final WebClient webClient;
 
     @Override
-    public UserWalletViewOutput getUserWalletView(String authorizationToken) {
+    public UserWalletViewOutput getUserWalletView() {
         try {
             String url = HOST.concat(URL_PREFIX).concat("/info");
-            String body = (String) restUtils.get(url, authorizationToken, String.class);
+            String body = webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
             return mapper.readValue(body, UserWalletViewOutput.class);
         } catch (Exception e) {

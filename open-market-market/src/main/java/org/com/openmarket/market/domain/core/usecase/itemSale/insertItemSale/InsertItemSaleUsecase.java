@@ -44,9 +44,9 @@ public class InsertItemSaleUsecase {
     private final DatabaseLockRepository databaseLockRepository;
 
     @Transactional
-    public void execute(String externalUserId, String externalItemId, String externalAttributeId, InsertItemSaleInput input, String authorizationToken) {
+    public void execute(String externalUserId, InsertItemSaleInput input) {
         User user = findUser(externalUserId);
-        Item item = findItem(externalItemId);
+        Item item = findItem(input.getExternalItemId());
 
         if (!user.getEnabled()) {
             throw new UserDisabledException();
@@ -69,7 +69,7 @@ public class InsertItemSaleUsecase {
                 throw new RuntimeException("System Wallet ID is null!");
             }
 
-            UserWalletViewOutput walletView = findUserWallet(authorizationToken);
+            UserWalletViewOutput walletView = findUserWallet();
 
             if (walletView.getBalance().compareTo(BigDecimal.ONE) < 1 || tax.compareTo(walletView.getBalance()) > 0) {
                 throw new UserBalanceException("User has no balance available.");
@@ -81,7 +81,7 @@ public class InsertItemSaleUsecase {
                 throw new UniqueItemException();
             }
 
-            UserItem userItem = findUserItem(user, item, externalAttributeId);
+            UserItem userItem = findUserItem(user, item, input.getExternalAttributeId());
 
             if (!input.getAcceptOffers()) {
                 input.setOnlyOffers(false);
@@ -132,8 +132,8 @@ public class InsertItemSaleUsecase {
         return itemRepository.findByExternalId(externalItemId).orElseThrow(ItemNotFoundException::new);
     }
 
-    private UserWalletViewOutput findUserWallet(String authorizationToken) {
-        return walletRepository.getUserWalletView(authorizationToken);
+    private UserWalletViewOutput findUserWallet() {
+        return walletRepository.getUserWalletView();
     }
 
     private UserItem findUserItem(User user, Item item, String externalAttributeId) {

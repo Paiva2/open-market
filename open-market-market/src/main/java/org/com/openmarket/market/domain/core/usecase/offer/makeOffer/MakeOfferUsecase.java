@@ -45,7 +45,7 @@ public class MakeOfferUsecase {
     private final MessageRepository messageRepository;
 
     @Transactional
-    public void execute(UUID itemSaleId, MakeOfferInput input, String externalId, String authToken) {
+    public void execute(UUID itemSaleId, MakeOfferInput input, String externalId) {
         User user = findUser(externalId);
 
         if (!user.getEnabled()) {
@@ -65,7 +65,7 @@ public class MakeOfferUsecase {
         DatabaseLock lock = lockUserWallet(user);
 
         try {
-            UserWalletViewOutput userWallet = findUserWallet(authToken);
+            UserWalletViewOutput userWallet = findUserWallet();
 
             Offer offer = fillOffer(user, itemSale, input);
             offer = persistOffer(offer);
@@ -147,8 +147,8 @@ public class MakeOfferUsecase {
         return databaseLockRepository.saveLock(databaseLock);
     }
 
-    private UserWalletViewOutput findUserWallet(String authToken) {
-        return walletRepository.getUserWalletView(authToken);
+    private UserWalletViewOutput findUserWallet() {
+        return walletRepository.getUserWalletView();
     }
 
     private void checkUserWalletValue(UserWalletViewOutput userWallet, MakeOfferInput input) {
