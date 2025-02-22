@@ -13,8 +13,8 @@ import org.com.openmarket.market.domain.core.usecase.category.registerCategory.e
 import org.com.openmarket.market.domain.core.usecase.common.dto.CommonMessageDTO;
 import org.com.openmarket.market.domain.core.usecase.common.exception.CategoryNotFoundException;
 import org.com.openmarket.market.domain.core.usecase.common.exception.ItemNotActiveException;
-import org.com.openmarket.market.domain.core.usecase.item.crateItem.CreateItemUsecase;
-import org.com.openmarket.market.domain.core.usecase.item.crateItem.dto.CreateItemInput;
+import org.com.openmarket.market.domain.core.usecase.item.createItem.CreateItemUsecase;
+import org.com.openmarket.market.domain.core.usecase.item.createItem.dto.CreateItemInput;
 import org.com.openmarket.market.domain.core.usecase.item.updateItem.UpdateItemUsecase;
 import org.com.openmarket.market.domain.core.usecase.item.updateItem.dto.UpdateItemInput;
 import org.com.openmarket.market.domain.core.usecase.user.disableUser.DisableUserUsecase;

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.items.application.gateway.message.dto.CommonMessageDTO;
-import org.com.openmarket.items.core.domain.entity.Category;
-import org.com.openmarket.items.core.domain.entity.Item;
-import org.com.openmarket.items.core.domain.entity.ItemCategory;
-import org.com.openmarket.items.core.domain.entity.User;
+import org.com.openmarket.items.core.domain.entity.*;
 import org.com.openmarket.items.core.domain.enumeration.EnumItemAlteration;
 import org.com.openmarket.items.core.domain.enumeration.EnumMessageEvent;
 import org.com.openmarket.items.core.domain.enumeration.EnumMessageType;
@@ -39,6 +36,7 @@ public class CreateItemUsecase {
     private final CategoryRepository categoryRepository;
     private final ItemCategoryRepository itemCategoryRepository;
     private final MessageRepository messageRepository;
+    private final BaseAttributeRepository baseAttributeRepository;
     private final RegisterItemAlterationUsecase registerItemAlterationUsecase;
 
     @Transactional
@@ -58,9 +56,13 @@ public class CreateItemUsecase {
 
         item.setItemCategories(itemCategories);
 
-        persistItemAlteration(user, item);
+        BaseAttribute baseAttribute = fillBaseAttribute(input, item);
+        baseAttribute = saveBaseAttribute(baseAttribute);
 
-        sendItemCreation(item);
+        persistItemAlteration(user, item);
+        item.setBaseAttribute(baseAttribute);
+
+        sendItemCreation(item, baseAttribute);
         return mountOutput(item);
     }
 
@@ -150,11 +152,22 @@ public class CreateItemUsecase {
         return itemCategoryRepository.saveAll(itemCategories);
     }
 
+    private BaseAttribute fillBaseAttribute(CreateItemInput input, Item item) {
+        return BaseAttribute.builder()
+            .item(item)
+            .attributes(input.getBaseAttribute())
+            .build();
+    }
+
+    private BaseAttribute saveBaseAttribute(BaseAttribute baseAttribute) {
+        return baseAttributeRepository.save(baseAttribute);
+    }
+
     private void persistItemAlteration(User user, Item item) {
         registerItemAlterationUsecase.execute(user, item, EnumItemAlteration.CREATION);
     }
 
-    private void sendItemCreation(Item item) {
+    private void sendItemCreation(Item item, BaseAttribute baseAttribute) {
         try {
             CreateItemMessageOutput messageOutput = CreateItemMessageOutput.builder()
                 .id(item.getId())
@@ -165,7 +178,11 @@ public class CreateItemUsecase {
                 .baseSellingPrice(item.getBaseSellingPrice())
                 .active(item.getActive())
                 .stackable(item.getStackable())
-                .categoriesIds(item.getItemCategories().stream().map(ItemCategory::getCategory).map(Category::getId).toList())
+                .baseAttribute(CreateItemMessageOutput.BaseAttributeOutput.builder()
+                    .externalId(baseAttribute.getId())
+                    .attributes(baseAttribute.getAttributes())
+                    .build()
+                ).categoriesIds(item.getItemCategories().stream().map(ItemCategory::getCategory).map(Category::getId).toList())
                 .build();
 
             CommonMessageDTO commonMessageDTO = CommonMessageDTO.builder()

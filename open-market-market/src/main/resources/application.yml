@@ -9,6 +9,10 @@ spring:
     username: development
     password: development
     driver-class-name: org.postgresql.Driver
+    tomcat:
+      connection-properties: stringtype=unspecified
+    hikari:
+      data-source-properties: stringtype=unspecified
   security:
     oauth2:
       resourceserver:

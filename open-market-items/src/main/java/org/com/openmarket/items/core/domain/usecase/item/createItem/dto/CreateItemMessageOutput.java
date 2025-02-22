@@ -20,6 +20,15 @@ public class CreateItemMessageOutput {
     private BigDecimal baseSellingPrice;
     private Boolean active;
     private Boolean stackable;
+    private BaseAttributeOutput baseAttribute;
 
     private List<Long> categoriesIds;
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class BaseAttributeOutput {
+        private UUID externalId;
+        private String attributes;
+    }
 }

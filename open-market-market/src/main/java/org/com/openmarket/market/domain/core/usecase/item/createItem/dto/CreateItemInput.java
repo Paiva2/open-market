@@ -1,6 +1,7 @@
-package org.com.openmarket.market.domain.core.usecase.item.crateItem.dto;
+package org.com.openmarket.market.domain.core.usecase.item.createItem.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,10 +20,20 @@ public class CreateItemInput {
     private String photoUrl;
     private Boolean unique;
     private BigDecimal baseSellingPrice;
+    private BaseAttributeOutput baseAttribute;
     private Boolean active;
     private Boolean stackable;
     private Date createdAt;
     private Date updatedAt;
 
     private List<Long> categoriesIds;
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BaseAttributeOutput {
+        private UUID externalId;
+        private String attributes;
+    }
 }

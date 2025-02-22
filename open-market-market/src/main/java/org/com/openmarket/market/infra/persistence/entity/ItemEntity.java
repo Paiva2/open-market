@@ -57,6 +57,9 @@ public class ItemEntity {
     @Column(name = "itm_updated_at")
     private Date updatedAt;
 
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "item")
+    private BaseAttributeEntity baseAttribute;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
     private List<ItemCategoryEntity> itemCategories;
 

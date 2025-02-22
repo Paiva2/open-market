@@ -23,6 +23,7 @@ public class CreateItemOutput {
     private Boolean unique;
     private BigDecimal baseSellingPrice;
     private List<CategoryOutput> categories;
+    private BaseAttributeOutput baseAttribute;
 
     public static CreateItemOutput toOutput(Item item) {
         return CreateItemOutput.builder()
@@ -32,6 +33,10 @@ public class CreateItemOutput {
             .photoUrl(item.getPhotoUrl())
             .unique(item.getUnique())
             .baseSellingPrice(item.getBaseSellingPrice())
+            .baseAttribute(BaseAttributeOutput.builder()
+                .id(item.getBaseAttribute().getId())
+                .attributes(item.getBaseAttribute().getAttributes())
+                .build())
             .categories(item.getItemCategories().stream().map(CategoryOutput::new).toList())
             .build();
     }
@@ -47,5 +52,13 @@ public class CreateItemOutput {
             this.id = itemCategory.getCategory().getId();
             this.name = itemCategory.getCategory().getName();
         }
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class BaseAttributeOutput {
+        private UUID id;
+        private String attributes;
     }
 }

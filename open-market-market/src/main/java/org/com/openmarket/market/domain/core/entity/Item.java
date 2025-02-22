@@ -27,6 +27,7 @@ public class Item {
     private Date createdAt;
     private Date updatedAt;
 
+    private BaseAttribute baseAttribute;
     private List<ItemCategory> itemCategories;
     private List<OfferUserItem> offerUserItems;
 }

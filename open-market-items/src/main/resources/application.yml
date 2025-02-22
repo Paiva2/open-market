@@ -18,6 +18,10 @@ spring:
     username: development
     password: development
     driver-class-name: org.postgresql.Driver
+    tomcat:
+      connection-properties: stringtype=unspecified
+    hikari:
+      data-source-properties: stringtype=unspecified
   jpa:
     hibernate:
       ddl-auto: none

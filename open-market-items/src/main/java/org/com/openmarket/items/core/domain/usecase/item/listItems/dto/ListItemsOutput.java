@@ -59,6 +59,7 @@ public class ListItemsOutput {
         private Boolean unique;
         private Boolean active;
         private BigDecimal baseSellingPrice;
+        private BaseAttributeOutput baseAttribute;
         private List<CategoriesOutput> categories;
 
         public ItemOutput(Item item) {
@@ -68,9 +69,21 @@ public class ListItemsOutput {
             this.photoUrl = item.getPhotoUrl();
             this.unique = item.getUnique();
             this.active = item.getActive();
+            this.baseAttribute = BaseAttributeOutput.builder()
+                .id(item.getBaseAttribute().getId())
+                .attributes(item.getBaseAttribute().getAttributes())
+                .build();
             this.baseSellingPrice = item.getBaseSellingPrice();
             this.categories = item.getItemCategories().stream().map(CategoriesOutput::new).toList();
         }
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class BaseAttributeOutput {
+        private UUID id;
+        private String attributes;
     }
 
     @AllArgsConstructor

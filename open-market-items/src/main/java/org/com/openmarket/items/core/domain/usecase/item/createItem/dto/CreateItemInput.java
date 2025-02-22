@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Data
 public class CreateItemInput {
     private String name;
     private String description;
@@ -20,4 +20,5 @@ public class CreateItemInput {
     private Boolean stackable;
     private BigDecimal baseSellingPrice;
     private List<Long> categoriesIds;
+    private String baseAttribute;
 }

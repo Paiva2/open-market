@@ -1,4 +1,4 @@
-package org.com.openmarket.market.domain.core.usecase.item.crateItem.exception;
+package org.com.openmarket.market.domain.core.usecase.item.createItem.exception;
 
 import org.com.openmarket.market.domain.core.usecase.common.exception.core.ConflictException;
 

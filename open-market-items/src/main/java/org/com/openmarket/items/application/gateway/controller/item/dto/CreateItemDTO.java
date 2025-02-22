@@ -40,6 +40,9 @@ public class CreateItemDTO {
     @NotNull
     private List<Long> categoriesIds;
 
+    @NotNull
+    private String baseAttribute;
+
     public CreateItemInput toInput() {
         return CreateItemInput.builder()
             .name(this.name)
@@ -49,6 +52,7 @@ public class CreateItemDTO {
             .baseSellingPrice(this.baseSellingPrice)
             .categoriesIds(this.categoriesIds)
             .stackable(this.stackable)
+            .baseAttribute(this.baseAttribute)
             .build();
     }
 }

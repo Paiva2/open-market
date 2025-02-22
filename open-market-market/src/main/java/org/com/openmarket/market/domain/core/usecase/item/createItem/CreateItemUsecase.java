@@ -1,13 +1,15 @@
-package org.com.openmarket.market.domain.core.usecase.item.crateItem;
+package org.com.openmarket.market.domain.core.usecase.item.createItem;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.com.openmarket.market.domain.core.entity.BaseAttribute;
 import org.com.openmarket.market.domain.core.entity.Category;
 import org.com.openmarket.market.domain.core.entity.Item;
 import org.com.openmarket.market.domain.core.entity.ItemCategory;
 import org.com.openmarket.market.domain.core.usecase.common.exception.CategoryNotFoundException;
-import org.com.openmarket.market.domain.core.usecase.item.crateItem.dto.CreateItemInput;
-import org.com.openmarket.market.domain.core.usecase.item.crateItem.exception.ItemAlreadyExistsException;
+import org.com.openmarket.market.domain.core.usecase.item.createItem.dto.CreateItemInput;
+import org.com.openmarket.market.domain.core.usecase.item.createItem.exception.ItemAlreadyExistsException;
+import org.com.openmarket.market.domain.interfaces.BaseAttributeRepository;
 import org.com.openmarket.market.domain.interfaces.CategoryRepository;
 import org.com.openmarket.market.domain.interfaces.ItemCategoryRepository;
 import org.com.openmarket.market.domain.interfaces.ItemRepository;
@@ -23,6 +25,7 @@ public class CreateItemUsecase {
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
     private final ItemCategoryRepository itemCategoryRepository;
+    private final BaseAttributeRepository baseAttributeRepository;
 
     @Transactional
     public void execute(CreateItemInput input) {
@@ -31,6 +34,9 @@ public class CreateItemUsecase {
 
         Item item = fillItem(input);
         item = persistItem(item);
+
+        BaseAttribute baseAttribute = fillBaseAttribute(input, item);
+        persistBaseAttribute(baseAttribute);
 
         List<ItemCategory> itemCategories = fillItemCategories(item, categories);
         persistItemCategories(itemCategories);
@@ -78,6 +84,18 @@ public class CreateItemUsecase {
 
     private Item persistItem(Item item) {
         return itemRepository.save(item);
+    }
+
+    private BaseAttribute fillBaseAttribute(CreateItemInput input, Item item) {
+        return BaseAttribute.builder()
+            .externalId(input.getBaseAttribute().getExternalId().toString())
+            .attributes(input.getBaseAttribute().getAttributes())
+            .item(item)
+            .build();
+    }
+
+    private void persistBaseAttribute(BaseAttribute baseAttribute) {
+        baseAttributeRepository.save(baseAttribute);
     }
 
     private List<ItemCategory> fillItemCategories(Item item, List<Category> categories) {
