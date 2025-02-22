@@ -1,5 +1,6 @@
 package org.com.openmarket.items.infra.persistence.mapper;
 
+import org.com.openmarket.items.core.domain.entity.BaseAttribute;
 import org.com.openmarket.items.core.domain.entity.Item;
 import org.com.openmarket.items.core.domain.entity.ItemCategory;
 import org.com.openmarket.items.infra.persistence.entity.ItemCategoryEntity;
@@ -24,6 +25,12 @@ public class ItemMapper {
             }
 
             item.setItemCategories(itemCategories);
+        }
+
+        if (persistenceEntity.getBaseAttribute() != null) {
+            BaseAttribute baseAttribute = new BaseAttribute();
+            copyProperties(persistenceEntity.getBaseAttribute(), baseAttribute);
+            item.setBaseAttribute(baseAttribute);
         }
 
         return item;

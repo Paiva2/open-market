@@ -1,12 +1,10 @@
 package org.com.openmarket.items.core.domain.usecase.item.updateItem;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.items.application.gateway.message.dto.CommonMessageDTO;
-import org.com.openmarket.items.core.domain.entity.Category;
-import org.com.openmarket.items.core.domain.entity.Item;
-import org.com.openmarket.items.core.domain.entity.ItemCategory;
-import org.com.openmarket.items.core.domain.entity.User;
+import org.com.openmarket.items.core.domain.entity.*;
 import org.com.openmarket.items.core.domain.enumeration.EnumItemAlteration;
 import org.com.openmarket.items.core.domain.enumeration.EnumMessageEvent;
 import org.com.openmarket.items.core.domain.enumeration.EnumMessageType;
@@ -37,12 +35,15 @@ public class UpdateItemUsecase {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final ItemCategoryRepository itemCategoryRepository;
-    private final RegisterItemAlterationUsecase registerItemAlterationUsecase;
     private final MessageRepository messageRepository;
+    private final BaseAttributeRepository baseAttributeRepository;
+    private final RegisterItemAlterationUsecase registerItemAlterationUsecase;
 
+    @Transactional
     public UpdateItemOutput execute(Long userId, UpdateItemInput input) {
         User user = findUser(userId);
         Item item = findItem(input.getId());
+        BaseAttribute baseAttribute = item.getBaseAttribute();
 
         checkNameAlreadyUsed(item, input.getName());
 
@@ -57,6 +58,13 @@ public class UpdateItemUsecase {
         item = persistItemUpdated(item);
         item.setItemCategories(itemCategoriesUpdated);
 
+        if (!input.getBaseAttribute().equals(baseAttribute.getAttributes())) {
+            baseAttribute.setAttributes(input.getBaseAttribute());
+            baseAttribute.setItem(item);
+            baseAttribute = persistBaseAttribute(baseAttribute);
+        }
+
+        item.setBaseAttribute(baseAttribute);
         registerItemAlteration(user, item);
         sendAlterationMessage(item);
 
@@ -158,6 +166,10 @@ public class UpdateItemUsecase {
         registerItemAlterationUsecase.execute(user, item, EnumItemAlteration.UPDATE);
     }
 
+    private BaseAttribute persistBaseAttribute(BaseAttribute baseAttribute) {
+        return baseAttributeRepository.save(baseAttribute);
+    }
+
     private void sendAlterationMessage(Item item) {
         try {
             UpdateItemMessageOutput messageOutput = UpdateItemMessageOutput.builder()
@@ -168,7 +180,10 @@ public class UpdateItemUsecase {
                 .unique(item.getUnique())
                 .baseSellingPrice(item.getBaseSellingPrice())
                 .active(item.getActive())
-                .categoriesIds(item.getItemCategories().stream().map(ItemCategory::getCategory).map(category -> category.getId().toString()).toList())
+                .baseAttribute(UpdateItemMessageOutput.BaseAttributeOutput.builder()
+                    .attributes(item.getBaseAttribute().getAttributes())
+                    .build()
+                ).categoriesIds(item.getItemCategories().stream().map(ItemCategory::getCategory).map(category -> category.getId().toString()).toList())
                 .build();
 
             CommonMessageDTO commonMessageDTO = CommonMessageDTO.builder()

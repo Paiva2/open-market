@@ -23,6 +23,7 @@ public class UpdateItemOutput {
     private Boolean unique;
     private Boolean active;
     private BigDecimal baseSellingPrice;
+    private BaseAttributeOutput baseAttribute;
     private List<CategoryOutput> categories;
 
     public static UpdateItemOutput toOutput(Item item) {
@@ -34,13 +35,17 @@ public class UpdateItemOutput {
             .unique(item.getUnique())
             .baseSellingPrice(item.getBaseSellingPrice())
             .active(item.getActive())
-            .categories(item.getItemCategories().stream().map(CategoryOutput::new).toList())
+            .baseAttribute(BaseAttributeOutput.builder()
+                .id(item.getBaseAttribute().getId())
+                .attributes(item.getBaseAttribute().getAttributes())
+                .build()
+            ).categories(item.getItemCategories().stream().map(CategoryOutput::new).toList())
             .build();
     }
 
-    @AllArgsConstructor
-    @Builder
     @Data
+    @Builder
+    @AllArgsConstructor
     public static class CategoryOutput {
         private Long id;
         private String name;
@@ -49,5 +54,13 @@ public class UpdateItemOutput {
             this.id = itemCategory.getCategory().getId();
             this.name = itemCategory.getCategory().getName();
         }
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    public static class BaseAttributeOutput {
+        private UUID id;
+        private String attributes;
     }
 }

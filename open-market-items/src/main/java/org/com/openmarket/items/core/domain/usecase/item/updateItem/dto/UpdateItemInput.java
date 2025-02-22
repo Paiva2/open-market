@@ -21,5 +21,6 @@ public class UpdateItemInput {
     private Boolean active;
     private Boolean unique;
     private BigDecimal baseSellingPrice;
+    private String baseAttribute;
     private List<Long> categoriesIds;
 }

@@ -19,7 +19,16 @@ public class UpdateItemInput {
     private String photoUrl;
     private Boolean unique;
     private BigDecimal baseSellingPrice;
+    private BaseAttributeOutput baseAttribute;
     private Boolean active;
 
     private List<String> categoriesIds;
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BaseAttributeOutput {
+        private String attributes;
+    }
 }

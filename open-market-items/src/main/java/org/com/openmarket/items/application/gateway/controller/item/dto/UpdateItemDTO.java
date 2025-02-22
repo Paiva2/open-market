@@ -43,6 +43,9 @@ public class UpdateItemDTO {
     @NotEmpty
     private List<@Min(0) Long> categoriesIds;
 
+    @NotNull
+    private String baseAttribute;
+
     public UpdateItemInput toInput(UUID itemId) {
         return UpdateItemInput.builder()
             .id(itemId)
@@ -52,6 +55,7 @@ public class UpdateItemDTO {
             .unique(this.unique)
             .active(this.active)
             .baseSellingPrice(this.baseSellingPrice)
+            .baseAttribute(this.baseAttribute)
             .categoriesIds(this.categoriesIds)
             .build();
     }

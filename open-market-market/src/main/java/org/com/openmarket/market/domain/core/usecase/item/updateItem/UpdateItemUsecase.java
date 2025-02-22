@@ -2,12 +2,14 @@ package org.com.openmarket.market.domain.core.usecase.item.updateItem;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.com.openmarket.market.domain.core.entity.BaseAttribute;
 import org.com.openmarket.market.domain.core.entity.Category;
 import org.com.openmarket.market.domain.core.entity.Item;
 import org.com.openmarket.market.domain.core.entity.ItemCategory;
 import org.com.openmarket.market.domain.core.usecase.common.exception.ItemNotActiveException;
 import org.com.openmarket.market.domain.core.usecase.common.exception.ItemNotFoundException;
 import org.com.openmarket.market.domain.core.usecase.item.updateItem.dto.UpdateItemInput;
+import org.com.openmarket.market.domain.interfaces.BaseAttributeRepository;
 import org.com.openmarket.market.domain.interfaces.CategoryRepository;
 import org.com.openmarket.market.domain.interfaces.ItemCategoryRepository;
 import org.com.openmarket.market.domain.interfaces.ItemRepository;
@@ -22,10 +24,12 @@ public class UpdateItemUsecase {
     private final ItemRepository itemRepository;
     private final CategoryRepository categoryRepository;
     private final ItemCategoryRepository itemCategoryRepository;
+    private final BaseAttributeRepository baseAttributeRepository;
 
     @Transactional
     public void execute(UpdateItemInput input) {
         Item item = findItem(input.getId());
+        BaseAttribute baseAttribute = item.getBaseAttribute();
 
         if (!item.getActive()) {
             throw new ItemNotActiveException();
@@ -36,6 +40,12 @@ public class UpdateItemUsecase {
 
         updateItem(input, item);
         persistItem(item);
+
+        if (!baseAttribute.getAttributes().equals(input.getBaseAttribute().getAttributes())) {
+            baseAttribute.setAttributes(input.getBaseAttribute().getAttributes());
+            baseAttribute.setItem(item);
+            persistBaseAttribute(baseAttribute);
+        }
     }
 
     private Item findItem(String externalItemId) {
@@ -53,6 +63,10 @@ public class UpdateItemUsecase {
 
     private void persistItem(Item item) {
         itemRepository.save(item);
+    }
+
+    private void persistBaseAttribute(BaseAttribute baseAttribute) {
+        baseAttributeRepository.save(baseAttribute);
     }
 
     private List<ItemCategory> findItemCategories(Item item) {
