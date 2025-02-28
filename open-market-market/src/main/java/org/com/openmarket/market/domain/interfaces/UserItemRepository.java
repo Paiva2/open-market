@@ -9,6 +9,8 @@ import java.util.UUID;
 public interface UserItemRepository {
     Optional<UserItem> getUserItemWithExternalAttributeId(UUID userId, UUID itemId, String externalAttributeId);
 
+    Optional<UserItem> findByUserAndItemExternalId(UUID userId, String externalItemId);
+
     UserItem persist(UserItem userItem);
 
     Optional<UserItem> findUserItemWithQuantity(UUID userId, String externalItemId, String externalAttributeId);
@@ -16,4 +18,6 @@ public interface UserItemRepository {
     List<UserItem> persistAll(List<UserItem> userItems);
 
     Optional<UserItem> findByItemSaleId(UUID itemSaleId);
+
+    void removeAll(List<UserItem> userItems);
 }

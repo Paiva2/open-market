@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 import java.util.UUID;
@@ -37,9 +39,11 @@ public class UserItemEntity {
     @Column(name = "uit_quantity")
     private Long quantity;
 
+    @CreationTimestamp
     @Column(name = "uit_created_at")
     private Date createdAt;
 
+    @UpdateTimestamp
     @Column(name = "uit_updated_at")
     private Date updatedAt;
 

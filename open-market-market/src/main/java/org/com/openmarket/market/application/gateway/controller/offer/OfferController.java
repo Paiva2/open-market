@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.market.application.gateway.controller.common.exception.ExternalIdMissingException;
 import org.com.openmarket.market.domain.core.usecase.common.dto.PageableList;
+import org.com.openmarket.market.domain.core.usecase.offer.acceptOffer.AcceptOfferUsecase;
 import org.com.openmarket.market.domain.core.usecase.offer.cancelOffer.CancelOfferUsecase;
 import org.com.openmarket.market.domain.core.usecase.offer.editOffer.EditOfferUsecase;
 import org.com.openmarket.market.domain.core.usecase.offer.editOffer.dto.EditOfferInput;
@@ -32,6 +33,19 @@ public class OfferController {
     private final EditOfferUsecase editOfferUsecase;
     private final ListOffersMadeUsecase listOffersMadeUsecase;
     private final RefuseOfferUsecase refuseOfferUsecase;
+    private final AcceptOfferUsecase acceptOfferUsecase;
+
+    @PostMapping("/offers/accept/{offerId}/item-sale/{itemSaleId}")
+    ResponseEntity<Void> acceptOffer(
+        @AuthenticationPrincipal Jwt jwt,
+        @PathVariable("offerId") UUID offerId,
+        @PathVariable("itemSaleId") UUID itemSaleId
+    ) {
+        String externalId = getIdFromToken(jwt);
+        acceptOfferUsecase.execute(externalId, itemSaleId, offerId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @GetMapping("/offers/list/item-sale/{itemSaleId}")
     ResponseEntity<PageableList<ListOffersByItemSaleOutput>> getOffersByItemSale(

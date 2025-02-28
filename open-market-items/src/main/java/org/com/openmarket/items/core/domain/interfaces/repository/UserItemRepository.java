@@ -9,4 +9,6 @@ public interface UserItemRepository {
     Optional<UserItem> findUserItem(UUID userId, UUID itemId, UUID attributeId);
 
     UserItem save(UserItem userItem);
+
+    void remove(UserItem userItem);
 }

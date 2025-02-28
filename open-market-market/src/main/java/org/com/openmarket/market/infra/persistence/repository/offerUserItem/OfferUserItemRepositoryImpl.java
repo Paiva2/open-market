@@ -29,6 +29,12 @@ public class OfferUserItemRepositoryImpl implements OfferUserItemRepository {
     }
 
     @Override
+    public List<OfferUserItem> findAllByItemSale(UUID itemSaleId) {
+        List<OfferUserItemEntity> offerUserItemEntities = repository.findAllByItemSale(itemSaleId);
+        return offerUserItemEntities.stream().map(OfferUserItemMapper::toDomain).toList();
+    }
+
+    @Override
     public Optional<OfferUserItem> findByUserItemAndAttribute(UUID userId, UUID itemId, UUID attributeId) {
         Optional<OfferUserItemEntity> offerUserItem = repository.findByUserItemAndAttribute(userId, itemId, attributeId);
         if (offerUserItem.isEmpty()) return Optional.empty();
@@ -43,6 +49,6 @@ public class OfferUserItemRepositoryImpl implements OfferUserItemRepository {
 
     @Override
     public void removeAll(List<OfferUserItem> offerUserItems) {
-        repository.deleteAll(offerUserItems.stream().map(OfferUserItemMapper::toPersistence).toList());
+        repository.removeAll(offerUserItems.stream().map(OfferUserItemMapper::toPersistence).map(OfferUserItemEntity::getId).toList());
     }
 }

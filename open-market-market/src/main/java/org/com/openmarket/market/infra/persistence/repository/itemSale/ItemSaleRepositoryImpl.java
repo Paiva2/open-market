@@ -37,7 +37,7 @@ public class ItemSaleRepositoryImpl implements ItemSaleRepository {
 
     @Override
     public void remove(UUID id) {
-        repository.deleteById(id);
+        repository.removeById(id);
     }
 
     @Override

@@ -29,8 +29,8 @@ public class OfferRepositoryImpl implements OfferRepository {
 
     @Override
     public void removeOffers(List<Offer> offers) {
-        List<OfferEntity> offersEntities = offers.stream().map(OfferMapper::toPersistence).toList();
-        repository.deleteAll(offersEntities);
+        List<UUID> offersEntitiesIds = offers.stream().map(OfferMapper::toPersistence).map(OfferEntity::getId).toList();
+        repository.removeAll(offersEntitiesIds);
     }
 
     @Override
@@ -46,6 +46,12 @@ public class OfferRepositoryImpl implements OfferRepository {
             offerEntities.isLast(),
             offerEntities.stream().map(OfferMapper::toDomain).toList()
         );
+    }
+
+    @Override
+    public List<Offer> findAllByItemSaleNoPage(UUID itemSaleId) {
+        List<OfferEntity> offerEntities = repository.findAllByItemSale(itemSaleId);
+        return offerEntities.stream().map(OfferMapper::toDomain).toList();
     }
 
     @Override
@@ -78,7 +84,7 @@ public class OfferRepositoryImpl implements OfferRepository {
 
     @Override
     public void delete(UUID offerId) {
-        repository.deleteById(offerId);
+        repository.removeById(offerId);
     }
 
     @Override

@@ -26,6 +26,9 @@ public class BaseAttributeEntity {
     @Column(name = "bat_attributes", columnDefinition = "JSONB")
     private String attributes;
 
+    @Column(name = "bat_external_id")
+    private String externalId;
+
     @CreationTimestamp
     @Column(name = "bat_created_at")
     private Date createdAt;

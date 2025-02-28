@@ -27,4 +27,17 @@ public interface OfferUserItemRepositoryOrm extends JpaRepository<OfferUserItemE
         "join fetch oui.offer ofr " +
         "where oui.offer.id = :offerId")
     List<OfferUserItemEntity> findAllByOfferIdWithUserItem(@Param("offerId") UUID offerId);
+
+    @Query("select oui from OfferUserItemEntity oui " +
+        "join fetch oui.userItem ui " +
+        "join fetch oui.offer ofr " +
+        "join fetch ofr.itemSale isl " +
+        "where isl.id = :itemSaleId")
+    List<OfferUserItemEntity> findAllByItemSale(@Param("itemSaleId") UUID itemSaleId);
+
+    @Modifying
+    @Query("delete OfferUserItemEntity where id in :ids")
+    void removeAll(@Param("ids") List<UUID> ids);
+
+
 }

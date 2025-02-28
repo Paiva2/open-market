@@ -12,6 +12,8 @@ import org.com.openmarket.items.core.domain.usecase.user.disableUser.DisableUser
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.InsertUserUsecase;
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.dto.InsertUserInput;
 import org.com.openmarket.items.core.domain.usecase.user.insertUser.exception.UserAlreadyExistsException;
+import org.com.openmarket.items.core.domain.usecase.userItem.createUserItem.CreateUserItemUsecase;
+import org.com.openmarket.items.core.domain.usecase.userItem.createUserItem.dto.CreateUserItemInput;
 import org.com.openmarket.items.core.domain.usecase.userItem.updateUserItem.UpdateUserItemUsecase;
 import org.com.openmarket.items.core.domain.usecase.userItem.updateUserItem.dto.UpdateUserItemInput;
 import org.springframework.amqp.core.Message;
@@ -32,6 +34,7 @@ public class MessageQueue {
     private final InsertUserUsecase insertUserUsecase;
     private final DisableUserUsecase disableUserUsecase;
     private final UpdateUserItemUsecase updateUserItemUsecase;
+    private final CreateUserItemUsecase createUserItemUsecase;
 
     @RabbitListener(queues = {ITEM_QUEUE})
     public void receive(@Payload Message messagePayload) {
@@ -62,6 +65,10 @@ public class MessageQueue {
             case USER_EVENT -> {
                 InsertUserInput input = mapper.readValue(messageDTO.getData(), InsertUserInput.class);
                 insertUserUsecase.execute(input);
+            }
+            case USER_ITEM_EVENT -> {
+                CreateUserItemInput input = mapper.readValue(messageDTO.getData(), CreateUserItemInput.class);
+                createUserItemUsecase.execute(input);
             }
             default -> throw new RuntimeException("Event not implemented! " + messageDTO.getEvent());
         }

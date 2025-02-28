@@ -26,6 +26,7 @@ public class ListItemsOnSaleOutput {
         Item item = userItem.getItem();
         User user = userItem.getUser();
         AttributeItem attribute = userItem.getAttribute();
+        BaseAttribute baseAttribute = item.getBaseAttribute();
 
         this.id = itemSale.getId();
         this.quantity = itemSale.getQuantity();
@@ -40,7 +41,13 @@ public class ListItemsOnSaleOutput {
             .description(item.getDescription())
             .photoUrl(item.getPhotoUrl())
             .baseSellingPrice(item.getBaseSellingPrice())
-            .attribute(AttributeOutput.builder()
+            .baseAttribute(
+                BaseAttributeOutput.builder()
+                    .id(baseAttribute.getId())
+                    .externalId(baseAttribute.getExternalId())
+                    .attributes(baseAttribute.getAttributes())
+                    .build()
+            ).attribute(AttributeOutput.builder()
                 .id(attribute.getId())
                 .externalId(attribute.getExternalId())
                 .attributes(attribute.getAttributes())
@@ -65,6 +72,7 @@ public class ListItemsOnSaleOutput {
         private String description;
         private String photoUrl;
         private BigDecimal baseSellingPrice;
+        private BaseAttributeOutput baseAttribute;
         private AttributeOutput attribute;
     }
 
@@ -83,6 +91,16 @@ public class ListItemsOnSaleOutput {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class AttributeOutput {
+        private UUID id;
+        private String externalId;
+        private String attributes;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class BaseAttributeOutput {
         private UUID id;
         private String externalId;
         private String attributes;

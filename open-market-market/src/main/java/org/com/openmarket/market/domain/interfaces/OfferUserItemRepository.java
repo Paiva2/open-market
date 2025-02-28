@@ -11,6 +11,8 @@ public interface OfferUserItemRepository {
 
     List<OfferUserItem> persistAll(List<OfferUserItem> offerUserItems);
 
+    List<OfferUserItem> findAllByItemSale(UUID itemSaleId);
+
     Optional<OfferUserItem> findByUserItemAndAttribute(UUID userId, UUID itemId, UUID attributeId);
 
     List<OfferUserItem> findByOfferIdWithDeps(UUID offerId);

@@ -27,4 +27,9 @@ public class UserItemRepositoryImpl implements UserItemRepository {
         UserItemEntity userItemEntity = repository.save(UserItemMapper.toPersistence(userItem));
         return UserItemMapper.toDomain(userItemEntity);
     }
+
+    @Override
+    public void remove(UserItem userItem) {
+        repository.remove(UserItemMapper.toPersistence(userItem).getId());
+    }
 }

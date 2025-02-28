@@ -16,6 +16,8 @@ public interface OfferRepository {
 
     PageableList<Offer> findAllByUser(UUID userId, int page, int size);
 
+    List<Offer> findAllByItemSaleNoPage(UUID itemSaleId);
+
     Offer persist(Offer offer);
 
     Optional<Offer> findById(UUID id);

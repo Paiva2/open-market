@@ -24,6 +24,13 @@ public class UserItemRepositoryImpl implements UserItemRepository {
     }
 
     @Override
+    public Optional<UserItem> findByUserAndItemExternalId(UUID userId, String externalItemId) {
+        Optional<UserItemEntity> userItemEntity = repository.findByUserAndExternalItemId(userId, externalItemId);
+        if (userItemEntity.isEmpty()) return Optional.empty();
+        return Optional.of(UserItemMapper.toDomain(userItemEntity.get()));
+    }
+
+    @Override
     public UserItem persist(UserItem userItem) {
         UserItemEntity userItemEntity = repository.save(UserItemMapper.toPersistence(userItem));
         return UserItemMapper.toDomain(userItemEntity);
@@ -48,5 +55,10 @@ public class UserItemRepositoryImpl implements UserItemRepository {
         Optional<UserItemEntity> userItemEntity = repository.findByItemSale(itemSaleId);
         if (userItemEntity.isEmpty()) return Optional.empty();
         return Optional.of(UserItemMapper.toDomain(userItemEntity.get()));
+    }
+
+    @Override
+    public void removeAll(List<UserItem> userItems) {
+        repository.removeAll(userItems.stream().map(UserItemMapper::toPersistence).map(UserItemEntity::getId).toList());
     }
 }

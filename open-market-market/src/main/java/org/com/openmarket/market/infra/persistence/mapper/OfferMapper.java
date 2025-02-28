@@ -25,6 +25,11 @@ public class OfferMapper {
             ItemSale itemSale = new ItemSale();
             copyProperties(entity.getItemSale(), itemSale);
             offer.setItemSale(itemSale);
+
+
+            if (entity.getItemSale().getUserItem() != null) {
+                offer.getItemSale().setUserItem(UserItemMapper.toDomain(entity.getItemSale().getUserItem()));
+            }
         }
 
         if (entity.getOfferUserItems() != null && !entity.getOfferUserItems().isEmpty()) {

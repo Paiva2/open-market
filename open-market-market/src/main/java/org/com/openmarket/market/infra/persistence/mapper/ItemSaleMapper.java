@@ -25,6 +25,12 @@ public class ItemSaleMapper {
                 copyProperties(entity.getUserItem().getItem(), item);
 
                 itemSale.getUserItem().setItem(item);
+
+                if (entity.getUserItem().getItem().getBaseAttribute() != null) {
+                    BaseAttribute baseAttribute = new BaseAttribute();
+                    copyProperties(entity.getUserItem().getItem().getBaseAttribute(), baseAttribute);
+                    itemSale.getUserItem().getItem().setBaseAttribute(baseAttribute);
+                }
             }
 
             if (entity.getUserItem().getUser() != null) {
