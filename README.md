@@ -97,7 +97,7 @@ remove, list items on sale, make offers, and other things related to market.
     - [x] Make offers
     - [x] Remove offers
     - [x] Edit offers
-    - [ ] Accept/Reject offers
+    - [x] Accept/Reject offers
     - [ ] View trade history
     - [x] List Offers made to item on sale
 

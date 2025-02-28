@@ -21,6 +21,8 @@ import org.com.openmarket.market.domain.core.usecase.user.disableUser.DisableUse
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.RegisterUserInput;
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.RegisterUserUsecase;
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.exception.UserAlreadyExistsException;
+import org.com.openmarket.market.domain.core.usecase.userItem.CreateUserItemInput;
+import org.com.openmarket.market.domain.core.usecase.userItem.CreateUserItemUsecase;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -44,6 +46,8 @@ public class MessageQueue {
 
     private final CreateItemUsecase createItemUsecase;
     private final UpdateItemUsecase updateItemUsecase;
+
+    private final CreateUserItemUsecase createUserItemUsecase;
 
     @Transactional
     @RabbitListener(queues = {MARKET_QUEUE})
@@ -83,6 +87,10 @@ public class MessageQueue {
             case ITEM_EVENT -> {
                 CreateItemInput input = mapper.readValue(messageDTO.getData(), CreateItemInput.class);
                 createItemUsecase.execute(input);
+            }
+            case USER_ITEM_EVENT -> {
+                CreateUserItemInput input = mapper.readValue(messageDTO.getData(), CreateUserItemInput.class);
+                createUserItemUsecase.execute(input);
             }
             default -> log.error("Event not recognized! {}", messageDTO.getEvent());
         }

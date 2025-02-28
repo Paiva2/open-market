@@ -168,6 +168,7 @@ public class AcceptOfferUsecase {
                     .build();
 
                 userItemsToSave.add(newUserItem);
+                userItemsToRemove.add(userItemOffered);
 
                 String userMakeOfferExtId = userItemOffered.getUser().getExternalId();
 
@@ -176,8 +177,6 @@ public class AcceptOfferUsecase {
 
                 messages.add(mountCommonMessage(EnumMessageEvent.USER_ITEM_EVENT, EnumMessageType.UPDATED, messageInput));
             }
-
-            userItemsToRemove.add(userItemOffered);
         }
 
         removeAllItemsOffered(offerUserItems);

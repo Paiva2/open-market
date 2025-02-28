@@ -60,7 +60,7 @@ public class ItemEntity {
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "item")
     private BaseAttributeEntity baseAttribute;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "item")
     private List<ItemCategoryEntity> itemCategories;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")

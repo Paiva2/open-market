@@ -60,7 +60,7 @@ public class ItemEntity {
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
     private List<ItemAlterationEntity> itemAlterations;
 
-    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
     private List<ItemCategoryEntity> itemCategories;
 
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)

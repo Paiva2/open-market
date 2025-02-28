@@ -6,7 +6,10 @@ import org.com.openmarket.items.core.domain.entity.AttributeItem;
 import org.com.openmarket.items.core.domain.entity.Item;
 import org.com.openmarket.items.core.domain.entity.User;
 import org.com.openmarket.items.core.domain.entity.UserItem;
+import org.com.openmarket.items.core.domain.enumeration.EnumMessageEvent;
+import org.com.openmarket.items.core.domain.enumeration.EnumMessageType;
 import org.com.openmarket.items.core.domain.interfaces.repository.*;
+import org.com.openmarket.items.core.domain.usecase.common.dto.CommonMessageDTO;
 import org.com.openmarket.items.core.domain.usecase.common.dto.CreateUserItemMessageInput;
 import org.com.openmarket.items.core.domain.usecase.common.exception.UserDisabledException;
 import org.com.openmarket.items.core.domain.usecase.common.exception.UserNotFoundException;
@@ -42,7 +45,7 @@ public class CreateUserItemUsecase {
         AttributeItem attributeItem = fillAttributeIem(input);
         attributeItem = persistAttributeItem(attributeItem);
 
-        UserItem userItem = fillUserItem(user, item, attributeItem);
+        UserItem userItem = fillUserItem(user, item, attributeItem, input.getUserItemInput().getQuantity());
         userItem = persistUserItem(userItem);
 
         userItem.setAttribute(attributeItem);
@@ -80,7 +83,7 @@ public class CreateUserItemUsecase {
             .build();
     }
 
-    private UserItem fillUserItem(User user, Item item, AttributeItem attributeItem) {
+    private UserItem fillUserItem(User user, Item item, AttributeItem attributeItem, Long quantity) {
         return UserItem.builder()
             .id(UserItem.KeyId.builder()
                 .userId(user.getId())
@@ -90,6 +93,7 @@ public class CreateUserItemUsecase {
             ).attribute(attributeItem)
             .user(user)
             .item(item)
+            .quantity(quantity)
             .build();
     }
 
@@ -108,8 +112,14 @@ public class CreateUserItemUsecase {
                     .attributes(userItem.getAttribute().getAttributes())
                     .build()
                 ).build();
+            
+            CommonMessageDTO commonMessageDTO = CommonMessageDTO.builder()
+                .type(EnumMessageType.CREATED)
+                .event(EnumMessageEvent.USER_ITEM_EVENT)
+                .data(mapper.writeValueAsString(input))
+                .build();
 
-            messageRepository.sendMessage(MARKET_QUEUE, mapper.writeValueAsString(input));
+            messageRepository.sendMessage(MARKET_QUEUE, mapper.writeValueAsString(commonMessageDTO));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
