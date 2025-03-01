@@ -14,6 +14,8 @@ import org.com.openmarket.items.core.domain.usecase.category.listCategories.List
 import org.com.openmarket.items.core.domain.usecase.category.listCategories.dto.ListCategoriesOutput;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.CreateItemUsecase;
 import org.com.openmarket.items.core.domain.usecase.item.createItem.dto.CreateItemOutput;
+import org.com.openmarket.items.core.domain.usecase.item.findItem.FindItemUsecase;
+import org.com.openmarket.items.core.domain.usecase.item.findItem.dto.FindItemOutput;
 import org.com.openmarket.items.core.domain.usecase.item.listItems.ListItemsUsecase;
 import org.com.openmarket.items.core.domain.usecase.item.listItems.dto.ListItemsInput;
 import org.com.openmarket.items.core.domain.usecase.item.listItems.dto.ListItemsOutput;
@@ -44,6 +46,7 @@ public class ItemController {
     private final CreateCategoryUsecase createCategoryUsecase;
     private final DeleteCategoryUsecase deleteCategoryUsecase;
     private final UploadImageUsecase uploadImageUsecase;
+    private final FindItemUsecase findItemUsecase;
 
     @PostMapping("/new")
     @PreAuthorize("hasAnyAuthority('ROLE_admin')")
@@ -60,6 +63,16 @@ public class ItemController {
     public ResponseEntity<UpdateItemOutput> updateItem(@AuthenticationPrincipal Jwt jwt, @PathVariable("itemId") UUID itemId, @RequestBody @Valid UpdateItemDTO dto) {
         Long subjectId = getIdFromToken(jwt);
         UpdateItemOutput output = updateItemUsecase.execute(subjectId, dto.toInput(itemId));
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @GetMapping("/{itemId}")
+    public ResponseEntity<FindItemOutput> findItem(
+        @AuthenticationPrincipal Jwt jwt,
+        @PathVariable("itemId") UUID itemId
+    ) {
+        getIdFromToken(jwt);
+        FindItemOutput output = findItemUsecase.execute(itemId);
         return new ResponseEntity<>(output, HttpStatus.OK);
     }
 
