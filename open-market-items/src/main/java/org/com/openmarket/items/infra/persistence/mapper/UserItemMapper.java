@@ -1,9 +1,6 @@
 package org.com.openmarket.items.infra.persistence.mapper;
 
-import org.com.openmarket.items.core.domain.entity.AttributeItem;
-import org.com.openmarket.items.core.domain.entity.Item;
-import org.com.openmarket.items.core.domain.entity.User;
-import org.com.openmarket.items.core.domain.entity.UserItem;
+import org.com.openmarket.items.core.domain.entity.*;
 import org.com.openmarket.items.infra.persistence.entity.AttributeItemEntity;
 import org.com.openmarket.items.infra.persistence.entity.ItemEntity;
 import org.com.openmarket.items.infra.persistence.entity.UserEntity;
@@ -19,6 +16,13 @@ public class UserItemMapper {
         if (persistenceEntity.getItem() != null) {
             Item item = new Item();
             copyProperties(persistenceEntity.getItem(), item);
+
+            if (persistenceEntity.getItem().getBaseAttribute() != null) {
+                BaseAttribute baseAttribute = new BaseAttribute();
+                copyProperties(persistenceEntity.getItem().getBaseAttribute(), baseAttribute);
+                item.setBaseAttribute(baseAttribute);
+            }
+
             userItem.setItem(item);
         }
 

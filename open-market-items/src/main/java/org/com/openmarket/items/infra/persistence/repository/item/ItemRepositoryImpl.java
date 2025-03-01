@@ -53,6 +53,7 @@ public class ItemRepositoryImpl implements ItemRepository {
         }
 
         Pageable pageable = PageRequest.of(page - 1, size, sortDirection, "itm_name");
+
         Page<ItemEntity> itemsEntities = repository.findAllItems(name, category, active, unique, maxPrice, minPrice, pageable);
 
         return itemsEntities.map(ItemMapper::toDomain);
