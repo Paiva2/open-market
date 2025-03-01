@@ -53,7 +53,7 @@ public class WalletLedgerController {
     }
 
     private String getIdFromToken(Jwt jwt) {
-        String externalIdString = jwt.getClaimAsString("externalId");
+        String externalIdString = jwt.getClaimAsString("sub").split(":")[2];
 
         if (externalIdString == null) {
             throw new ExternalIdMissingException();
