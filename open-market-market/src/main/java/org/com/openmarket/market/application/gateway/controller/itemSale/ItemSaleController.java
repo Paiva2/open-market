@@ -8,6 +8,8 @@ import org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale.Ins
 import org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale.dto.InsertItemSaleInput;
 import org.com.openmarket.market.domain.core.usecase.itemSale.listItemsOnSale.ListItemsOnSaleUsecase;
 import org.com.openmarket.market.domain.core.usecase.itemSale.listItemsOnSale.dto.ListItemsOnSaleOutput;
+import org.com.openmarket.market.domain.core.usecase.itemSale.listMineItemsOnSale.ListMineItemsOnSaleUsecase;
+import org.com.openmarket.market.domain.core.usecase.itemSale.listMineItemsOnSale.dto.ListMineItemsOnSaleOutput;
 import org.com.openmarket.market.domain.core.usecase.itemSale.removeItemSale.RemoveItemSaleUsecase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ public class ItemSaleController {
     private final InsertItemSaleUsecase insertItemSaleUsecase;
     private final RemoveItemSaleUsecase removeItemSaleUsecase;
     private final ListItemsOnSaleUsecase listItemsOnSaleUsecase;
+    private final ListMineItemsOnSaleUsecase listMineItemsOnSaleUsecase;
 
     @PostMapping("/item-sale/insert")
     ResponseEntity<Void> insertItemForSale(
@@ -35,6 +38,18 @@ public class ItemSaleController {
         insertItemSaleUsecase.execute(externalUserId, input);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/item-sale/selling")
+    ResponseEntity<PageableList<ListMineItemsOnSaleOutput>> listMineItemsOnSale(
+        @AuthenticationPrincipal Jwt jwt,
+        @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+        @RequestParam(value = "size", required = false, defaultValue = "15") Integer size
+    ) {
+        String externalUserId = getIdFromToken(jwt);
+        PageableList<ListMineItemsOnSaleOutput> output = listMineItemsOnSaleUsecase.execute(externalUserId, page, size);
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
     }
 
     @DeleteMapping("/item-sale/{itemSaleId}")

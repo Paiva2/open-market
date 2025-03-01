@@ -17,6 +17,8 @@ public interface ItemSaleRepository {
 
     PageableList<ItemSale> findAllPaginated(int page, int size, String name, String externalCategoryId, BigDecimal min, BigDecimal max);
 
+    PageableList<ItemSale> findAllByUser(UUID userId, int page, int size);
+
     List<ItemSale> findAllExpired();
 
     void deleteAll(List<ItemSale> itemSales);

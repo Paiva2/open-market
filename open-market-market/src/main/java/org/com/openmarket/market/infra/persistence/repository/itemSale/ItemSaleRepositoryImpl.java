@@ -56,6 +56,21 @@ public class ItemSaleRepositoryImpl implements ItemSaleRepository {
     }
 
     @Override
+    public PageableList<ItemSale> findAllByUser(UUID userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.DESC, "isl_created_at");
+        Page<ItemSaleEntity> itemSales = repository.findAllActiveByUser(userId, page, size, pageable);
+
+        return new PageableList<>(
+            itemSales.getNumber() + 1,
+            itemSales.getSize(),
+            itemSales.getTotalElements(),
+            itemSales.getTotalPages(),
+            itemSales.isLast(),
+            itemSales.stream().map(ItemSaleMapper::toDomain).toList()
+        );
+    }
+
+    @Override
     public List<ItemSale> findAllExpired() {
         List<ItemSaleEntity> itemSaleEntities = repository.findAllExpired();
         return itemSaleEntities.stream().map(ItemSaleMapper::toDomain).toList();
