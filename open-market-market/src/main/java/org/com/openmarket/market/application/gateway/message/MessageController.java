@@ -8,8 +8,8 @@ import org.com.openmarket.market.domain.core.usecase.common.dto.CommonMessageDTO
 import org.com.openmarket.market.domain.core.usecase.common.exception.ItemNotFoundException;
 import org.com.openmarket.market.domain.core.usecase.common.exception.UserDisabledException;
 import org.com.openmarket.market.domain.core.usecase.common.exception.UserNotFoundException;
-import org.com.openmarket.market.domain.core.usecase.userItem.CreateUserItemInput;
-import org.com.openmarket.market.domain.core.usecase.userItem.CreateUserItemUsecase;
+import org.com.openmarket.market.domain.core.usecase.userItem.createUserItem.CreateUserItemInput;
+import org.com.openmarket.market.domain.core.usecase.userItem.createUserItem.CreateUserItemUsecase;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;

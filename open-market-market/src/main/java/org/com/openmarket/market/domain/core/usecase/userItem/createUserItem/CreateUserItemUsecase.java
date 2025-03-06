@@ -1,4 +1,4 @@
-package org.com.openmarket.market.domain.core.usecase.userItem;
+package org.com.openmarket.market.domain.core.usecase.userItem.createUserItem;
 
 import lombok.AllArgsConstructor;
 import org.com.openmarket.market.domain.core.entity.AttributeItem;

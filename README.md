@@ -82,7 +82,7 @@ remove, list items on sale, make offers, and other things related to market.
     - [x] Scheduled listings/removals
 
 - [ ] Market core (Item on sale)
-    - [ ] Buy Item on sale
+    - [x] Buy Item on sale
     - [x] Insert items for sale
     - [x] Remove items for sale
 
@@ -104,7 +104,7 @@ remove, list items on sale, make offers, and other things related to market.
 - [ ] Enhanced Trading Features (Item on sale)
     - [ ] Counter-offers
     - [ ] Notification system on trading operations
-    - [ ] Receive items/balance on operation finishing
+    - [x] Receive items/balance on operation finishing
 
 - [ ] Market Analysis (Item on sale)
     - [ ] Price history tracking

@@ -48,4 +48,8 @@ public interface UserItemRepositoryOrm extends JpaRepository<UserItemEntity, Use
     @Modifying
     @Query("delete UserItemEntity ui where ui.id in :ids")
     void removeAll(@Param("ids") List<UserItemEntity.KeyId> ids);
+
+    @Modifying
+    @Query("delete UserItemEntity ui where ui.id = :id")
+    void remove(@Param("id") UserItemEntity.KeyId id);
 }

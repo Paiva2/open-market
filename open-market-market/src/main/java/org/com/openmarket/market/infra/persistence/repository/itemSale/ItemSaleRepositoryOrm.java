@@ -50,7 +50,13 @@ public interface ItemSaleRepositoryOrm extends JpaRepository<ItemSaleEntity, UUI
     Page<ItemSaleEntity> findAllActiveByUser(@Param("userId") UUID userId, @Param("page") Integer page, @Param("size") Integer size, Pageable pageable);
 
 
-    @Query("select isl from ItemSaleEntity isl join fetch isl.userItem ui where isl.id = :id")
+    @Query("select isl from ItemSaleEntity isl " +
+        "join fetch isl.userItem ui " +
+        "join fetch ui.user usr " +
+        "join fetch ui.item itm " +
+        "join fetch ui.attribute atb " +
+        "where isl.id = :id " +
+        "and isl.quantity > 0")
     Optional<ItemSaleEntity> findByIdWithDeps(@Param("id") UUID id);
 
     @Query("select isl from ItemSaleEntity isl " +

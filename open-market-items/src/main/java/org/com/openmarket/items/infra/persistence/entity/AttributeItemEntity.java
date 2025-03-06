@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -24,6 +25,7 @@ public class AttributeItemEntity {
     private UUID id;
 
     @Column(name = "aui_attributes", columnDefinition = "JSONB")
+    @ColumnTransformer(write = "?::jsonb")
     private String attributes;
 
     @CreationTimestamp

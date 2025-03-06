@@ -61,4 +61,9 @@ public class UserItemRepositoryImpl implements UserItemRepository {
     public void removeAll(List<UserItem> userItems) {
         repository.removeAll(userItems.stream().map(UserItemMapper::toPersistence).map(UserItemEntity::getId).toList());
     }
+
+    @Override
+    public void remove(UserItem userItem) {
+        repository.remove(UserItemMapper.toPersistence(userItem).getId());
+    }
 }

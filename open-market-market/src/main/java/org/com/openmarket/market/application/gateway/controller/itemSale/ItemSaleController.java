@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.com.openmarket.market.application.gateway.controller.common.exception.ExternalIdMissingException;
 import org.com.openmarket.market.domain.core.usecase.common.dto.PageableList;
+import org.com.openmarket.market.domain.core.usecase.itemSale.buyItemSale.BuyItemSaleInput;
+import org.com.openmarket.market.domain.core.usecase.itemSale.buyItemSale.BuyItemSaleUsecase;
 import org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale.InsertItemSaleUsecase;
 import org.com.openmarket.market.domain.core.usecase.itemSale.insertItemSale.dto.InsertItemSaleInput;
 import org.com.openmarket.market.domain.core.usecase.itemSale.listItemsOnSale.ListItemsOnSaleUsecase;
@@ -28,6 +30,7 @@ public class ItemSaleController {
     private final RemoveItemSaleUsecase removeItemSaleUsecase;
     private final ListItemsOnSaleUsecase listItemsOnSaleUsecase;
     private final ListMineItemsOnSaleUsecase listMineItemsOnSaleUsecase;
+    private final BuyItemSaleUsecase buyItemSaleUsecase;
 
     @PostMapping("/item-sale/insert")
     ResponseEntity<Void> insertItemForSale(
@@ -50,6 +53,18 @@ public class ItemSaleController {
         PageableList<ListMineItemsOnSaleOutput> output = listMineItemsOnSaleUsecase.execute(externalUserId, page, size);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @PostMapping("/item-sale/{itemSaleId}/buy")
+    ResponseEntity<PageableList<ListMineItemsOnSaleOutput>> buyItemOnSale(
+        @AuthenticationPrincipal Jwt jwt,
+        @PathVariable("itemSaleId") UUID itemSaleId,
+        @RequestBody BuyItemSaleInput input
+    ) {
+        String externalUserId = getIdFromToken(jwt);
+        buyItemSaleUsecase.execute(input, externalUserId, itemSaleId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/item-sale/{itemSaleId}")

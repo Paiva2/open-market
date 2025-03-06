@@ -20,4 +20,6 @@ public interface UserItemRepository {
     Optional<UserItem> findByItemSaleId(UUID itemSaleId);
 
     void removeAll(List<UserItem> userItems);
+
+    void remove(UserItem userItem);
 }

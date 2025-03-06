@@ -22,6 +22,7 @@ public class WalletRepositoryImpl implements WalletRepository {
     public UserWalletViewOutput getUserWalletView() {
         try {
             String url = HOST.concat(URL_PREFIX).concat("/info");
+            
             String body = webClient.get()
                 .uri(url)
                 .retrieve()

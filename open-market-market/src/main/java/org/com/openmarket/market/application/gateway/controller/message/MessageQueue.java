@@ -21,8 +21,8 @@ import org.com.openmarket.market.domain.core.usecase.user.disableUser.DisableUse
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.RegisterUserInput;
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.RegisterUserUsecase;
 import org.com.openmarket.market.domain.core.usecase.user.registerUser.exception.UserAlreadyExistsException;
-import org.com.openmarket.market.domain.core.usecase.userItem.CreateUserItemInput;
-import org.com.openmarket.market.domain.core.usecase.userItem.CreateUserItemUsecase;
+import org.com.openmarket.market.domain.core.usecase.userItem.createUserItem.CreateUserItemInput;
+import org.com.openmarket.market.domain.core.usecase.userItem.createUserItem.CreateUserItemUsecase;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
